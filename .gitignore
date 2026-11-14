@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# Large NASA data: document the source instead of committing it
+kernels/
+*.bsp
+*.bpc

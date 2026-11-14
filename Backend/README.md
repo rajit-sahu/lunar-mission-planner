@@ -2,13 +2,21 @@
 
 FastAPI service that connects the science code to the frontend.
 
-**Status:** Sun/Earth angles, visibility, windows and statistics come from
-the real SPICE pipeline (`Science/science_pipeline.py`). Site coordinates
-come from Arnav's `config/sites.json`. **Terrain horizons are still
-placeholders** until real LOLA terrain files are generated (see the last
-section), so visibility results are not yet physically meaningful. Every
-science response says where its numbers came from (`ephemeris_source`,
-`terrain_source`: `"lola"` or `"placeholder"`).
+**Status:** every number is now computed from real data. Sun/Earth angles,
+visibility, windows and statistics come from the SPICE pipeline
+(`Science/science_pipeline.py`); site coordinates come from Arnav's
+`config/sites.json`; terrain horizons, elevations and slopes come from NASA
+LOLA elevation maps processed by Arnav's terrain pipeline
+(`data/processed/`). The terrain is computed but **not yet validated**
+(status `geotiff_calculated_pending_validation`). Every science response
+says where its numbers came from (`ephemeris_source`, and `terrain_source`:
+`"lola"`, or `"placeholder"` for a site with no terrain file).
+
+**Known issue:** `site_004` (Shackleton Rim) shows the Sun and Earth as
+never visible. Its published coordinate falls in a hollow about 7 m deep
+in the 5 m elevation map, so nearby ground blocks the view in every
+direction (horizon 2 to 10 degrees). The representative point needs moving
+to the nearby crest.
 
 ## Run it
 
@@ -51,10 +59,10 @@ The science endpoints return the science pipeline's JSON unchanged, with
 ```json
 [{"id": "site_001", "name": "Connecting Ridge / Site 001",
   "latitude_deg": -89.45, "longitude_deg": 222.69,
-  "elevation_m": null, "slope_deg": null,
+  "elevation_m": 1954.847, "slope_deg": 9.403,
   "source": "Kumari et al., Planetary Science Journal (2022); ...",
   "note": "Representative published point, not an approved landing zone",
-  "terrain_source": "placeholder"}]
+  "terrain_source": "lola"}]
 ```
 
 ### `GET /sites/{id}/terrain`
@@ -153,16 +161,17 @@ per site, in the order requested) plus the full analysis of each site under
 
 Requests are limited to 5000 timeline samples per site.
 
-## Adding real terrain
+## Regenerating terrain
 
-Arnav's terrain code is in `Arnav_Lunar_Terrain_Project.zip` at the repo
-root. It ships no terrain results: they have to be generated from NASA LOLA
-GeoTIFFs, following the README inside the zip.
+The files in `data/processed/` were generated on 2026-11-15 from
+`LDEM_80S_80MPP_ADJ.TIF` (80 m) plus each site's 5 m elevation and slope
+maps (Site01, Site04, Site23) from https://pgda.gsfc.nasa.gov, with the
+pipeline's default settings (2 m observer, 120 km range). The source maps
+(about 485 MB) are not in the repo.
 
-1. Unzip it, download the DEMs and run its CLI for each site.
-2. Copy each resulting `data/processed/{site_id}_terrain.json` into this
-   repo's `data/processed/` folder.
-3. Restart the server. That site now reports `terrain_source: "lola"`.
+To regenerate or add a site: unzip `Arnav_Lunar_Terrain_Project.zip`,
+follow its README to download the maps and run its CLI, copy the resulting
+`data/processed/{site_id}_terrain.json` here, and restart the server.
 
 What the backend does with a terrain file:
 

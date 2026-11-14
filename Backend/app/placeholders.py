@@ -1,8 +1,8 @@
 """Placeholder terrain horizon. NOT real lunar terrain.
 
-Returns a made-up but smooth 360-degree horizon so the real Sun/Earth
-pipeline has something to compare against until Arnav's LOLA horizon
-profiles are ready. science.py decides whether this is used.
+Returns a made-up but smooth 360-degree horizon so the Sun/Earth pipeline
+has something to compare against for sites whose real LOLA terrain file has
+not been generated yet. science.py decides when this is used.
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 import math
 
 
-def horizon_profile(site_id: str, latitude_deg: float, longitude_deg: float) -> dict:
+def horizon_profile(site_id: str) -> dict:
     """Fake terrain horizon: elevation angle at each whole azimuth."""
     seed = sum(ord(c) for c in site_id)
     azimuths = list(range(360))

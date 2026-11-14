@@ -3,10 +3,12 @@
 FastAPI service that connects the science code to the frontend.
 
 **Status:** Sun/Earth angles, visibility, windows and statistics come from
-the real SPICE pipeline (`Science/science_pipeline.py`). The **terrain
-horizons and site coordinates are still placeholders**, so visibility results
-are not yet physically meaningful. Every science response says where its
-numbers came from (`ephemeris_source`, `terrain_source`).
+the real SPICE pipeline (`Science/science_pipeline.py`). Site coordinates
+come from Arnav's `config/sites.json`. **Terrain horizons are still
+placeholders** until real LOLA terrain files are generated (see the last
+section), so visibility results are not yet physically meaningful. Every
+science response says where its numbers came from (`ephemeris_source`,
+`terrain_source`: `"lola"` or `"placeholder"`).
 
 ## Run it
 
@@ -31,7 +33,7 @@ Tests: `python -m pytest Backend`
 | Quantity | Convention |
 |---|---|
 | Time | UTC, ISO 8601, ending in `Z` (a time with no offset is read as UTC) |
-| Latitude / longitude | Degrees; north-positive / east-positive |
+| Latitude / longitude | Degrees; north-positive / east-positive, longitude in 0 to 360 |
 | Azimuth | Degrees clockwise from north, 0 to 360 |
 | Elevation | Degrees above the local horizontal |
 | Distance | Kilometres |
@@ -44,15 +46,30 @@ The science endpoints return the science pipeline's JSON unchanged, with
 
 ### `GET /sites`
 
+`elevation_m` and `slope_deg` are `null` until the site has real terrain.
+
 ```json
-[{"id": "malapert-massif", "name": "Malapert Massif", "latitude_deg": -86.0,
-  "longitude_deg": 0.0, "elevation_km": 0.0, "placeholder": true}]
+[{"id": "site_001", "name": "Connecting Ridge / Site 001",
+  "latitude_deg": -89.45, "longitude_deg": 222.69,
+  "elevation_m": null, "slope_deg": null,
+  "source": "Kumari et al., Planetary Science Journal (2022); ...",
+  "note": "Representative published point, not an approved landing zone",
+  "terrain_source": "placeholder"}]
 ```
+
+### `GET /sites/{id}/terrain`
+
+The terrain pipeline's full JSON for the site, unchanged (elevation, slope,
+quality flags, and 360 `terrain_horizon` rows). Returns 404 until a real
+terrain file exists for the site.
 
 ### `GET /sites/{id}/horizon`
 
+The horizon actually used for visibility, as two plain lists: real when
+available, otherwise the placeholder.
+
 ```json
-{"site_id": "malapert-massif", "terrain_source": "placeholder",
+{"site_id": "site_001", "terrain_source": "placeholder",
  "horizon_azimuths": [0, 1, 2], "horizon_elevations": [1.7, 1.8, 1.9]}
 ```
 
@@ -62,7 +79,7 @@ One moment in time: for the time slider, dashboard and surface POV.
 
 ```json
 {
-  "site_id": "malapert-massif",
+  "site_id": "site_malapert",
   "time": "2028-11-20T12:00:00Z",
   "sun":   {"azimuth_deg": 105.9, "elevation_deg": -0.6, "distance_km": 147900000.0,
             "visible": false, "terrain_horizon_deg": 1.2, "clearance_deg": -1.8},
@@ -81,8 +98,8 @@ transition times refined to about a second, and summary statistics.
 
 ```json
 {
-  "site_id": "malapert-massif",
-  "coordinates": {"latitude_deg": -86.0, "longitude_deg": 0.0, "elevation_km": 0.0},
+  "site_id": "site_malapert",
+  "coordinates": {"latitude_deg": -85.992, "longitude_deg": 2.056, "elevation_km": 0.0},
   "timeline": [
     {"time": "2028-11-20T00:00:00Z",
      "sun_azimuth_deg": 112.2, "sun_elevation_deg": -0.8,
@@ -123,26 +140,36 @@ per site, in the order requested) plus the full analysis of each site under
   "end_time": "2028-12-04T00:00:00Z",
   "step_minutes": 15,
   "comparison": [
-    {"site_id": "malapert-massif", "sun_visible_percent": 80.9,
+    {"site_id": "site_malapert", "sun_visible_percent": 80.9,
      "earth_visible_percent": 100.0, "both_visible_percent": 80.9,
      "longest_darkness_hours": 64.3, "longest_earth_outage_hours": 0.0,
      "longest_simultaneous_visibility_hours": 271.7}
   ],
   "sites": ["...one /analysis-shaped object per site..."],
   "ephemeris_source": "spice",
-  "terrain_source": "placeholder"
+  "terrain_sources": {"site_malapert": "placeholder"}
 }
 ```
 
 Requests are limited to 5000 timeline samples per site.
 
-## Still to plug in
+## Adding real terrain
 
-All science calls go through `app/science.py`; nothing else needs to change.
+Arnav's terrain code is in `Arnav_Lunar_Terrain_Project.zip` at the repo
+root. It ships no terrain results: they have to be generated from NASA LOLA
+GeoTIFFs, following the README inside the zip.
 
-- **Terrain horizon (Arnav):** needs a function
-  `horizon_profile(site_id, latitude_deg, longitude_deg)` returning
-  `{"horizon_azimuths": [...], "horizon_elevations": [...]}` in degrees.
-  Point `horizon_profile` in `app/science.py` at it and set
-  `TERRAIN_SOURCE = "lola"`.
-- **Site coordinates and elevations (Arnav):** edit `app/sites.py`.
+1. Unzip it, download the DEMs and run its CLI for each site.
+2. Copy each resulting `data/processed/{site_id}_terrain.json` into this
+   repo's `data/processed/` folder.
+3. Restart the server. That site now reports `terrain_source: "lola"`.
+
+What the backend does with a terrain file:
+
+- Uses it only if its `status` is `geotiff_calculated_pending_validation`.
+  Synthetic fixtures and schema examples are ignored.
+- Places the observer at `elevation_m + observer_height_m`, so the Sun/Earth
+  angles are computed from the same point the horizon was.
+- If any horizon azimuth has no data (`elevation_deg: null`), the science
+  endpoints for that site return **409** instead of treating the gap as
+  clear sky. `/sites/{id}/terrain` still serves the file.

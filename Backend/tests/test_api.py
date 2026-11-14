@@ -160,3 +160,10 @@ def test_horizon_with_unknown_bins_is_refused_not_treated_as_clear(terrain_file)
     assert client.get(f"/sites/{SITE}/analysis", params=RANGE).status_code == 409
     # The raw terrain file is still served so the gap can be inspected.
     assert client.get(f"/sites/{SITE}/terrain").status_code == 200
+
+
+def test_preview_page_is_served():
+    response = client.get("/preview")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert client.get("/", follow_redirects=False).headers["location"] == "/preview"

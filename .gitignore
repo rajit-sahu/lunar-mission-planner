@@ -4,6 +4,7 @@
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # Virtual environments
 .venv/
@@ -11,3 +12,6 @@ venv/
 
 # Environment variables
 .env
+
+# Node
+node_modules/

@@ -1,13 +1,17 @@
+# macOS
+.DS_Store
+
 # Python
 __pycache__/
 *.pyc
-.venv/
 .pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
 
 # Node
 node_modules/
-
-# Large NASA data: document the source instead of committing it
-kernels/
-*.bsp
-*.bpc

@@ -11,15 +11,17 @@ is a full example of the /compare response.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 
 from . import science
 from .sites import SITES
 
 MAX_SAMPLES = 5000  # per site, per request
+PREVIEW_PAGE = Path(__file__).parent / "static" / "preview.html"
 
 app = FastAPI(title="Lunar South Pole Mission Planner API", version="0.3.0")
 
@@ -68,6 +70,17 @@ def _sources(site_id: str) -> dict:
         "ephemeris_source": science.EPHEMERIS_SOURCE,
         "terrain_source": science.terrain_source(site_id),
     }
+
+
+@app.get("/", include_in_schema=False)
+def root() -> RedirectResponse:
+    return RedirectResponse("/preview")
+
+
+@app.get("/preview", include_in_schema=False)
+def preview() -> FileResponse:
+    """A plain charts page for eyeballing the data; not the real frontend."""
+    return FileResponse(PREVIEW_PAGE)
 
 
 @app.get("/health")

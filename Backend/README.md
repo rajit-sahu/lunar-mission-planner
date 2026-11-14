@@ -31,6 +31,12 @@ uvicorn Backend.app.main:app --reload
 
 Then open http://localhost:8000/docs to try every endpoint in the browser.
 
+For a visual check of the data, open http://localhost:8000/preview: a plain
+charts page (sky view against the terrain horizon, visibility windows,
+height above terrain, and the site comparison) that reads the live API. It
+is a debugging and fallback view, not the real frontend, and it needs
+internet access to load Plotly.
+
 The SPICE kernels are loaded from `kernels/` at startup (set
 `LUNAR_KERNELS_DIR` to use a different folder).
 

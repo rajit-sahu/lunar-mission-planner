@@ -54,7 +54,7 @@ def terrain_file(terrain_dir):
 
 def test_sites_come_from_config():
     sites = client.get("/sites").json()
-    assert [s["id"] for s in sites] == ["site_001", "site_004", "site_malapert"]
+    assert [s["id"] for s in sites] == ["site_001", "site_004", "site_004_crest", "site_malapert"]
     assert sites[0]["latitude_deg"] == -89.45 and sites[0]["longitude_deg"] == 222.69
     assert all(s["terrain_source"] == "placeholder" and s["elevation_m"] is None for s in sites)
 

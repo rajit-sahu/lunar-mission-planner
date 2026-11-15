@@ -27,7 +27,12 @@ from science.terrain.geometry import MOON_RADIUS_M, great_circle_targets
 from science.terrain.horizon import calculate_horizon
 
 REPO = Path(__file__).resolve().parents[2]
-SITES = {"site_001": "Site01", "site_004": "Site04", "site_malapert": "Site23"}
+SITES = {"site_001": "Site01", "site_004": "Site04", "site_004_crest": "Site04", "site_malapert": "Site23"}
+# Extra named viewpoints (kept even when close to the landing point).
+EXTRA = {
+    "site_004": [("crest", "Crest near Site 004 (54 m)", -89.78033, 203.81414)],
+    "site_004_crest": [("published", "Site 004 published point (54 m)", -89.78, 204.27)],
+}
 RING_M = 400          # ring of viewpoints around the landing point
 RING_N = 8
 SEARCH_M = 1500       # radius for the highest / lowest ground
@@ -71,7 +76,7 @@ def main():
     for site_id in args.site or SITES:
         site = sites[site_id]
         own = raw / f"{SITES[site_id]}_final_adj_5mpp_surf.tif"
-        others = [raw / f"{v}_final_adj_5mpp_surf.tif" for k, v in SITES.items() if k != site_id]
+        others = [raw / f"{v}_final_adj_5mpp_surf.tif" for v in dict.fromkeys(SITES.values()) if v != SITES[site_id]]
         dems = [own, *others, raw / "LDEM_80S_80MPP_ADJ.TIF"]
         lat0, lon0 = site["latitude_deg"], site["longitude_deg"] % 360
         centre_file = json.loads((REPO / "data" / "processed" / f"{site_id}_terrain.json").read_text())
@@ -132,6 +137,8 @@ def main():
                 if all(gc_distance_bearing(p["lat"], p["lon"], q["lat"], q["lon"])[0] > 120 for q in kept):
                     kept.append(p)
             pts = kept
+            for pid, label, la, lo in EXTRA.get(site_id, []):
+                pts.append({"id": pid, "label": label, "lat": la, "lon": lo % 360})
 
             # ---- horizons, elevation, slope
             for p in pts:

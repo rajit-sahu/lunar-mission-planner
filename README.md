@@ -46,7 +46,7 @@ line to Earth, and how that changes when a launch slips.
   - Terrain is pending independent validation.
   - Irradiance is not electrical power.
   - Earth visibility is line of sight, not a link budget or a Deep Space Network schedule; no relay satellites.
-  - Shackleton Rim's point was moved 54 m to the nearby crest (its published point is fully enclosed by terrain); the other sites use published points. See `config/sites.json`.
+  - All sites use their published points. Shackleton Rim's sits in a small hollow, so we also show a team-chosen comparison point, Shackleton crest, 54 m away and 10.5 m higher (labelled as ours, not a published site).
 
   The in-app **"How do we know?"** dialog explains all of this in plain language.
 

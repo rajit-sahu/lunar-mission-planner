@@ -140,8 +140,8 @@ The files in `../data/processed/` (used by the backend) were made with
 `scripts/regenerate_shipped.sh`: 2, 5 and 10 m observer heights, 160 km range,
 `--subrays-per-bin 5`, and all three 5 m site DEMs plus the 80 m polar DEM.
 The defaults described above (120 km, 1 ray per bin) reproduce the earlier files.
-Shackleton Rim's point is the crest from `scripts/find_crest.py` (highest 5 m cell
-within 100 m of the published point); see `representative_point_note` in the JSON.
+All sites use published points; `site_004_crest` is the extra comparison point from
+`scripts/find_crest.py` (highest 5 m cell within 100 m of Shackleton Rim's published point).
 
 ## Street View viewpoints (frontend "Stand here")
 

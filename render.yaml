@@ -1,0 +1,15 @@
+# Render Blueprint for the FastAPI backend (https://render.com/docs/blueprint-spec).
+# Render: New > Blueprint > pick this repo. Free plan sleeps after 15 min idle;
+# the frontend falls back to saved results while it wakes up.
+services:
+  - type: web
+    name: lunar-mission-planner-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r Backend/requirements.txt
+    startCommand: uvicorn Backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8

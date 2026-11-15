@@ -116,7 +116,7 @@ See `TEAM_HANDOFF.md` for what to tell the rest of the team. `examples/sample_fr
 
 - NASA PGDA: https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/
 - NASA large-area LOLA maps: https://pgda.gsfc.nasa.gov/products/90
-- Kumari et al. (2022) Site 001/004 coordinates: https://doi.org/10.3847/PSJ/aca590
+- Boazman et al. (2022) Site 001/004 coordinates: https://doi.org/10.3847/PSJ/aca590
 - Wueller et al. (2026) Appendix A / MMA_K2023 coordinates: https://doi.org/10.1029/2025JE009434
 - Barker et al. (2021) high-resolution LOLA elevation maps: https://doi.org/10.1016/j.pss.2020.105119
 

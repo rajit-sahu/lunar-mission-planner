@@ -64,6 +64,12 @@ export function AboutDialog() {
                 <b>{s.name}:</b> {s.point_note}
               </p>
             ))}
+            <p>
+              Why a published point can sit in a hollow: Sites 001 and 004 were first picked from Clementine images (Bussey et al. 1999),
+              re-examined as well-lit points by Mazarico et al. (2011) on a <b>240 m</b> map, and later numbered by NASA's Artemis program. A
+              240 m pixel holds over 2,000 of our 5 m cells, so the published coordinates mark an area, not a spot. NASA's own 5 m study of
+              these sites (Barker et al. 2021) also looks for the lit patches near each site rather than a single point.
+            </p>
           </section>
         )}
 
@@ -105,7 +111,8 @@ export function AboutDialog() {
 
         <section className="credits small muted">
           Data: NASA LRO LOLA (PGDA), LRO LROC WAC and LOLA illumination maps via NASA Moon Trek, NAIF SPICE kernels, JPL Horizons. Sites:
-          Kumari et al. 2022 (Planetary Science Journal); Wueller et al. 2026 (JGR Planets). None of these are approved landing zones.
+          Boazman et al. 2022 (Planetary Science Journal); Wueller et al. 2026 (JGR Planets); Mazarico et al. 2011 (Icarus); Barker et al. 2021
+          (Planetary and Space Science). None of these are approved landing zones.
         </section>
       </div>
     </div>

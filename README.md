@@ -73,5 +73,5 @@ cd Frontend && npm install && npm run dev       # app on :5173
 
 Hosting: the frontend is on Vercel. The backend runs on Render from `render.yaml`. See [Frontend/README.md](Frontend/README.md#deployment).
 
-Sites are representative published points (Kumari et al. 2022; Wueller et al.
+Sites are representative published points (Boazman et al. 2022; Wueller et al.
 2026), not approved landing zones.

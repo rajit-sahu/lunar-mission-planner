@@ -52,10 +52,11 @@ const STEPS: Step[] = [
   {
     title: "Stand on the surface",
     body: () =>
-      "This is the real horizon from NASA's laser altimeter, at true angles. Drag to look around; Earth is the small blue disc, lit from the side by the Sun.",
+      "This is the real horizon from NASA's laser altimeter, at true angles. Drag to look around, and tap the arrows on the ground to walk: a few hundred metres downhill can cut the sunlight in half.",
     enter: () => {
       const s = go();
       s.setPlaying(false);
+      s.setSvPoint("landing");
       s.setView("surface");
     },
   },

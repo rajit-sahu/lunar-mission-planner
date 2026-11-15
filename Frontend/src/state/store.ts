@@ -88,6 +88,8 @@ interface State {
   /** Index of the guided-story step on screen, or null. */
   storyStep: number | null;
   aboutOpen: boolean;
+  /** Street View: which viewpoint around the selected site you're standing at. */
+  svPointId: string;
 
   init: () => Promise<void>;
   selectSite: (id: string | null, fly?: boolean) => void;
@@ -108,6 +110,7 @@ interface State {
   removeScenario: (id: string) => void;
   setStoryStep: (n: number | null) => void;
   setAboutOpen: (o: boolean) => void;
+  setSvPoint: (id: string) => void;
 }
 
 let scenarioSeq = 0;
@@ -133,6 +136,7 @@ export const useStore = create<State>((set, get) => ({
   flyToToken: 0,
   storyStep: null,
   aboutOpen: false,
+  svPointId: "landing",
 
   async init() {
     const { data, origin } = await fetchSites();
@@ -153,7 +157,11 @@ export const useStore = create<State>((set, get) => ({
   },
 
   selectSite(id, fly = true) {
-    set((s) => ({ selectedSiteId: id, flyToToken: fly ? s.flyToToken + 1 : s.flyToToken }));
+    set((s) => ({
+      selectedSiteId: id,
+      flyToToken: fly ? s.flyToToken + 1 : s.flyToToken,
+      svPointId: id === s.selectedSiteId ? s.svPointId : "landing",
+    }));
     if (id) {
       get().ensureHorizon(id);
       get().ensureAnalysis(id, get().missionStart);
@@ -252,6 +260,7 @@ export const useStore = create<State>((set, get) => ({
   removeScenario: (id) => set((s) => ({ scenarios: s.scenarios.filter((x) => x.id !== id) })),
   setStoryStep: (storyStep) => set({ storyStep }),
   setAboutOpen: (aboutOpen) => set({ aboutOpen }),
+  setSvPoint: (svPointId) => set({ svPointId }),
 }));
 
 /** Analysis for a site at a landing date under the current visibility settings. */

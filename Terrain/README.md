@@ -133,3 +133,19 @@ python -m scripts.inspect_dem --dem data/raw/Site01_final_adj_5mpp_surf.tif
 This reports the raster CRS, pixel size, bounds, and whether the published points fall within its coverage. A site within the bounds does **not** by itself prove that the reference frame, pixel values or projection convention is correct.
 
 For backend integration, `examples/consume_terrain_json.py` illustrates conservative line-of-sight visibility and refuses synthetic input or incomplete data.
+
+## Street View viewpoints (frontend "Stand here")
+
+`scripts/streetview_points.py` builds `Frontend/public/streetview/{site}.json` + `{site}_map.png`:
+the landing point (horizon copied from `data/processed`), 8 points on a 400 m ring, and the
+highest and lowest ground within 1.5 km, each with a full 360-degree horizon (2 m observer,
+160 km, 3 rays per degree), elevation, slope, links to points within 900 m, and positions on a
+hillshade minimap of the 5 m DEM.
+
+```bash
+cd Terrain
+python -m scripts.streetview_points --raw data/raw --out ../Frontend/public/streetview
+```
+
+The frontend re-expresses the landing point's SPICE Sun/Earth directions in each viewpoint's
+local horizon frame (`Frontend/src/lib/sky.ts`); this matches SPICE run at the viewpoint exactly.

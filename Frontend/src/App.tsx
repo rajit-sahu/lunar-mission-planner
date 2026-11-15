@@ -8,6 +8,7 @@ import { SiteDashboard } from "./components/panels/SiteDashboard";
 import { TimelineDock } from "./components/panels/TimelineDock";
 import { LayerSwitcher } from "./components/panels/LayerSwitcher";
 import { AboutDialog } from "./components/AboutDialog";
+import { Astronaut } from "./components/globe/Astronaut";
 import { StoryTour } from "./components/StoryTour";
 import { CloseIcon, PlayIcon } from "./components/icons";
 
@@ -101,6 +102,7 @@ export default function App() {
         <>
           <SitePanel />
           {mode === "planner" && <LayerSwitcher />}
+          <Astronaut />
           {selected ? <SiteDashboard /> : <Welcome />}
         </>
       )}

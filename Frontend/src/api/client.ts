@@ -78,11 +78,27 @@ function backendReady(): Promise<boolean> {
   return firstCheck.then(() => backendUp);
 }
 
+/**
+ * Deployed builds use precomputed results first: they are the backend's own
+ * SPICE + LOLA output, and a free-plan server takes ~4 s per 30-day analysis.
+ * Local development stays live-first so the team always sees fresh science.
+ * (Re-run `npm run snapshot` after science changes, before deploying.)
+ */
+const SNAPSHOT_FIRST = !import.meta.env.DEV && import.meta.env.VITE_LIVE_FIRST !== "true";
+
 async function withFallback<T>(
   live: (timeoutMs: number) => Promise<T>,
   snapshotPath: string | null,
   demo: () => T,
 ): Promise<Result<T>> {
+  if (SNAPSHOT_FIRST && snapshotPath) {
+    void backendReady(); // wake the server for requests that have no snapshot
+    try {
+      return { data: await getJSON<T>(snapshotPath, 8000), origin: "snapshot" };
+    } catch {
+      /* not precomputed: use the backend */
+    }
+  }
   const up = await backendReady();
   if (up) {
     try {

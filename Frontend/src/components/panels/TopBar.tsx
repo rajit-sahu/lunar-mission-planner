@@ -1,10 +1,10 @@
-import { useStore, type View } from "../../state/store";
+import { analysisKey, useStore, type View } from "../../state/store";
 import type { DataOrigin } from "../../api/types";
 import { CompareIcon, GlobeIcon, MountainIcon } from "../icons";
 
 const ORIGIN_LABEL: Record<DataOrigin, { text: string; title: string; cls: string }> = {
   live: { text: "Live · SPICE + LOLA", title: "Computed now by the FastAPI science backend", cls: "ok" },
-  snapshot: { text: "Saved results · SPICE + LOLA", title: "Precomputed backend output bundled with the app", cls: "ok" },
+  snapshot: { text: "Precomputed · SPICE + LOLA", title: "Backend output precomputed for these dates; other dates are calculated live", cls: "ok" },
   demo: { text: "Demo data (approximate)", title: "Backend unreachable: showing an approximate analytic model, not mission-grade results", cls: "warn" },
 };
 
@@ -18,9 +18,12 @@ export function TopBar() {
   const mode = useStore((s) => s.mode);
   const view = useStore((s) => s.view);
   const selected = useStore((s) => s.selectedSiteId);
+  // Demo data anywhere → warn; otherwise say "live" if the current date was computed live.
   const origin = useStore((s) => {
-    const a = Object.values(s.analyses).find((x) => x.origin);
-    return a?.origin ?? s.sitesOrigin;
+    const all = Object.values(s.analyses);
+    if (all.some((x) => x.origin === "demo")) return "demo" as const;
+    const current = s.sites.map((site) => s.analyses[analysisKey(site.id, s.missionStart)]?.origin).find(Boolean);
+    return current ?? s.sitesOrigin;
   });
   const { setMode, setView, selectSite, sites } = useStore.getState();
   const o = origin ? ORIGIN_LABEL[origin] : null;

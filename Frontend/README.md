@@ -42,6 +42,26 @@ npm run snapshot                       # default landing date + 3/7/14/30-day de
 npm run snapshot -- 2028-11-20 2029-01-15
 ```
 
+## Deployment
+
+| Part | Where | How it updates |
+|---|---|---|
+| Frontend | Vercel project `lunar-mission-planner` → https://lunar-mission-planner-alpha.vercel.app | Manual: `npx vercel deploy --prod` from `Frontend/` |
+| Backend | Render web service `lunar-mission-planner-api` → https://lunar-mission-planner-api.onrender.com (from `render.yaml`) | Auto-deploys from `AryemanGuptaMathur/lunar-mission-planner` (a private fork, because Render can't read the team repo yet). After merging backend changes into the team repo, run `gh repo sync AryemanGuptaMathur/lunar-mission-planner` |
+
+The Vercel build sets `VITE_API_URL` to the Render URL. Deployed builds use
+the precomputed results in `public/fixtures/` first, because the free Render
+CPU takes about 4 s per 30-day analysis. Dates that aren't precomputed are
+calculated live. Local `npm run dev` is always live-first. Set
+`VITE_LIVE_FIRST=true` to make a deployed build behave the same way.
+
+**After any science or terrain change:** run the backend locally, then
+`npm run snapshot`, commit the new fixtures, and redeploy. Otherwise the
+site keeps serving the old precomputed numbers.
+
+The free Render service sleeps after 15 minutes idle and takes 30–60 s to
+wake. The app pings `/health` on load to start waking it.
+
 ## Map imagery
 
 `public/textures/` holds JPGs stitched from NASA Moon Trek WMTS tiles

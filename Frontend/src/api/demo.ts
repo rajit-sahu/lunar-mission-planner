@@ -42,7 +42,7 @@ export const DEMO_SITES: Site[] = [
   },
   {
     id: "site_malapert",
-    name: "Malapert Massif / MMA_K2023",
+    name: "Mons Malapert / MMA_K2023",
     latitude_deg: -85.992,
     longitude_deg: 2.056,
     elevation_m: null,

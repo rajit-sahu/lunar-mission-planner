@@ -32,12 +32,12 @@
   },
   {
     "id": "site_malapert",
-    "name": "Malapert Massif / MMA_K2023",
+    "name": "Mons Malapert / MMA_K2023",
     "latitude_deg": -85.992,
     "longitude_deg": 2.056,
     "source": "Wueller et al., Journal of Geophysical Research: Planets (2026), Table A1",
     "high_resolution_site_id": "Site23",
     "note": "Representative research site, not an approved landing zone",
-    "context": "Malapert Massif is on NASA's Artemis III candidate-region lists in both 2022 and 2024."
+    "context": "On NASA's Artemis III candidate-region lists in 2022 and 2024 as Malapert Massif; the region is now called Mons Malapert (Wueller et al. 2026)."
   }
 ]

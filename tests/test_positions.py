@@ -7,7 +7,7 @@ from Science.ephemeris.sun_earth_positions import local_enu_basis, sun_earth_pos
 
 # Reference values from the JPL Horizons API (2026-11-15): observer CENTER='coord@301',
 # COORD_TYPE='GEODETIC', QUANTITIES='4' (apparent azimuth/elevation), APPARENT='AIRLESS'.
-# Sites: Malapert Massif (5.171 km + 2 m) and Site 001 (1.955 km + 2 m) above the 1737.4 km sphere.
+# Sites: Mons Malapert (5.171 km + 2 m) and Site 001 (1.955 km + 2 m) above the 1737.4 km sphere.
 MALAPERT = (-85.992, 2.056, 5.173403)
 SITE_001 = (-89.45, 222.69, 1.956847)
 HORIZONS = [

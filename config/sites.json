@@ -6,16 +6,21 @@
     "longitude_deg": 222.69,
     "source": "Kumari et al., Planetary Science Journal (2022); Site 001 89.45 S, 137.31 W",
     "high_resolution_site_id": "Site01",
-    "note": "Representative published point, not an approved landing zone"
+    "note": "Representative published point, not an approved landing zone",
+    "context": "One of NASA's 13 Artemis III candidate regions in 2022 (Connecting Ridge); not on the 2024 shortlist of nine."
   },
   {
     "id": "site_004",
     "name": "Shackleton Rim / Site 004",
-    "latitude_deg": -89.78,
-    "longitude_deg": 204.27,
+    "latitude_deg": -89.78033,
+    "longitude_deg": 203.81414,
     "source": "Kumari et al., Planetary Science Journal (2022); Site 004 89.78 S, 155.73 W",
     "high_resolution_site_id": "Site04",
-    "note": "Representative published point, not an approved landing zone"
+    "note": "Representative published point, not an approved landing zone",
+    "published_latitude_deg": -89.78,
+    "published_longitude_deg": 204.27,
+    "representative_point_note": "Moved 54 m from the published point (89.78 S, 155.73 W) to the highest 5 m LOLA cell within 100 m (NASA's landing-site radius). The published point sits in a hollow 10.5 m below this crest, where nearby ground blocks the Sun and Earth in every direction.",
+    "context": "Study site on the rim of Shackleton crater, from Kumari et al. (2022)."
   },
   {
     "id": "site_malapert",
@@ -24,6 +29,7 @@
     "longitude_deg": 2.056,
     "source": "Wueller et al., Journal of Geophysical Research: Planets (2026), Table A1",
     "high_resolution_site_id": "Site23",
-    "note": "Representative research site, not an approved landing zone"
+    "note": "Representative research site, not an approved landing zone",
+    "context": "Malapert Massif is on NASA's Artemis III candidate-region lists in both 2022 and 2024."
   }
 ]

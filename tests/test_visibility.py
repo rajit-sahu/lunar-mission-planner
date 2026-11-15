@@ -1,77 +1,56 @@
-import numpy as np
+"""Terrain comparison, thresholds and disc fractions."""
+
+import math
+
+import pytest
 
 from Science.visibility.terrain_visibility import (
-    interpolate_horizon,
+    SUN_ANGULAR_RADIUS_DEG,
+    angular_radius_deg,
     check_visibility,
-    compare_sun_earth
+    disc_fraction,
+    interpolate_horizon,
+    visibility_thresholds,
 )
 
-
-# Temporary synthetic horizon profile
-# Replace with Arnav's actual horizon data later.
-
-horizon_azimuths = np.arange(0, 360, 10)
-
-horizon_elevations = np.full(
-    len(horizon_azimuths),
-    2.0
-)
-
-# Introduce an artificial ridge between 90° and 120°
-horizon_elevations[
-    (horizon_azimuths >= 90) &
-    (horizon_azimuths <= 120)
-] = 5.0
+AZ = list(range(360))
 
 
-# Test 1: Interpolation
-print("===== INTERPOLATION TEST =====")
-
-print(
-    interpolate_horizon(
-        105,
-        horizon_azimuths,
-        horizon_elevations
-    )
-)
+def test_interpolation_wraps_at_north():
+    elev = [0.0] * 360
+    elev[359], elev[0] = 2.0, 4.0
+    assert interpolate_horizon(359.5, AZ, elev) == pytest.approx(3.0)
+    assert interpolate_horizon(-0.5, AZ, elev) == pytest.approx(3.0)
+    assert interpolate_horizon(720.0, AZ, elev) == pytest.approx(4.0)
 
 
-# Test 2: Visibility
-print("\n===== VISIBILITY TEST =====")
-
-print(
-    check_visibility(
-        body_azimuth=105,
-        body_elevation=4,
-        horizon_azimuths=horizon_azimuths,
-        horizon_elevations=horizon_elevations
-    )
-)
+def test_visible_means_clearance_above_threshold():
+    flat = [1.0] * 360
+    v = check_visibility(10.0, 1.2, AZ, flat)
+    assert v["visible"] and v["clearance_deg"] == pytest.approx(0.2)
+    assert not check_visibility(10.0, 1.2, AZ, flat, threshold_deg=0.3)["visible"]
+    assert not check_visibility(10.0, 1.0, AZ, flat)["visible"]  # exactly on the horizon is not visible
 
 
-# Test 3: Sun/Earth comparison
-print("\n===== SUN/EARTH TEST =====")
+def test_disc_fraction():
+    r = SUN_ANGULAR_RADIUS_DEG
+    assert disc_fraction(0.0, r) == pytest.approx(0.5)
+    assert disc_fraction(r, r) == 1.0 and disc_fraction(-r, r) == 0.0
+    assert disc_fraction(r / 2, r) + disc_fraction(-r / 2, r) == pytest.approx(1.0)
+    assert disc_fraction(0.1, r) > disc_fraction(0.05, r) > 0.5
 
-positions = {
-    "site_id": "test_site",
-    "time": "2028-11-20T12:00:00Z",
 
-    "sun": {
-        "azimuth_deg": 106.169407,
-        "elevation_deg": -0.269693
-    },
+def test_angular_radii():
+    assert angular_radius_deg("sun", 1.496e8) == pytest.approx(0.2665, abs=0.001)
+    assert angular_radius_deg("earth", 384_400) == pytest.approx(math.degrees(math.asin(6371 / 384_400)))
 
-    "earth": {
-        "azimuth_deg": 336.301429,
-        "elevation_deg": 4.785296
-    }
-}
 
-result = compare_sun_earth(
-    positions,
-    horizon_azimuths,
-    horizon_elevations
-)
-
-print("Sun:", result["sun"])
-print("Earth:", result["earth"])
+def test_thresholds():
+    assert visibility_thresholds() == {"sun": 0.0, "earth": 0.0}
+    t = visibility_thresholds("full", 2.0)
+    assert t["sun"] == pytest.approx(SUN_ANGULAR_RADIUS_DEG) and t["earth"] == 2.0
+    assert visibility_thresholds("limb")["sun"] == pytest.approx(-SUN_ANGULAR_RADIUS_DEG)
+    with pytest.raises(ValueError):
+        visibility_thresholds("edge")
+    with pytest.raises(ValueError):
+        visibility_thresholds("centre", -1)

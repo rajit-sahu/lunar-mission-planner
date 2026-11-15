@@ -15,7 +15,8 @@ def _number(x, decimals=5):
 
 def process_site(site, elevation_stack, slope_map=None, observer_height_m=2,
                  slope_baseline_m=50, max_distance_m=120_000,
-                 near_step_m=10, mid_step_m=50, far_step_m=250, outer_step_m=500):
+                 near_step_m=10, mid_step_m=50, far_step_m=250, outer_step_m=500,
+                 subrays_per_bin=1):
     lat, lon = float(site['latitude_deg']), float(site['longitude_deg']) % 360
     if not (-90 <= lat <= -80):
         raise ValueError(f"{site['id']}: latitude must be in 80-90 S for this project")
@@ -35,7 +36,7 @@ def process_site(site, elevation_stack, slope_map=None, observer_height_m=2,
     horizon = calculate_horizon(elevation_stack, lat, lon, z,
         observer_height_m=observer_height_m, max_distance_m=max_distance_m,
         near_step_m=near_step_m, mid_step_m=mid_step_m,
-        far_step_m=far_step_m, outer_step_m=outer_step_m)
+        far_step_m=far_step_m, outer_step_m=outer_step_m, subrays_per_bin=subrays_per_bin)
     coverage = horizon['sample_coverage']
     first_valid = horizon['first_valid_distance_m']
     profiles = []
@@ -59,6 +60,7 @@ def process_site(site, elevation_stack, slope_map=None, observer_height_m=2,
         'longitude_deg': lon,
         'site_coordinate_source': site.get('source'),
         'site_note': site.get('note'),
+        'representative_point_note': site.get('representative_point_note'),
         'elevation_m': _number(z, 3),
         'elevation_source_path': elevation_stack.layers[source_index][0],
         'elevation_source_raster_pixel_size_m': [abs(float(x)) for x in elevation_stack.layers[source_index][1].res],
@@ -87,6 +89,7 @@ def process_site(site, elevation_stack, slope_map=None, observer_height_m=2,
             'lunar_reference_radius_m': MOON_RADIUS_M,
             'observer_elevation_reference': 'height above 1737400 m lunar reference sphere',
             'max_horizon_distance_m': max_distance_m,
+            'subrays_per_azimuth_bin': subrays_per_bin,
             'sampling_spacing_m': {'near_0_500m': near_step_m,
               'mid_500_5000m': mid_step_m, 'far_5_40km': far_step_m,
               'outer_40km_plus': outer_step_m},

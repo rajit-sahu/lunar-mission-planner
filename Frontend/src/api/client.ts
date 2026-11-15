@@ -1,4 +1,4 @@
-import type { Analysis, DataOrigin, Horizon, Site } from "./types";
+import { DEFAULT_SETTINGS, type Analysis, type DataOrigin, type Horizon, type Site, type VisSettings } from "./types";
 import { demoAnalysis, demoHorizon, DEMO_SITES } from "./demo";
 
 /**
@@ -133,24 +133,41 @@ export function fetchSites(): Promise<Result<Site[]>> {
   );
 }
 
-export function fetchHorizon(siteId: string): Promise<Result<Horizon>> {
+export const isDefaultSettings = (v: VisSettings) =>
+  v.sunCriterion === DEFAULT_SETTINGS.sunCriterion &&
+  v.earthMarginDeg === DEFAULT_SETTINGS.earthMarginDeg &&
+  v.observerHeightM === DEFAULT_SETTINGS.observerHeightM;
+
+export function fetchHorizon(siteId: string, heightM = DEFAULT_SETTINGS.observerHeightM): Promise<Result<Horizon>> {
+  const isDefault = heightM === DEFAULT_SETTINGS.observerHeightM;
   return withFallback(
-    (t) => getJSON<Horizon>(`${API}/sites/${siteId}/horizon`, t),
-    `/fixtures/${siteId}_horizon.json`,
+    (t) => getJSON<Horizon>(`${API}/sites/${siteId}/horizon?observer_height_m=${heightM}`, t),
+    isDefault ? `/fixtures/${siteId}_horizon.json` : null,
     () => demoHorizon(siteId),
   );
 }
 
-/** start/end as ISO strings. Snapshots are keyed by start date + days. */
+/**
+ * start/end as ISO strings. Snapshots exist only for the default visibility
+ * settings, keyed by start date + days; other settings always come from the backend.
+ */
 export function fetchAnalysis(
   siteId: string,
   start: string,
   end: string,
   stepMinutes: number,
+  settings: VisSettings = DEFAULT_SETTINGS,
 ): Promise<Result<Analysis>> {
-  const q = new URLSearchParams({ start, end, step_minutes: String(stepMinutes) });
+  const q = new URLSearchParams({
+    start,
+    end,
+    step_minutes: String(stepMinutes),
+    sun_criterion: settings.sunCriterion,
+    earth_margin_deg: String(settings.earthMarginDeg),
+    observer_height_m: String(settings.observerHeightM),
+  });
   const days = Math.round((Date.parse(end) - Date.parse(start)) / 86_400_000);
-  const snap = `/fixtures/${siteId}_${start.slice(0, 10)}_${days}d.json`;
+  const snap = isDefaultSettings(settings) ? `/fixtures/${siteId}_${start.slice(0, 10)}_${days}d.json` : null;
   return withFallback(
     (t) => getJSON<Analysis>(`${API}/sites/${siteId}/analysis?${q}`, t),
     snap,

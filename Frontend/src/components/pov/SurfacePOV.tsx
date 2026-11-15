@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useStore } from "../../state/store";
+import { useHorizon, useStore } from "../../state/store";
 import { useSiteSky } from "../../state/hooks";
 import { angDiff, cardinal, DEG, norm360 } from "../../lib/geo";
 import { horizonAt, type SkyState } from "../../lib/timeline";
 import type { Horizon } from "../../api/types";
 import { EarthIcon, SunIcon } from "../icons";
+import { shortName } from "../globe/GlobeOverlay";
 
 /**
  * "Stand on the Moon": stylized 2.5D horizon view.
@@ -243,8 +244,9 @@ function draw(
 export function SurfacePOV() {
   const siteId = useStore((s) => s.selectedSiteId);
   const site = useStore((s) => s.sites.find((x) => x.id === siteId));
-  const horizon = useStore((s) => (siteId ? s.horizons[siteId] : undefined));
+  const horizon = useHorizon(siteId);
   const { sky, status } = useSiteSky(siteId);
+  const planner = useStore((s) => s.mode === "planner");
   const [heading, setHeading] = useState<number | null>(null);
   const [fov, setFov] = useState(70);
   const [exag, setExag] = useState(1);
@@ -274,12 +276,13 @@ export function SurfacePOV() {
     c.height = size.h * dpr;
     const ctx = c.getContext("2d")!;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw(ctx, size.w, size.h, horizon, sky, h, fov, exag, stars);
-  }, [size, horizon, sky, h, fov, exag, stars]);
+    draw(ctx, size.w, size.h, horizon, sky, h, fov, planner ? exag : 1, stars);
+  }, [size, horizon, sky, h, fov, exag, stars, planner]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement)?.tagName === "INPUT") return;
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "SELECT" || (e.target as HTMLElement)?.getAttribute("role") === "slider") return;
       if (e.key === "ArrowLeft") setHeading(norm360(h - 5));
       if (e.key === "ArrowRight") setHeading(norm360(h + 5));
     };
@@ -309,27 +312,46 @@ export function SurfacePOV() {
 
       <div className="pov__hud glass">
         <div className="eyebrow">Standing at</div>
-        <div className="pov__site">{site?.name ?? "—"}</div>
+        <div className="pov__site">{site ? (planner ? site.name : shortName(site)) : "—"}</div>
         <div className="small muted">
-          Looking {cardinal(h)} ({h.toFixed(0)}°) · field of view {fov.toFixed(0)}°
+          Looking {cardinal(h)}
+          {planner ? ` (${h.toFixed(0)}°) · field of view ${fov.toFixed(0)}°` : ""}
         </div>
         {status === "loading" && <div className="small muted">Loading…</div>}
-        {sky && (
+        {sky && planner && (
           <div className="pov__read">
             <div className={`pov__body ${sky.sun.visible ? "on-sun" : "off"}`}>
               <SunIcon size={16} />
               <span>Sun</span>
               <span className="mono">el {sky.sun.el.toFixed(2)}°</span>
-              <span className="mono">{sky.sun.clearance >= 0 ? "+" : ""}{sky.sun.clearance.toFixed(2)}° vs terrain</span>
+              <span className="mono">{sky.sun.clearance >= 0 ? "▲ +" : "▼ "}{sky.sun.clearance.toFixed(2)}° vs terrain</span>
             </div>
             <div className={`pov__body ${sky.earth.visible ? "on-earth" : "off"}`}>
               <EarthIcon size={16} />
               <span>Earth</span>
               <span className="mono">el {sky.earth.el.toFixed(2)}°</span>
-              <span className="mono">{sky.earth.clearance >= 0 ? "+" : ""}{sky.earth.clearance.toFixed(2)}° vs terrain</span>
+              <span className="mono">{sky.earth.clearance >= 0 ? "▲ +" : "▼ "}{sky.earth.clearance.toFixed(2)}° vs terrain</span>
             </div>
           </div>
         )}
+        {sky && !planner && (
+          <div className="pov__read">
+            <div className={`pov__body pov__body--plain ${sky.sun.visible ? "on-sun" : "off"}`}>
+              <SunIcon size={16} />
+              <span>{sky.sun.visible ? "The Sun is just above the hills" : "The Sun is behind the hills"}</span>
+            </div>
+            <div className={`pov__body pov__body--plain ${sky.earth.visible ? "on-earth" : "off"}`}>
+              <EarthIcon size={16} />
+              <span>{sky.earth.visible ? "Earth is in view" : "Earth is hidden"}</span>
+            </div>
+            <p className="small muted">At the pole the Sun never climbs high: it circles the horizon once a month.</p>
+          </div>
+        )}
+        <p className="sr-only" aria-live="polite">
+          {sky
+            ? `Facing ${cardinal(h)}. Sun ${sky.sun.visible ? `${sky.sun.clearance.toFixed(1)} degrees above the terrain` : "hidden behind terrain"}, Earth ${sky.earth.visible ? "in view" : "hidden"}.`
+            : ""}
+        </p>
         <div className="pov__btns">
           <button className="btn btn--small" onClick={() => sky && setHeading(sky.sun.az)}>
             <SunIcon size={14} /> Face Sun
@@ -338,17 +360,19 @@ export function SurfacePOV() {
             <EarthIcon size={14} /> Face Earth
           </button>
         </div>
-        <label className="pov__exag small">
-          Vertical exaggeration
-          <select value={exag} onChange={(e) => setExag(Number(e.target.value))}>
-            <option value={1}>None (true angles)</option>
-            <option value={3}>3×</option>
-            <option value={6}>6×</option>
-          </select>
-        </label>
+        {planner && (
+          <label className="pov__exag small">
+            Vertical exaggeration
+            <select value={exag} onChange={(e) => setExag(Number(e.target.value))}>
+              <option value={1}>None (true angles)</option>
+              <option value={3}>3×</option>
+              <option value={6}>6×</option>
+            </select>
+          </label>
+        )}
         <div className="small muted">Drag to look around · scroll to zoom · ← → keys</div>
       </div>
-      {exag !== 1 && <div className="pov__exag-badge">Vertical ×{exag}: angles above the horizon are stretched</div>}
+      {planner && exag !== 1 && <div className="pov__exag-badge">Vertical ×{exag}: angles above the horizon are stretched</div>}
     </div>
   );
 }

@@ -4,8 +4,10 @@ Suggested repository location: science/ephemeris/sun_earth_positions.py
 
 Dependencies: numpy, spiceypy
 
-This module calculates *geometric* (uncorrected for light-time/aberration)
-Sun/Earth azimuth and elevation from a specified lunar surface site.
+This module calculates *apparent* Sun/Earth azimuth and elevation from a
+specified lunar surface site: corrected for light time and stellar
+aberration (SPICE "LT+S"), which is what an observer on the Moon sees and
+what JPL Horizons reports. Pass correction="NONE" for geometric directions.
 It does not load SPICE kernels automatically: call load_kernels() with a
 compatible planetary SPK, lunar orientation PCK/FK and leap-seconds LSK.
 
@@ -32,6 +34,7 @@ import spiceypy as spice
 
 MOON_RADIUS_KM = 1737.4  # Mean reference radius; confirm DEM vertical datum.
 MOON_FRAME = "MOON_ME"
+DEFAULT_CORRECTION = "LT+S"  # light time + stellar aberration (apparent direction)
 
 
 def load_kernels(paths: Iterable[str | Path]) -> None:
@@ -119,20 +122,27 @@ def body_angles(
     elevation_km: float = 0.0,
     radius_km: float = MOON_RADIUS_KM,
     frame: str = MOON_FRAME,
+    correction: str = DEFAULT_CORRECTION,
 ) -> dict:
-    """Return geometric Sun/Earth direction from a lunar surface location.
+    """Return the Sun/Earth direction from a lunar surface location.
 
-    Requires loaded SPICE kernels. 'NONE' keeps the body and site positions
-    at the same ephemeris time; do not interpret as apparent observed angles.
+    Requires loaded SPICE kernels. With the default "LT+S" the site is treated
+    as a fixed point on the Moon (spkcpo) and the result is the apparent
+    direction; validated against JPL Horizons to <0.001 deg. "NONE" gives
+    the geometric direction (about 0.006 deg different for the Sun).
     """
     body = body.upper()
     if body not in {"SUN", "EARTH"}:
         raise ValueError("body must be 'SUN' or 'EARTH'.")
     utc = _utc_iso(timestamp)
     et = spice.str2et(utc)
-    body_from_moon, _ = spice.spkpos(body, et, frame, "NONE", "MOON")
     site_from_moon = site_position_km(latitude_deg, longitude_deg, elevation_km, radius_km)
-    site_to_body = np.asarray(body_from_moon, dtype=float) - site_from_moon
+    if correction.upper() == "NONE":
+        body_from_moon, _ = spice.spkpos(body, et, frame, "NONE", "MOON")
+        site_to_body = np.asarray(body_from_moon, dtype=float) - site_from_moon
+    else:
+        state, _ = spice.spkcpo(body, et, frame, "OBSERVER", correction, site_from_moon, "MOON", frame)
+        site_to_body = np.asarray(state[:3], dtype=float)
     azimuth, elevation = azimuth_elevation_deg(site_to_body, latitude_deg, longitude_deg)
     return {
         "azimuth_deg": azimuth,
@@ -158,7 +168,7 @@ def sun_earth_positions(
         "longitude_deg": longitude_deg,
         "site_elevation_km": elevation_km,
         "frame": MOON_FRAME,
-        "geometry": "geometric",
+        "geometry": "apparent (LT+S)",
         "sun": body_angles("SUN", utc, latitude_deg, longitude_deg, elevation_km, radius_km),
         "earth": body_angles("EARTH", utc, latitude_deg, longitude_deg, elevation_km, radius_km),
     }

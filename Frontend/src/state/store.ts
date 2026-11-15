@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { fetchAnalysis, fetchHorizon, fetchSites } from "../api/client";
-import type { Analysis, DataOrigin, Horizon, Site } from "../api/types";
+import { fetchAnalysis, fetchHorizon, fetchSites, isDefaultSettings } from "../api/client";
+import { DEFAULT_SETTINGS, type Analysis, type DataOrigin, type Horizon, type Site, type VisSettings } from "../api/types";
 
 /**
  * Shared application state. Every view (globe, dashboard, timeline, POV,
@@ -8,7 +8,8 @@ import type { Analysis, DataOrigin, Horizon, Site } from "../api/types";
  * disagree about what moment or place is shown.
  */
 
-export type Mode = "explore" | "analyse";
+/** Two layers: a simple default for everyone, and a mission-planning layer with full detail. */
+export type Mode = "discover" | "planner";
 export type View = "globe" | "surface" | "compare";
 export type MapLayer = "shade" | "wac" | "illum" | "earthvis";
 
@@ -33,11 +34,29 @@ export interface AnalysisEntry {
   error?: string;
 }
 
-export const analysisKey = (siteId: string, start: string) => `${siteId}|${start}`;
+const settingsKey = (v: VisSettings) => (isDefaultSettings(v) ? "" : `|${v.sunCriterion}|${v.earthMarginDeg}|${v.observerHeightM}`);
+export const analysisKey = (siteId: string, start: string, settings: VisSettings = DEFAULT_SETTINGS) =>
+  `${siteId}|${start}${settingsKey(settings)}`;
+export const horizonKey = (siteId: string, heightM: number) => `${siteId}|${heightM}`;
 export const isoAddDays = (iso: string, days: number) =>
   new Date(Date.parse(iso) + days * DAY).toISOString().replace(".000Z", "Z");
 
 const SCENARIO_COLORS = ["#7cc4ff", "#ffb547", "#c792ff"];
+
+function initialMode(): Mode {
+  try {
+    const q = new URLSearchParams(window.location.search).get("layer");
+    if (q === "planner" || q === "discover") return q;
+    const saved = localStorage.getItem("lmp-layer");
+    if (saved === "planner" || saved === "discover") return saved;
+  } catch {
+    /* storage unavailable */
+  }
+  return "discover";
+}
+
+export const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
 interface State {
   sites: Site[];
@@ -48,8 +67,13 @@ interface State {
   mode: Mode;
   view: View;
   layer: MapLayer;
+  settings: VisSettings;
 
-  /** Landing date: start of the analysed range. */
+  /** Original landing date chosen by the user. */
+  baseStart: string;
+  /** Delay applied to the original date (days). */
+  delayDays: number;
+  /** Effective landing date = baseStart + delayDays: start of the analysed range. */
   missionStart: string;
   /** Global clock (ms since epoch, UTC). */
   time: number;
@@ -61,6 +85,9 @@ interface State {
   horizons: Record<string, Horizon>;
   scenarios: Scenario[];
   flyToToken: number;
+  /** Index of the guided-story step on screen, or null. */
+  storyStep: number | null;
+  aboutOpen: boolean;
 
   init: () => Promise<void>;
   selectSite: (id: string | null, fly?: boolean) => void;
@@ -68,7 +95,9 @@ interface State {
   setMode: (m: Mode) => void;
   setView: (v: View) => void;
   setLayer: (l: MapLayer) => void;
-  setMissionStart: (iso: string, keepOffset?: boolean) => void;
+  setSettings: (patch: Partial<VisSettings>) => void;
+  setBaseStart: (iso: string) => void;
+  setDelay: (days: number) => void;
   setTime: (t: number) => void;
   setPlaying: (p: boolean) => void;
   setSpeed: (s: number) => void;
@@ -77,6 +106,8 @@ interface State {
   addScenario: (s?: Partial<Scenario>) => void;
   updateScenario: (id: string, patch: Partial<Scenario>) => void;
   removeScenario: (id: string) => void;
+  setStoryStep: (n: number | null) => void;
+  setAboutOpen: (o: boolean) => void;
 }
 
 let scenarioSeq = 0;
@@ -86,9 +117,12 @@ export const useStore = create<State>((set, get) => ({
   sitesOrigin: null,
   selectedSiteId: null,
   hoveredSiteId: null,
-  mode: "explore",
+  mode: initialMode(),
   view: "globe",
   layer: "shade",
+  settings: DEFAULT_SETTINGS,
+  baseStart: DEFAULT_START,
+  delayDays: 0,
   missionStart: DEFAULT_START,
   time: Date.parse(DEFAULT_START) + 2 * DAY,
   playing: false,
@@ -97,6 +131,8 @@ export const useStore = create<State>((set, get) => ({
   horizons: {},
   scenarios: [],
   flyToToken: 0,
+  storyStep: null,
+  aboutOpen: false,
 
   async init() {
     const { data, origin } = await fetchSites();
@@ -107,10 +143,12 @@ export const useStore = create<State>((set, get) => ({
       get().ensureAnalysis(s.id, missionStart);
     }
     if (get().scenarios.length === 0 && data.length) {
-      // A ready-made "7-day delay" comparison for the demo story.
+      // The demo story: a landing slips a week. Same site on time vs late, and an alternative site.
+      const late = isoAddDays(missionStart, 7);
       get().addScenario({ siteId: data[0].id, start: missionStart });
-      get().addScenario({ siteId: data[0].id, start: isoAddDays(missionStart, 7) });
-      if (data[2]) get().addScenario({ siteId: data[2].id, start: missionStart });
+      get().addScenario({ siteId: data[0].id, start: late });
+      const alt = data.find((s) => s.id === "site_malapert") ?? data[2];
+      if (alt) get().addScenario({ siteId: alt.id, start: late });
     }
   },
 
@@ -122,16 +160,45 @@ export const useStore = create<State>((set, get) => ({
     }
   },
   hoverSite: (id) => set({ hoveredSiteId: id }),
-  setMode: (mode) => set({ mode }),
+  setMode(mode) {
+    set({ mode });
+    try {
+      localStorage.setItem("lmp-layer", mode);
+      const url = new URL(window.location.href);
+      if (mode === "planner") url.searchParams.set("layer", "planner");
+      else url.searchParams.delete("layer");
+      window.history.replaceState(null, "", url);
+    } catch {
+      /* storage or history unavailable */
+    }
+  },
   setView: (view) => set({ view, playing: view === "compare" ? false : get().playing }),
   setLayer: (layer) => set({ layer }),
 
-  setMissionStart(iso, keepOffset = true) {
+  setSettings(patch) {
+    set((s) => ({ settings: { ...s.settings, ...patch } }));
+    const { sites, missionStart, scenarios } = get();
+    for (const s of sites) {
+      get().ensureHorizon(s.id);
+      get().ensureAnalysis(s.id, missionStart);
+    }
+    for (const sc of scenarios) get().ensureAnalysis(sc.siteId, sc.start);
+  },
+
+  setBaseStart(iso) {
     const { missionStart, time } = get();
-    const offset = keepOffset ? time - Date.parse(missionStart) : 0;
-    const clamped = Math.min(Math.max(offset, 0), WINDOW_DAYS * DAY);
-    set({ missionStart: iso, time: Date.parse(iso) + clamped });
+    const offset = Math.min(Math.max(time - Date.parse(missionStart), 0), WINDOW_DAYS * DAY);
+    set({ baseStart: iso, delayDays: 0, missionStart: iso, time: Date.parse(iso) + offset });
     for (const s of get().sites) get().ensureAnalysis(s.id, iso);
+  },
+
+  /** Delays are always measured from the original landing date, never stacked. */
+  setDelay(days) {
+    const { baseStart, missionStart, time } = get();
+    const offset = Math.min(Math.max(time - Date.parse(missionStart), 0), WINDOW_DAYS * DAY);
+    const start = isoAddDays(baseStart, days);
+    set({ delayDays: days, missionStart: start, time: Date.parse(start) + offset });
+    for (const s of get().sites) get().ensureAnalysis(s.id, start);
   },
 
   setTime(t) {
@@ -142,10 +209,11 @@ export const useStore = create<State>((set, get) => ({
   setSpeed: (speed) => set({ speed }),
 
   ensureAnalysis(siteId, start) {
-    const key = analysisKey(siteId, start);
+    const settings = get().settings;
+    const key = analysisKey(siteId, start, settings);
     if (get().analyses[key]) return;
     set((s) => ({ analyses: { ...s.analyses, [key]: { status: "loading" } } }));
-    fetchAnalysis(siteId, start, isoAddDays(start, WINDOW_DAYS), STEP_MINUTES)
+    fetchAnalysis(siteId, start, isoAddDays(start, WINDOW_DAYS), STEP_MINUTES, settings)
       .then(({ data, origin }) =>
         set((s) => ({ analyses: { ...s.analyses, [key]: { status: "ready", data, origin } } })),
       )
@@ -155,8 +223,12 @@ export const useStore = create<State>((set, get) => ({
   },
 
   ensureHorizon(siteId) {
-    if (get().horizons[siteId]) return;
-    fetchHorizon(siteId).then(({ data }) => set((s) => ({ horizons: { ...s.horizons, [siteId]: data } })));
+    const h = get().settings.observerHeightM;
+    const key = horizonKey(siteId, h);
+    if (get().horizons[key]) return;
+    fetchHorizon(siteId, h)
+      .then(({ data }) => set((s) => ({ horizons: { ...s.horizons, [key]: data } })))
+      .catch((err) => console.warn("[horizon] unavailable:", err));
   },
 
   addScenario(partial) {
@@ -178,12 +250,16 @@ export const useStore = create<State>((set, get) => ({
     if (sc) get().ensureAnalysis(sc.siteId, sc.start);
   },
   removeScenario: (id) => set((s) => ({ scenarios: s.scenarios.filter((x) => x.id !== id) })),
+  setStoryStep: (storyStep) => set({ storyStep }),
+  setAboutOpen: (aboutOpen) => set({ aboutOpen }),
 }));
 
-/** Selected site's analysis for the current mission start, if loaded. */
-export function useCurrentAnalysis(siteId?: string | null): AnalysisEntry | undefined {
-  return useStore((s) => {
-    const id = siteId ?? s.selectedSiteId;
-    return id ? s.analyses[analysisKey(id, s.missionStart)] : undefined;
-  });
+/** Analysis for a site at a landing date under the current visibility settings. */
+export function useAnalysisEntry(siteId: string | null | undefined, start?: string): AnalysisEntry | undefined {
+  return useStore((s) => (siteId ? s.analyses[analysisKey(siteId, start ?? s.missionStart, s.settings)] : undefined));
+}
+
+/** Horizon for a site at the current observer height. */
+export function useHorizon(siteId: string | null | undefined): Horizon | undefined {
+  return useStore((s) => (siteId ? s.horizons[horizonKey(siteId, s.settings.observerHeightM)] : undefined));
 }

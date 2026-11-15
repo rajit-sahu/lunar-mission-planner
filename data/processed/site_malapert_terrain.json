@@ -8,8 +8,9 @@
   "longitude_deg": 2.056,
   "site_coordinate_source": "Wueller et al., Journal of Geophysical Research: Planets (2026), Table A1",
   "site_note": "Representative research site, not an approved landing zone",
+  "representative_point_note": null,
   "elevation_m": 5169.403,
-  "elevation_source_path": "data\\raw\\Site23_final_adj_5mpp_surf.tif",
+  "elevation_source_path": "data/raw/Site23_final_adj_5mpp_surf.tif",
   "elevation_source_raster_pixel_size_m": [
     5.0,
     5.0
@@ -17,7 +18,7 @@
   "slope_deg": 3.885,
   "slope_method": "NASA_LOLA_precomputed_slope_map",
   "computed_slope_deg": 1.314,
-  "observer_height_m": 2,
+  "observer_height_m": 2.0,
   "terrain_horizon": [
     {
       "azimuth_deg": 0,
@@ -42,8 +43,8 @@
     },
     {
       "azimuth_deg": 3,
-      "elevation_deg": 0.81306,
-      "obstruction_distance_km": 0.1,
+      "elevation_deg": 0.86841,
+      "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -63,8 +64,8 @@
     },
     {
       "azimuth_deg": 6,
-      "elevation_deg": 0.88527,
-      "obstruction_distance_km": 0.08,
+      "elevation_deg": 0.90653,
+      "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -112,7 +113,7 @@
     },
     {
       "azimuth_deg": 13,
-      "elevation_deg": 0.81853,
+      "elevation_deg": 0.82937,
       "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -175,15 +176,15 @@
     },
     {
       "azimuth_deg": 22,
-      "elevation_deg": 0.79568,
+      "elevation_deg": 0.81172,
       "obstruction_distance_km": 0.08,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 23,
-      "elevation_deg": 0.78351,
-      "obstruction_distance_km": 0.09,
+      "elevation_deg": 0.81172,
+      "obstruction_distance_km": 0.08,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -238,7 +239,7 @@
     },
     {
       "azimuth_deg": 31,
-      "elevation_deg": 0.89106,
+      "elevation_deg": 1.0449,
       "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -280,8 +281,8 @@
     },
     {
       "azimuth_deg": 37,
-      "elevation_deg": 1.05628,
-      "obstruction_distance_km": 0.07,
+      "elevation_deg": 1.18431,
+      "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -294,8 +295,8 @@
     },
     {
       "azimuth_deg": 39,
-      "elevation_deg": 1.18431,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": 1.24947,
+      "obstruction_distance_km": 0.07,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -441,15 +442,15 @@
     },
     {
       "azimuth_deg": 60,
-      "elevation_deg": 0.98773,
+      "elevation_deg": 1.36274,
       "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 61,
-      "elevation_deg": 0.67214,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": 0.68978,
+      "obstruction_distance_km": 0.05,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -483,7 +484,7 @@
     },
     {
       "azimuth_deg": 66,
-      "elevation_deg": 0.32954,
+      "elevation_deg": 0.67214,
       "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -518,8 +519,8 @@
     },
     {
       "azimuth_deg": 71,
-      "elevation_deg": 0.14389,
-      "obstruction_distance_km": 0.07,
+      "elevation_deg": 0.32954,
+      "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -546,15 +547,15 @@
     },
     {
       "azimuth_deg": 75,
-      "elevation_deg": 0.02086,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": 0.05517,
+      "obstruction_distance_km": 0.08,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 76,
-      "elevation_deg": -0.11233,
-      "obstruction_distance_km": 0.07,
+      "elevation_deg": 0.02086,
+      "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -609,64 +610,64 @@
     },
     {
       "azimuth_deg": 84,
-      "elevation_deg": -0.49423,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": -0.48718,
+      "obstruction_distance_km": 82.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 85,
-      "elevation_deg": -0.4617,
-      "obstruction_distance_km": 81.5,
+      "elevation_deg": -0.45128,
+      "obstruction_distance_km": 81.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 86,
-      "elevation_deg": -0.37289,
-      "obstruction_distance_km": 81.5,
+      "elevation_deg": -0.36085,
+      "obstruction_distance_km": 82.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 87,
-      "elevation_deg": -0.36283,
-      "obstruction_distance_km": 81.5,
-      "dem_sample_coverage_fraction": 1.0,
-      "nearest_valid_dem_sample_m": 10.0
-    },
-    {
-      "azimuth_deg": 88,
-      "elevation_deg": -0.26661,
+      "elevation_deg": -0.32788,
       "obstruction_distance_km": 71.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
+      "azimuth_deg": 88,
+      "elevation_deg": -0.24747,
+      "obstruction_distance_km": 65.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
       "azimuth_deg": 89,
-      "elevation_deg": -0.16801,
+      "elevation_deg": -0.15208,
       "obstruction_distance_km": 62.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 90,
-      "elevation_deg": -0.09337,
+      "elevation_deg": -0.07338,
       "obstruction_distance_km": 69.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 91,
-      "elevation_deg": -0.10665,
+      "elevation_deg": -0.08115,
       "obstruction_distance_km": 69.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 92,
-      "elevation_deg": -0.18072,
-      "obstruction_distance_km": 67.5,
+      "elevation_deg": -0.1443,
+      "obstruction_distance_km": 67.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -679,8 +680,8 @@
     },
     {
       "azimuth_deg": 94,
-      "elevation_deg": -0.37604,
-      "obstruction_distance_km": 81.0,
+      "elevation_deg": -0.28403,
+      "obstruction_distance_km": 81.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -700,36 +701,36 @@
     },
     {
       "azimuth_deg": 97,
-      "elevation_deg": -0.70161,
+      "elevation_deg": -0.68135,
       "obstruction_distance_km": 80.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 98,
-      "elevation_deg": -0.63656,
+      "elevation_deg": -0.63079,
       "obstruction_distance_km": 79.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 99,
-      "elevation_deg": -0.69714,
+      "elevation_deg": -0.6566,
       "obstruction_distance_km": 79.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 100,
-      "elevation_deg": -0.81335,
+      "elevation_deg": -0.76749,
       "obstruction_distance_km": 79.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 101,
-      "elevation_deg": -0.94563,
-      "obstruction_distance_km": 1.5,
+      "elevation_deg": -0.9048,
+      "obstruction_distance_km": 79.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -742,7 +743,7 @@
     },
     {
       "azimuth_deg": 103,
-      "elevation_deg": -0.98245,
+      "elevation_deg": -0.97972,
       "obstruction_distance_km": 1.55,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -756,189 +757,189 @@
     },
     {
       "azimuth_deg": 105,
-      "elevation_deg": -0.9501,
+      "elevation_deg": -0.93735,
       "obstruction_distance_km": 1.6,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 106,
-      "elevation_deg": -0.95849,
+      "elevation_deg": -0.92846,
       "obstruction_distance_km": 2.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 107,
-      "elevation_deg": -0.89476,
+      "elevation_deg": -0.87746,
       "obstruction_distance_km": 1.95,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 108,
-      "elevation_deg": -0.86075,
+      "elevation_deg": -0.85399,
       "obstruction_distance_km": 1.95,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 109,
-      "elevation_deg": -0.90075,
+      "elevation_deg": -0.87103,
       "obstruction_distance_km": 1.9,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 110,
-      "elevation_deg": -0.92665,
+      "elevation_deg": -0.90312,
       "obstruction_distance_km": 1.8,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 111,
-      "elevation_deg": -0.99866,
+      "elevation_deg": -0.96481,
       "obstruction_distance_km": 1.8,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 112,
-      "elevation_deg": -1.03717,
-      "obstruction_distance_km": 1.85,
+      "elevation_deg": -1.02373,
+      "obstruction_distance_km": 1.9,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 113,
-      "elevation_deg": -1.14857,
-      "obstruction_distance_km": 1.8,
+      "elevation_deg": -1.1306,
+      "obstruction_distance_km": 1.85,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 114,
-      "elevation_deg": -1.21806,
+      "elevation_deg": -1.186,
       "obstruction_distance_km": 1.8,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 115,
-      "elevation_deg": -1.32656,
-      "obstruction_distance_km": 2.0,
+      "elevation_deg": -1.29404,
+      "obstruction_distance_km": 1.8,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 116,
-      "elevation_deg": -1.38912,
+      "elevation_deg": -1.37079,
       "obstruction_distance_km": 2.0,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 117,
-      "elevation_deg": -1.52173,
-      "obstruction_distance_km": 1.9,
+      "elevation_deg": -1.46718,
+      "obstruction_distance_km": 2.05,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 118,
-      "elevation_deg": -1.62497,
+      "elevation_deg": -1.56378,
       "obstruction_distance_km": 1.8,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 119,
-      "elevation_deg": -1.7058,
-      "obstruction_distance_km": 2.55,
+      "elevation_deg": -1.70104,
+      "obstruction_distance_km": 1.8,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 120,
-      "elevation_deg": -1.73424,
+      "elevation_deg": -1.72648,
       "obstruction_distance_km": 2.55,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 121,
-      "elevation_deg": -1.74797,
+      "elevation_deg": -1.73994,
       "obstruction_distance_km": 2.55,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 122,
-      "elevation_deg": -1.82415,
+      "elevation_deg": -1.79214,
       "obstruction_distance_km": 2.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 123,
-      "elevation_deg": -1.88043,
-      "obstruction_distance_km": 2.6,
+      "elevation_deg": -1.86937,
+      "obstruction_distance_km": 2.7,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 124,
-      "elevation_deg": -1.95349,
+      "elevation_deg": -1.91855,
       "obstruction_distance_km": 2.6,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 125,
-      "elevation_deg": -2.08848,
+      "elevation_deg": -2.03095,
       "obstruction_distance_km": 2.65,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 126,
-      "elevation_deg": -2.18442,
+      "elevation_deg": -2.1558,
       "obstruction_distance_km": 2.6,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 127,
-      "elevation_deg": -2.30898,
+      "elevation_deg": -2.26403,
       "obstruction_distance_km": 2.6,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 128,
-      "elevation_deg": -2.38436,
+      "elevation_deg": -2.36006,
       "obstruction_distance_km": 2.6,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 129,
-      "elevation_deg": -2.45591,
-      "obstruction_distance_km": 2.6,
+      "elevation_deg": -2.42931,
+      "obstruction_distance_km": 2.55,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 130,
-      "elevation_deg": -2.38926,
-      "obstruction_distance_km": 0.5,
+      "elevation_deg": -2.36438,
+      "obstruction_distance_km": 0.49,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 131,
-      "elevation_deg": -2.30322,
+      "elevation_deg": -2.26701,
       "obstruction_distance_km": 0.5,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -952,28 +953,28 @@
     },
     {
       "azimuth_deg": 133,
-      "elevation_deg": -2.17091,
-      "obstruction_distance_km": 0.49,
+      "elevation_deg": -2.14891,
+      "obstruction_distance_km": 0.48,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 134,
-      "elevation_deg": -2.16702,
-      "obstruction_distance_km": 0.5,
+      "elevation_deg": -2.15379,
+      "obstruction_distance_km": 0.48,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 135,
-      "elevation_deg": -2.20786,
-      "obstruction_distance_km": 0.5,
+      "elevation_deg": -2.17891,
+      "obstruction_distance_km": 0.35,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 136,
-      "elevation_deg": -2.17891,
+      "elevation_deg": -2.09598,
       "obstruction_distance_km": 0.35,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -994,15 +995,15 @@
     },
     {
       "azimuth_deg": 139,
-      "elevation_deg": -2.1905,
-      "obstruction_distance_km": 0.34,
+      "elevation_deg": -2.12201,
+      "obstruction_distance_km": 0.35,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 140,
-      "elevation_deg": -2.19395,
-      "obstruction_distance_km": 0.35,
+      "elevation_deg": -2.18689,
+      "obstruction_distance_km": 0.34,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1022,14 +1023,14 @@
     },
     {
       "azimuth_deg": 143,
-      "elevation_deg": -2.3758,
+      "elevation_deg": -2.372,
       "obstruction_distance_km": 0.33,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 144,
-      "elevation_deg": -2.39006,
+      "elevation_deg": -2.37437,
       "obstruction_distance_km": 0.33,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1057,15 +1058,15 @@
     },
     {
       "azimuth_deg": 148,
-      "elevation_deg": -2.58169,
-      "obstruction_distance_km": 0.3,
+      "elevation_deg": -2.57673,
+      "obstruction_distance_km": 0.32,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 149,
-      "elevation_deg": -2.56143,
-      "obstruction_distance_km": 0.31,
+      "elevation_deg": -2.55608,
+      "obstruction_distance_km": 0.3,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1078,7 +1079,7 @@
     },
     {
       "azimuth_deg": 151,
-      "elevation_deg": -2.59189,
+      "elevation_deg": -2.56025,
       "obstruction_distance_km": 0.3,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1092,21 +1093,21 @@
     },
     {
       "azimuth_deg": 153,
+      "elevation_deg": -2.52916,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 154,
       "elevation_deg": -2.63454,
       "obstruction_distance_km": 0.29,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
-      "azimuth_deg": 154,
-      "elevation_deg": -2.65796,
-      "obstruction_distance_km": 0.29,
-      "dem_sample_coverage_fraction": 1.0,
-      "nearest_valid_dem_sample_m": 10.0
-    },
-    {
       "azimuth_deg": 155,
-      "elevation_deg": -2.69794,
+      "elevation_deg": -2.64943,
       "obstruction_distance_km": 0.28,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1148,15 +1149,15 @@
     },
     {
       "azimuth_deg": 161,
-      "elevation_deg": -2.73224,
-      "obstruction_distance_km": 0.27,
+      "elevation_deg": -2.72227,
+      "obstruction_distance_km": 0.29,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 162,
-      "elevation_deg": -2.76409,
-      "obstruction_distance_km": 0.27,
+      "elevation_deg": -2.73969,
+      "obstruction_distance_km": 0.28,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1176,8 +1177,8 @@
     },
     {
       "azimuth_deg": 165,
-      "elevation_deg": -2.80263,
-      "obstruction_distance_km": 0.27,
+      "elevation_deg": -2.70898,
+      "obstruction_distance_km": 0.28,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1197,15 +1198,15 @@
     },
     {
       "azimuth_deg": 168,
-      "elevation_deg": -2.92939,
+      "elevation_deg": -2.87426,
       "obstruction_distance_km": 0.27,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 169,
-      "elevation_deg": -2.95432,
-      "obstruction_distance_km": 0.26,
+      "elevation_deg": -2.92939,
+      "obstruction_distance_km": 0.27,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1239,7 +1240,7 @@
     },
     {
       "azimuth_deg": 174,
-      "elevation_deg": -2.91173,
+      "elevation_deg": -2.88926,
       "obstruction_distance_km": 0.26,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1274,8 +1275,8 @@
     },
     {
       "azimuth_deg": 179,
-      "elevation_deg": -2.96758,
-      "obstruction_distance_km": 0.26,
+      "elevation_deg": -2.64453,
+      "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1344,8 +1345,8 @@
     },
     {
       "azimuth_deg": 189,
-      "elevation_deg": -2.83403,
-      "obstruction_distance_km": 0.08,
+      "elevation_deg": -2.59319,
+      "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1379,8 +1380,8 @@
     },
     {
       "azimuth_deg": 194,
-      "elevation_deg": -2.74407,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": -2.68891,
+      "obstruction_distance_km": 0.07,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1456,8 +1457,8 @@
     },
     {
       "azimuth_deg": 205,
-      "elevation_deg": -3.07536,
-      "obstruction_distance_km": 0.08,
+      "elevation_deg": -3.07237,
+      "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1491,15 +1492,15 @@
     },
     {
       "azimuth_deg": 210,
-      "elevation_deg": -3.19705,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": -3.13326,
+      "obstruction_distance_km": 0.07,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 211,
-      "elevation_deg": -3.16679,
-      "obstruction_distance_km": 0.08,
+      "elevation_deg": -3.15192,
+      "obstruction_distance_km": 0.17,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1512,21 +1513,21 @@
     },
     {
       "azimuth_deg": 213,
-      "elevation_deg": -3.16321,
-      "obstruction_distance_km": 0.17,
-      "dem_sample_coverage_fraction": 1.0,
-      "nearest_valid_dem_sample_m": 10.0
-    },
-    {
-      "azimuth_deg": 214,
       "elevation_deg": -3.11379,
       "obstruction_distance_km": 0.07,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
+      "azimuth_deg": 214,
+      "elevation_deg": -3.00091,
+      "obstruction_distance_km": 0.17,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
       "azimuth_deg": 215,
-      "elevation_deg": -3.09074,
+      "elevation_deg": -3.00091,
       "obstruction_distance_km": 0.17,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1540,7 +1541,7 @@
     },
     {
       "azimuth_deg": 217,
-      "elevation_deg": -3.0945,
+      "elevation_deg": -3.09074,
       "obstruction_distance_km": 0.17,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1575,8 +1576,8 @@
     },
     {
       "azimuth_deg": 222,
-      "elevation_deg": -3.06616,
-      "obstruction_distance_km": 0.18,
+      "elevation_deg": -2.98619,
+      "obstruction_distance_km": 0.17,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1617,8 +1618,8 @@
     },
     {
       "azimuth_deg": 228,
-      "elevation_deg": -2.61789,
-      "obstruction_distance_km": 0.17,
+      "elevation_deg": -2.61532,
+      "obstruction_distance_km": 0.16,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1652,8 +1653,8 @@
     },
     {
       "azimuth_deg": 233,
-      "elevation_deg": -2.51667,
-      "obstruction_distance_km": 0.16,
+      "elevation_deg": -2.50244,
+      "obstruction_distance_km": 0.17,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1666,8 +1667,8 @@
     },
     {
       "azimuth_deg": 235,
-      "elevation_deg": -2.53337,
-      "obstruction_distance_km": 0.16,
+      "elevation_deg": -2.42989,
+      "obstruction_distance_km": 0.17,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1708,14 +1709,14 @@
     },
     {
       "azimuth_deg": 241,
-      "elevation_deg": -2.2618,
+      "elevation_deg": -2.25275,
       "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 242,
-      "elevation_deg": -2.2618,
+      "elevation_deg": -2.0002,
       "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -1750,15 +1751,15 @@
     },
     {
       "azimuth_deg": 247,
-      "elevation_deg": -2.03387,
-      "obstruction_distance_km": 0.13,
+      "elevation_deg": -1.97861,
+      "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 248,
-      "elevation_deg": -1.99811,
-      "obstruction_distance_km": 0.12,
+      "elevation_deg": -1.96348,
+      "obstruction_distance_km": 0.11,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1806,22 +1807,22 @@
     },
     {
       "azimuth_deg": 255,
-      "elevation_deg": -1.64283,
+      "elevation_deg": -1.61751,
       "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 256,
-      "elevation_deg": -1.64283,
-      "obstruction_distance_km": 0.12,
+      "elevation_deg": -1.62529,
+      "obstruction_distance_km": 0.11,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 257,
-      "elevation_deg": -1.62529,
-      "obstruction_distance_km": 0.11,
+      "elevation_deg": -1.54737,
+      "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1855,8 +1856,8 @@
     },
     {
       "azimuth_deg": 262,
-      "elevation_deg": -1.36504,
-      "obstruction_distance_km": 0.11,
+      "elevation_deg": -1.34852,
+      "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1869,8 +1870,8 @@
     },
     {
       "azimuth_deg": 264,
-      "elevation_deg": -1.33444,
-      "obstruction_distance_km": 0.1,
+      "elevation_deg": -1.22919,
+      "obstruction_distance_km": 0.11,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -1946,36 +1947,36 @@
     },
     {
       "azimuth_deg": 275,
-      "elevation_deg": -0.98103,
-      "obstruction_distance_km": 0.11,
-      "dem_sample_coverage_fraction": 1.0,
-      "nearest_valid_dem_sample_m": 10.0
-    },
-    {
-      "azimuth_deg": 276,
       "elevation_deg": -0.91926,
       "obstruction_distance_km": 0.1,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
-      "azimuth_deg": 277,
+      "azimuth_deg": 276,
       "elevation_deg": -0.9033,
       "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
-      "azimuth_deg": 278,
+      "azimuth_deg": 277,
       "elevation_deg": -0.87912,
       "obstruction_distance_km": 0.11,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
-      "azimuth_deg": 279,
+      "azimuth_deg": 278,
       "elevation_deg": -0.79461,
       "obstruction_distance_km": 0.1,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 279,
+      "elevation_deg": -0.68236,
+      "obstruction_distance_km": 0.09,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2009,8 +2010,8 @@
     },
     {
       "azimuth_deg": 284,
-      "elevation_deg": -0.78709,
-      "obstruction_distance_km": 0.11,
+      "elevation_deg": -0.76867,
+      "obstruction_distance_km": 0.1,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2023,8 +2024,8 @@
     },
     {
       "azimuth_deg": 286,
-      "elevation_deg": -0.76867,
-      "obstruction_distance_km": 0.1,
+      "elevation_deg": -0.72107,
+      "obstruction_distance_km": 0.06,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2051,15 +2052,15 @@
     },
     {
       "azimuth_deg": 290,
-      "elevation_deg": -0.72107,
-      "obstruction_distance_km": 0.06,
+      "elevation_deg": -0.71736,
+      "obstruction_distance_km": 0.1,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 291,
-      "elevation_deg": -0.70266,
-      "obstruction_distance_km": 0.11,
+      "elevation_deg": -0.65991,
+      "obstruction_distance_km": 0.1,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2072,7 +2073,7 @@
     },
     {
       "azimuth_deg": 293,
-      "elevation_deg": -0.65991,
+      "elevation_deg": -0.59994,
       "obstruction_distance_km": 0.1,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2184,7 +2185,7 @@
     },
     {
       "azimuth_deg": 309,
-      "elevation_deg": -0.34837,
+      "elevation_deg": -0.28422,
       "obstruction_distance_km": 0.05,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2198,8 +2199,8 @@
     },
     {
       "azimuth_deg": 311,
-      "elevation_deg": -0.42982,
-      "obstruction_distance_km": 0.05,
+      "elevation_deg": -0.41213,
+      "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2226,7 +2227,7 @@
     },
     {
       "azimuth_deg": 315,
-      "elevation_deg": -0.36955,
+      "elevation_deg": -0.33217,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2247,7 +2248,7 @@
     },
     {
       "azimuth_deg": 318,
-      "elevation_deg": -0.32324,
+      "elevation_deg": -0.25723,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2261,7 +2262,7 @@
     },
     {
       "azimuth_deg": 320,
-      "elevation_deg": -0.26207,
+      "elevation_deg": -0.18434,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2310,7 +2311,7 @@
     },
     {
       "azimuth_deg": 327,
-      "elevation_deg": -0.17523,
+      "elevation_deg": -0.10958,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2324,14 +2325,14 @@
     },
     {
       "azimuth_deg": 329,
-      "elevation_deg": -0.10958,
+      "elevation_deg": -0.04469,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
     {
       "azimuth_deg": 330,
-      "elevation_deg": -0.04469,
+      "elevation_deg": 0.00013,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2387,7 +2388,7 @@
     },
     {
       "azimuth_deg": 338,
-      "elevation_deg": 0.06391,
+      "elevation_deg": 0.06707,
       "obstruction_distance_km": 0.15,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2401,8 +2402,8 @@
     },
     {
       "azimuth_deg": 340,
-      "elevation_deg": 0.06085,
-      "obstruction_distance_km": 0.14,
+      "elevation_deg": 0.20335,
+      "obstruction_distance_km": 0.05,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2436,8 +2437,8 @@
     },
     {
       "azimuth_deg": 345,
-      "elevation_deg": 0.28114,
-      "obstruction_distance_km": 0.12,
+      "elevation_deg": 0.3141,
+      "obstruction_distance_km": 0.1,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2457,8 +2458,8 @@
     },
     {
       "azimuth_deg": 348,
-      "elevation_deg": 0.44826,
-      "obstruction_distance_km": 0.12,
+      "elevation_deg": 0.4759,
+      "obstruction_distance_km": 0.13,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2485,8 +2486,8 @@
     },
     {
       "azimuth_deg": 352,
-      "elevation_deg": 0.64238,
-      "obstruction_distance_km": 0.13,
+      "elevation_deg": 0.64256,
+      "obstruction_distance_km": 0.12,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
     },
@@ -2506,7 +2507,7 @@
     },
     {
       "azimuth_deg": 355,
-      "elevation_deg": 0.73742,
+      "elevation_deg": 0.82859,
       "obstruction_distance_km": 0.13,
       "dem_sample_coverage_fraction": 1.0,
       "nearest_valid_dem_sample_m": 10.0
@@ -2546,7 +2547,7 @@
     "mean_dem_sample_coverage_fraction": 1.0,
     "min_dem_sample_coverage_fraction": 1.0,
     "azimuth_bins_with_near_gap_gt_100m": 0,
-    "max_range_limit_km": 120.0,
+    "max_range_limit_km": 160.0,
     "complete_near_range_coverage": true,
     "horizon_samples_are_complete": true,
     "caution": "Incomplete coverage or limited range can hide higher obstacles; never interpret gaps as clear line of sight"
@@ -2559,7 +2560,8 @@
     "azimuth_clockwise_from_north_deg": true,
     "lunar_reference_radius_m": 1737400.0,
     "observer_elevation_reference": "height above 1737400 m lunar reference sphere",
-    "max_horizon_distance_m": 120000,
+    "max_horizon_distance_m": 160000.0,
+    "subrays_per_azimuth_bin": 5,
     "sampling_spacing_m": {
       "near_0_500m": 10,
       "mid_500_5000m": 50,
@@ -2567,10 +2569,12 @@
       "outer_40km_plus": 500
     },
     "dems_in_priority_order": [
-      "data\\raw\\Site23_final_adj_5mpp_surf.tif",
-      "data\\raw\\LDEM_80S_80MPP_ADJ.TIF"
+      "data/raw/Site01_final_adj_5mpp_surf.tif",
+      "data/raw/Site04_final_adj_5mpp_surf.tif",
+      "data/raw/Site23_final_adj_5mpp_surf.tif",
+      "data/raw/LDEM_80S_80MPP_ADJ.TIF"
     ],
-    "slope_map": "data\\raw\\Site23_final_adj_5mpp_slp.tif",
-    "generated_utc": "2026-11-14T16:48:29.897629+00:00"
+    "slope_map": "data/raw/Site23_final_adj_5mpp_slp.tif",
+    "generated_utc": "2026-11-15T03:10:45.599888+00:00"
   }
 }

@@ -31,12 +31,19 @@ def calculate_horizon(stack, latitude_deg, longitude_deg, observer_elevation_m,
                       observer_height_m=2.0, azimuth_step_deg=1,
                       max_distance_m=120_000, near_step_m=10,
                       mid_step_m=50, far_step_m=250, outer_step_m=500,
-                      chunk_azimuths=12):
+                      chunk_azimuths=12, subrays_per_bin=1):
     """Compute maxima over sampled terrain directions, preserving missing data flags.
 
     The calculated max is a LOWER BOUND on the true full horizon when the sampling
     is coarse, data is missing, or more distant terrain is outside max_distance.
+
+    subrays_per_bin > 1 casts that many rays spread across each 1-degree bin
+    (centred on the bin's azimuth, within +/-0.5 deg) and keeps the highest, so
+    narrow peaks between whole-degree rays are not missed.
     """
+    if subrays_per_bin < 1:
+        raise ValueError("subrays_per_bin must be >= 1")
+    offsets = np.zeros(1) if subrays_per_bin == 1 else np.linspace(-0.5, 0.5, subrays_per_bin + 2)[1:-1]
     if azimuth_step_deg != 1:
         raise ValueError("360-bin shared JSON format requires 1 degree azimuth steps")
     azimuths = np.arange(360, dtype=float)
@@ -46,25 +53,36 @@ def calculate_horizon(stack, latitude_deg, longitude_deg, observer_elevation_m,
     best_distances = np.full(360, np.nan)
     sample_coverage = np.zeros(360, dtype=float)
     first_valid_distance = np.full(360, np.nan)
+    n_sub = len(offsets)
     for start in range(0, 360, chunk_azimuths):
         subset = azimuths[start:start+chunk_azimuths]
-        az_grid, distance_grid = np.broadcast_arrays(subset[:, None], distances[None, :])
+        ray_az = (subset[:, None] + offsets[None, :]).ravel()
+        az_grid, distance_grid = np.broadcast_arrays(ray_az[:, None], distances[None, :])
         lat_grid, lon_grid, unit = great_circle_targets(
             latitude_deg, longitude_deg, az_grid, distance_grid
         )
         terrain_z = stack.sample(lat_grid, lon_grid)
         valid = np.isfinite(terrain_z)
-        sample_coverage[start:start+len(subset)] = np.mean(valid, axis=1)
         for row in range(len(subset)):
-            usable = np.flatnonzero(valid[row])
-            if not usable.size:
-                continue
-            first_valid_distance[start+row] = distances[usable[0]]
-            angles = terrain_elevation_angle(latitude_deg, longitude_deg,
-                observer_elevation_m, observer_height_m, unit[row, usable], terrain_z[row, usable])
-            best = int(np.argmax(angles))
-            angles_out[start+row] = float(angles[best])
-            best_distances[start+row] = float(distances[usable[best]])
+            best_angle, best_dist, coverage, first_valid = np.nan, np.nan, 0.0, np.nan
+            for k in range(n_sub):
+                ray = row * n_sub + k
+                coverage += np.mean(valid[ray]) / n_sub
+                usable = np.flatnonzero(valid[ray])
+                if not usable.size:
+                    continue
+                if not np.isfinite(first_valid) or distances[usable[0]] < first_valid:
+                    first_valid = distances[usable[0]]
+                angles = terrain_elevation_angle(latitude_deg, longitude_deg,
+                    observer_elevation_m, observer_height_m, unit[ray, usable], terrain_z[ray, usable])
+                best = int(np.argmax(angles))
+                if not np.isfinite(best_angle) or angles[best] > best_angle:
+                    best_angle = float(angles[best])
+                    best_dist = float(distances[usable[best]])
+            sample_coverage[start+row] = coverage
+            first_valid_distance[start+row] = first_valid
+            angles_out[start+row] = best_angle
+            best_distances[start+row] = best_dist
     return {
         "azimuths": azimuths,
         "elevation_angles": angles_out,

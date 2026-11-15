@@ -19,10 +19,12 @@ def clearance_at_time(
     horizon_azimuths,
     horizon_elevations,
     site_id="test_site",
-    site_elevation_km=0.0
+    site_elevation_km=0.0,
+    threshold_deg=0.0
 ):
     """
-    Calculate terrain clearance for Sun or Earth at a specific time.
+    Terrain clearance for Sun or Earth at a time, minus the visibility
+    threshold, so the function crosses zero exactly at a transition.
 
     SPICE kernels must already be loaded.
     """
@@ -41,7 +43,7 @@ def clearance_at_time(
         horizon_elevations
     )
 
-    return visibility[body]["clearance_deg"]
+    return visibility[body]["clearance_deg"] - threshold_deg
 
 
 def refine_transition(
@@ -53,7 +55,8 @@ def refine_transition(
     horizon_azimuths,
     horizon_elevations,
     site_id="test_site",
-    site_elevation_km=0.0
+    site_elevation_km=0.0,
+    threshold_deg=0.0
 ):
     """
     Refine a visibility transition using Brent's root-finding method.
@@ -78,7 +81,8 @@ def refine_transition(
             horizon_azimuths=horizon_azimuths,
             horizon_elevations=horizon_elevations,
             site_id=site_id,
-            site_elevation_km=site_elevation_km
+            site_elevation_km=site_elevation_km,
+            threshold_deg=threshold_deg
         )
 
     root_seconds = brentq(
@@ -100,13 +104,18 @@ def find_visibility_windows(
     horizon_azimuths,
     horizon_elevations,
     site_id="test_site",
-    site_elevation_km=0.0
+    site_elevation_km=0.0,
+    thresholds=None
 ):
     """
     Find visibility windows for Sun, Earth, and both simultaneously.
 
-    Uses root-finding to refine Sun/Earth transitions.
+    Uses root-finding to refine Sun/Earth transitions. Windows that touch the
+    start or end of the range are marked clipped_start / clipped_end: the
+    body may have been visible before the range or stay visible after it.
     """
+
+    thresholds = thresholds or {"sun": 0.0, "earth": 0.0}
 
     timeline = timeline_result["timeline"]
 
@@ -131,10 +140,10 @@ def find_visibility_windows(
             row0 = timeline[i]
             row1 = timeline[i + 1]
 
-            c0 = row0[clearance_key]
-            c1 = row1[clearance_key]
+            c0 = row0[clearance_key] - thresholds[body]
+            c1 = row1[clearance_key] - thresholds[body]
 
-            # Check whether clearance crosses zero.
+            # Check whether clearance crosses the threshold.
             if c0 * c1 < 0:
 
                 transition = refine_transition(
@@ -146,18 +155,21 @@ def find_visibility_windows(
                     horizon_azimuths=horizon_azimuths,
                     horizon_elevations=horizon_elevations,
                     site_id=site_id,
-                    site_elevation_km=site_elevation_km
+                    site_elevation_km=site_elevation_km,
+                    threshold_deg=thresholds[body]
                 )
 
                 transitions[body].append(parse_utc(transition))
 
             elif c0 == 0:
 
-                transitions.append(t0)
+                # Exactly on the threshold at a sample: that sample is a boundary.
+                transitions[body].append(parse_utc(row0["time"]))
 
             elif c1 == 0:
 
-                transitions.append(t1)    
+                transitions[body].append(parse_utc(row1["time"]))
+
     # Combine start/end and all transition timestamps.
     boundaries = [
         parse_utc(start_time),
@@ -193,7 +205,8 @@ def find_visibility_windows(
         visibility = compare_sun_earth(
             positions,
             horizon_azimuths,
-            horizon_elevations
+            horizon_elevations,
+            thresholds
         )
 
         sun_visible = visibility["sun"]["visible"]
@@ -232,6 +245,8 @@ def find_visibility_windows(
             window["duration_hours"] = (
                 end - start
             ).total_seconds() / 3600.0
+            window["clipped_start"] = window["start"] == format_utc(boundaries[0])
+            window["clipped_end"] = window["end"] == format_utc(boundaries[-1])
 
     return {
         "site_id": site_id,
@@ -267,7 +282,9 @@ def calculate_window_statistics(windows_result):
             default=0.0
         )
 
-        # Calculate gaps between visibility windows.
+        # Calculate gaps between visibility windows. A gap or window that
+        # touches either end of the range may continue beyond it, so the
+        # true duration is at least the value given ("clipped").
         gaps = []
 
         previous_end = start
@@ -277,21 +294,31 @@ def calculate_window_statistics(windows_result):
             window_start = parse_utc(window["start"])
             window_end = parse_utc(window["end"])
 
-            gaps.append(
-                (window_start - previous_end).total_seconds() / 3600.0
-            )
+            gaps.append((
+                (window_start - previous_end).total_seconds() / 3600.0,
+                previous_end == start
+            ))
 
             previous_end = window_end
 
-        gaps.append(
-            (end - previous_end).total_seconds() / 3600.0
-        )
+        gaps.append((
+            (end - previous_end).total_seconds() / 3600.0,
+            True
+        ))
+
+        longest_gap = max(gaps, key=lambda g: g[0])
+        longest_window = max(windows, key=lambda w: w["duration_hours"], default=None)
 
         statistics[body] = {
             "visible_hours": visible_hours,
             "visible_percent": 100 * visible_hours / total_hours,
             "longest_visible_hours": longest_visible,
-            "longest_not_visible_hours": max(gaps)
+            "longest_visible_clipped": bool(
+                longest_window
+                and (longest_window.get("clipped_start") or longest_window.get("clipped_end"))
+            ),
+            "longest_not_visible_hours": longest_gap[0],
+            "longest_not_visible_clipped": bool(longest_gap[0] > 0 and longest_gap[1]),
         }
 
     return statistics

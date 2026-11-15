@@ -20,3 +20,9 @@ terrain_inspection/
 Terrain/data/raw/
 Terrain/data/convergence/
 Terrain/data/convergence_fine/
+
+# Node
+node_modules/
+
+# Local tool settings
+.claude/

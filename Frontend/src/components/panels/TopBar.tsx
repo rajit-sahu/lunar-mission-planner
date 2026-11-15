@@ -1,6 +1,6 @@
 import { analysisKey, useStore, type View } from "../../state/store";
 import type { DataOrigin } from "../../api/types";
-import { CompareIcon, GlobeIcon, MountainIcon } from "../icons";
+import { CompareIcon, GlobeIcon, InfoIcon, MountainIcon, PlayIcon } from "../icons";
 
 const ORIGIN_LABEL: Record<DataOrigin, { text: string; title: string; cls: string }> = {
   live: { text: "Live · SPICE + LOLA", title: "Computed now by the FastAPI science backend", cls: "ok" },
@@ -8,10 +8,10 @@ const ORIGIN_LABEL: Record<DataOrigin, { text: string; title: string; cls: strin
   demo: { text: "Demo data (approximate)", title: "Backend unreachable: showing an approximate analytic model, not mission-grade results", cls: "warn" },
 };
 
-const VIEWS: { v: View; label: string; Icon: typeof GlobeIcon }[] = [
-  { v: "globe", label: "Map", Icon: GlobeIcon },
-  { v: "surface", label: "Surface", Icon: MountainIcon },
-  { v: "compare", label: "Compare", Icon: CompareIcon },
+const VIEWS: { v: View; discover: string; planner: string; Icon: typeof GlobeIcon }[] = [
+  { v: "globe", discover: "Map", planner: "Map", Icon: GlobeIcon },
+  { v: "surface", discover: "Stand here", planner: "Surface", Icon: MountainIcon },
+  { v: "compare", discover: "Launch late?", planner: "Compare", Icon: CompareIcon },
 ];
 
 export function TopBar() {
@@ -22,11 +22,12 @@ export function TopBar() {
   const origin = useStore((s) => {
     const all = Object.values(s.analyses);
     if (all.some((x) => x.origin === "demo")) return "demo" as const;
-    const current = s.sites.map((site) => s.analyses[analysisKey(site.id, s.missionStart)]?.origin).find(Boolean);
+    const current = s.sites.map((site) => s.analyses[analysisKey(site.id, s.missionStart, s.settings)]?.origin).find(Boolean);
     return current ?? s.sitesOrigin;
   });
-  const { setMode, setView, selectSite, sites } = useStore.getState();
+  const { setMode, setView, selectSite, setStoryStep, setAboutOpen } = useStore.getState();
   const o = origin ? ORIGIN_LABEL[origin] : null;
+  const planner = mode === "planner";
 
   return (
     <header className="topbar">
@@ -38,43 +39,59 @@ export function TopBar() {
         </svg>
         <div>
           <div className="brand__name">Lunar South Pole Mission Planner</div>
-          <div className="brand__sub">Sun &amp; Earth visibility for landing-site decisions</div>
+          <div className="brand__sub">{planner ? "Sun & Earth visibility for landing-site decisions" : "Where can a lander get sunlight and call home?"}</div>
         </div>
       </div>
 
-      <div className="topbar__center glass">
-        <div className="seg seg--lg" role="tablist" aria-label="View">
-          {VIEWS.map(({ v, label, Icon }) => (
+      <nav className="topbar__center glass" aria-label="Views">
+        <div className="seg seg--lg">
+          {VIEWS.map(({ v, discover, planner: p, Icon }) => (
             <button
               key={v}
-              role="tab"
-              aria-selected={view === v}
+              aria-pressed={view === v}
               className={view === v ? "seg__btn active" : "seg__btn"}
               onClick={() => {
-                if (v === "surface" && !selected) selectSite(useStore.getState().sites[0]?.id ?? sites[0]?.id ?? null, false);
+                if (v === "surface" && !selected) selectSite(useStore.getState().sites[0]?.id ?? null, false);
                 setView(v);
               }}
             >
-              <Icon size={15} /> {label}
+              <Icon size={15} /> {planner ? p : discover}
             </button>
           ))}
         </div>
-      </div>
+      </nav>
 
       <div className="topbar__right">
-        {o && (
+        {!planner && (
+          <button className="btn btn--pill glass" onClick={() => setStoryStep(0)}>
+            <PlayIcon size={13} /> Show me
+          </button>
+        )}
+        {planner && o && (
           <span className={`origin origin--${o.cls}`} title={o.title}>
             <span className="origin__dot" /> {o.text}
           </span>
         )}
-        <div className="seg glass" role="group" aria-label="Detail level">
-          <button className={mode === "explore" ? "seg__btn active" : "seg__btn"} onClick={() => setMode("explore")} title="Simple indicators for everyone">
-            Explore
-          </button>
-          <button className={mode === "analyse" ? "seg__btn active" : "seg__btn"} onClick={() => setMode("analyse")} title="Engineering detail: angles, margins, statistics">
-            Analyse
-          </button>
-        </div>
+        {!planner && o?.cls === "warn" && (
+          <span className="origin origin--warn" title={o.title}>
+            <span className="origin__dot" /> Approximate data
+          </span>
+        )}
+        <button className="btn btn--icon glass about-btn" onClick={() => setAboutOpen(true)} aria-label="How do we know? Data and methods" title="How do we know?">
+          <InfoIcon size={17} />
+        </button>
+        <button
+          className={`layer-switch glass ${planner ? "is-on" : ""}`}
+          role="switch"
+          aria-checked={planner}
+          onClick={() => setMode(planner ? "discover" : "planner")}
+          title={planner ? "Back to the simple view" : "Show angles, margins, statistics and constraints"}
+        >
+          <span className="layer-switch__track" aria-hidden>
+            <span className="layer-switch__thumb" />
+          </span>
+          Mission planner
+        </button>
       </div>
     </header>
   );

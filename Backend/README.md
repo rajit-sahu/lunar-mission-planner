@@ -12,11 +12,15 @@ LOLA elevation maps processed by Arnav's terrain pipeline
 says where its numbers came from (`ephemeris_source`, and `terrain_source`:
 `"lola"`, or `"placeholder"` for a site with no terrain file).
 
-**Known issue:** `site_004` (Shackleton Rim) shows the Sun and Earth as
-never visible. Its published coordinate falls in a hollow about 7 m deep
-in the 5 m elevation map, so nearby ground blocks the view in every
-direction (horizon 2 to 10 degrees). The representative point needs moving
-to the nearby crest.
+**Validated:** Sun/Earth azimuth and elevation are apparent directions
+(SPICE `LT+S`, observer fixed on the Moon) and match JPL Horizons to better
+than 0.00001 deg; `tests/test_positions.py` checks this on every run.
+
+**Shackleton Rim (site_004):** the published point sits in a hollow 10.5 m
+below the highest 5 m LOLA cell 54 m away, which blocked the Sun and Earth in
+every direction. The representative point is now that crest (within NASA's
+100 m landing-site radius); see `representative_point_note` in
+`config/sites.json`.
 
 ## Run it
 
@@ -40,7 +44,7 @@ internet access to load Plotly.
 The SPICE kernels are loaded from `kernels/` at startup (set
 `LUNAR_KERNELS_DIR` to use a different folder).
 
-Tests: `python -m pytest Backend`
+Tests: `python -m pytest` (science + API; Arnav's terrain suite: `cd Terrain && python -m pytest`)
 
 ## Conventions
 
@@ -51,7 +55,25 @@ Tests: `python -m pytest Backend`
 | Azimuth | Degrees clockwise from north, 0 to 360 |
 | Elevation | Degrees above the local horizontal |
 | Distance | Kilometres |
-| Visibility | `true` when the body's centre is above the terrain horizon at its azimuth |
+| Visibility | `true` when clearance (elevation minus terrain horizon at the body's azimuth) exceeds the threshold: by default the body's centre above the terrain |
+
+## Visibility settings
+
+`/position`, `/analysis` and `/compare` accept three optional parameters; the
+defaults reproduce the original behaviour, and every response echoes them
+under `settings`.
+
+| Parameter | Values | Meaning |
+|---|---|---|
+| `sun_criterion` | `centre` (default), `limb`, `full` | Sun counts as visible when its centre / any part / its whole disc is above the terrain |
+| `earth_margin_deg` | 0 (default) to 20 | Earth's centre must clear the terrain by this much (radio link margin) |
+| `observer_height_m` | 2 (default), 5, 10 | Uses the horizon computed for that eye/mast height (`{site}_terrain_h5.json`, `_h10.json`) |
+
+Timeline rows also report `sun_disc_fraction` / `earth_disc_fraction` (share
+of each disc above the terrain) and `sun_distance_km`. Windows touching the
+start or end of the range carry `clipped_start` / `clipped_end`, and
+statistics carry `longest_visible_clipped` / `longest_not_visible_clipped`:
+the true duration is at least the value given.
 
 ## Endpoints
 

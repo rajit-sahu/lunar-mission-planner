@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { DAY, useHorizon, useStore, WINDOW_DAYS } from "../../state/store";
 import { useSiteSky } from "../../state/hooks";
 import { cardinal, DEG, formatLat, formatLon } from "../../lib/geo";
-import { formatDuration, formatHours, fmtUTC, type Countdown } from "../../lib/timeline";
+import { formatDuration, formatHours, fmtUTC, type Countdown, type SkyState } from "../../lib/timeline";
 import { SOLAR_CONSTANT } from "../../lib/power";
 import type { Analysis, Site, SunCriterion } from "../../api/types";
 import { SkyChart } from "../charts/SkyChart";
@@ -46,6 +46,9 @@ function StatusTile({ kind, visible, text, sub }: { kind: "sun" | "earth" | "bot
     </div>
   );
 }
+
+/** Sun above the terrain but hidden behind Earth's disc. */
+const eclipsed = (sky: SkyState) => !sky.sun.visible && sky.sun.clearance > sky.sun.threshold && sky.sun.eclipse <= sky.sun.threshold;
 
 function summarySentence(sun: boolean, earth: boolean) {
   if (sun && earth) return "A lander here right now would have sunlight for power and a direct radio line to Earth.";
@@ -217,7 +220,7 @@ export function SiteDashboard() {
       {status === "loading" && <div className="dash__loading" role="status">Calculating Sun and Earth geometry…</div>}
       {status === "error" && (
         <div className="dash__error" role="alert">
-          Couldn't load this site's results. Check the connection and try another date.
+          Couldn't load this site's results. Check the connection and try again in a minute.
           {planner && <div className="small muted">{error}</div>}
         </div>
       )}
@@ -227,7 +230,7 @@ export function SiteDashboard() {
           <div className={`plain plain--sun ${sky.sun.visible ? "is-on" : ""}`}>
             <SunIcon size={22} />
             <p>
-              <b>{sky.sun.visible ? "The Sun is up." : "The Sun is behind the hills."}</b>{" "}
+              <b>{sky.sun.visible ? "The Sun is up." : eclipsed(sky) ? "Earth is blocking the Sun: an eclipse!" : "The Sun is behind the hills."}</b>{" "}
               {sunCountdown?.kind === "set"
                 ? sunCountdown.beyondRange
                   ? "It stays up for weeks."
@@ -250,7 +253,11 @@ export function SiteDashboard() {
                   : "It doesn't rise again this month."}
             </p>
           </div>
-          <p className="dash__summary">{summarySentence(sky.sun.visible, sky.earth.visible)}</p>
+          <p className="dash__summary">
+            {eclipsed(sky)
+              ? "Seen from the Moon, Earth is passing in front of the Sun (on Earth this is a lunar eclipse). The panels go dark for a few hours."
+              : summarySentence(sky.sun.visible, sky.earth.visible)}
+          </p>
           <div className="gauge" aria-label="Sunlight for solar panels">
             <BoltIcon size={14} />
             <span>Sunlight for solar panels</span>

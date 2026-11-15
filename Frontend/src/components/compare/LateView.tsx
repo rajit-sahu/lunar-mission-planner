@@ -1,3 +1,4 @@
+import { niceDate } from "../panels/TimelineDock";
 import { useEffect, useMemo, useState } from "react";
 import { analysisKey, isoAddDays, useStore } from "../../state/store";
 import { DEFAULT_CONSTRAINTS, delaySentence, fmtH, missionMetrics, rank, type Candidate } from "../../lib/metrics";
@@ -85,12 +86,12 @@ export function LateView() {
           <div className="late__rows">
             <div className="late__label">
               On time
-              <span className="small muted mono">{baseStart.slice(0, 10)}</span>
+              <span className="small muted">{niceDate(baseStart)}</span>
             </div>
             <CombinedStrip analysis={onTimeA} label="On time" />
             <div className="late__label">
               {days} days late
-              <span className="small muted mono">{late.slice(0, 10)}</span>
+              <span className="small muted">{niceDate(late)}</span>
             </div>
             <CombinedStrip analysis={lateA} label={`${days} days late`} />
             <div />
@@ -111,9 +112,15 @@ export function LateView() {
           <section className="card late__best">
             <div className="eyebrow">If we land {days} days late</div>
             <h3>
-              {top!.passes ? "Best choice" : "Closest option"}: {shortName(topSite)}
+              {top!.passes ? "Best choice" : "No site passes every check. Nearest"}: {shortName(topSite)}
               {topSite.id === siteId ? " (same site)" : ""}
             </h3>
+            {top!.tiedWith.length > 0 && (
+              <p className="small muted">
+                Tied with {top!.tiedWith.map((id) => shortName(sites.find((x) => x.id === id)!)).join(" and ")} on Sun and Earth
+                in the first 3 days; {shortName(topSite)} keeps its first sunlight longer.
+              </p>
+            )}
             <p>
               {topM.sunAtLanding
                 ? `Sunlight for about ${fmtH(topM.firstSunsetH)} after touchdown`

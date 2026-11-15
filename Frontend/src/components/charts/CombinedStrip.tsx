@@ -61,7 +61,31 @@ export function CombinedStrip({
     .filter(Boolean)
     .join(", ");
   return (
-    <div ref={ref} className="strip" role="img" aria-label={`${label ? label + ": " : ""}${summary} over ${days} days`}>
+    <div
+      ref={ref}
+      className="strip"
+      {...(onScrub
+        ? {
+            role: "slider",
+            tabIndex: 0,
+            "aria-label": `${label ? label + ": " : ""}${summary} over ${days} days. Time`,
+            "aria-valuemin": 0,
+            "aria-valuemax": days,
+            "aria-valuenow": time !== undefined ? Math.round((time - t0) / DAY) : 0,
+            "aria-valuetext": time !== undefined ? `Day ${((time - t0) / DAY + 0).toFixed(1)}` : undefined,
+            onKeyDown: (e: React.KeyboardEvent) => {
+              const now = time ?? t0;
+              const step = (e.shiftKey ? 24 : 6) * 3.6e6;
+              if (e.key === "ArrowRight" || e.key === "ArrowUp") onScrub(Math.min(t1, now + step));
+              else if (e.key === "ArrowLeft" || e.key === "ArrowDown") onScrub(Math.max(t0, now - step));
+              else if (e.key === "Home") onScrub(t0);
+              else if (e.key === "End") onScrub(t1);
+              else return;
+              e.preventDefault();
+            },
+          }
+        : { role: "img", "aria-label": `${label ? label + ": " : ""}${summary} over ${days} days` })}
+    >
       {width > 0 && (
         <svg
           width={width}

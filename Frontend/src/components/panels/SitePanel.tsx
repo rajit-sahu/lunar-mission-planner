@@ -87,7 +87,7 @@ function SiteRow({ site, traits }: { site: Site; traits: string[] }) {
               </div>
             )}
             <div className="site-row__plain small">
-              Sunlight about {days(st?.sun.visible_percent)} of {WINDOW_DAYS} days · Earth in view about {days(st?.earth.visible_percent)}
+              Sunlight about {days(st?.sun.visible_percent)} of {WINDOW_DAYS} days · Earth in view about {days(st?.earth.visible_percent)} days
             </div>
           </>
         )}

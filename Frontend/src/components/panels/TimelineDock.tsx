@@ -59,7 +59,9 @@ function DiscoverDock() {
           <div className="dock__time">
             Day {Math.min(day, WINDOW_DAYS)} <span className="muted">of {WINDOW_DAYS} after landing</span>
           </div>
-          <div className="dock__met">{site ? `at ${shortName(site)}` : "Pick a site"}</div>
+          <div className="dock__met">
+            {site ? `at ${shortName(site)}` : "Pick a site"} · example landing {niceDate(missionStart)}
+          </div>
         </div>
         <div className="dock__spacer" />
         <button
@@ -145,3 +147,7 @@ export function TimelineDock() {
   const mode = useStore((s) => s.mode);
   return mode === "planner" ? <PlannerDock /> : <DiscoverDock />;
 }
+
+/** "20 Nov 2028" */
+export const niceDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });

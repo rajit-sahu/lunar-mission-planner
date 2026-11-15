@@ -43,5 +43,6 @@ def run_site_comparison(
         sites=sites,
         start_time=start_time,
         end_time=end_time,
-        step_minutes=step_minutes
+        step_minutes=step_minutes,
+        thresholds=thresholds
     )

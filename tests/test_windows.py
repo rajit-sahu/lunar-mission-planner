@@ -94,3 +94,11 @@ def test_range_validation(flat_site):
     with pytest.raises(ValueError):
         run_site_analysis(flat_site, END, START, 60)
     assert parse_utc(START) + timedelta(days=14) == parse_utc(END)
+
+
+def test_comparison_respects_thresholds(flat_site):
+    from Science.visibility.terrain_visibility import visibility_thresholds
+    thr = visibility_thresholds("full", 5.0)
+    cmp = run_site_comparison([flat_site], START, "2028-11-27T00:00:00Z", 60, thresholds=thr)
+    one = run_site_analysis(flat_site, START, "2028-11-27T00:00:00Z", 60, thresholds=thr)
+    assert cmp["comparison"][0]["earth_visible_percent"] == one["statistics"]["earth"]["visible_percent"]

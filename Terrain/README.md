@@ -134,6 +134,15 @@ This reports the raster CRS, pixel size, bounds, and whether the published point
 
 For backend integration, `examples/consume_terrain_json.py` illustrates conservative line-of-sight visibility and refuses synthetic input or incomplete data.
 
+## Reproducing the shipped horizon files
+
+The files in `../data/processed/` (used by the backend) were made with
+`scripts/regenerate_shipped.sh`: 2, 5 and 10 m observer heights, 160 km range,
+`--subrays-per-bin 5`, and all three 5 m site DEMs plus the 80 m polar DEM.
+The defaults described above (120 km, 1 ray per bin) reproduce the earlier files.
+Shackleton Rim's point is the crest from `scripts/find_crest.py` (highest 5 m cell
+within 100 m of the published point); see `representative_point_note` in the JSON.
+
 ## Street View viewpoints (frontend "Stand here")
 
 `scripts/streetview_points.py` builds `Frontend/public/streetview/{site}.json` + `{site}_map.png`:

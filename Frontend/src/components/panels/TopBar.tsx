@@ -11,7 +11,7 @@ const ORIGIN_LABEL: Record<DataOrigin, { text: string; title: string; cls: strin
 const VIEWS: { v: View; discover: string; planner: string; Icon: typeof GlobeIcon }[] = [
   { v: "globe", discover: "Map", planner: "Map", Icon: GlobeIcon },
   { v: "surface", discover: "Stand here", planner: "Surface", Icon: MountainIcon },
-  { v: "compare", discover: "Launch late?", planner: "Compare", Icon: CompareIcon },
+  { v: "compare", discover: "Land late?", planner: "Compare", Icon: CompareIcon },
 ];
 
 export function TopBar() {

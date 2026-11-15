@@ -21,8 +21,8 @@ export const DEMO_SITES: Site[] = [
   {
     id: "site_004",
     name: "Shackleton Rim / Site 004",
-    latitude_deg: -89.78,
-    longitude_deg: 204.27,
+    latitude_deg: -89.78033,
+    longitude_deg: 203.81414,
     elevation_m: null,
     slope_deg: null,
     source: "Kumari et al., Planetary Science Journal (2022)",
@@ -31,7 +31,7 @@ export const DEMO_SITES: Site[] = [
   },
   {
     id: "site_malapert",
-    name: "Mons Malapert / MMA_K2023",
+    name: "Malapert Massif / MMA_K2023",
     latitude_deg: -85.992,
     longitude_deg: 2.056,
     elevation_m: null,

@@ -10,8 +10,21 @@ export interface Series {
   earthAz: Float64Array;
   earthEl: Float64Array;
   earthClr: Float64Array;
+  /** Sun clearance from Earth's disc (eclipses); +Infinity when not provided. */
+  sunEcl: Float64Array;
+  /** Clearance each body must exceed to count as visible (the analysis's rule). */
+  thr: { sun: number; earth: number };
   start: number;
   end: number;
+}
+
+const SUN_CRITERION_DEG = { limb: -0.2666, centre: 0, full: 0.2666 } as const;
+
+/** Visibility thresholds an analysis was computed with. */
+export function thresholdsOf(a: Analysis) {
+  const st = a.settings;
+  if (st?.thresholds_deg) return st.thresholds_deg;
+  return { sun: st ? SUN_CRITERION_DEG[st.sun_criterion] ?? 0 : 0, earth: st?.earth_margin_deg ?? 0 };
 }
 
 const cache = new WeakMap<Analysis, Series>();
@@ -28,6 +41,8 @@ export function toSeries(a: Analysis): Series {
     earthAz: new Float64Array(n),
     earthEl: new Float64Array(n),
     earthClr: new Float64Array(n),
+    sunEcl: new Float64Array(n),
+    thr: thresholdsOf(a),
     start: 0,
     end: 0,
   };
@@ -39,6 +54,7 @@ export function toSeries(a: Analysis): Series {
     s.earthAz[i] = r.earth_azimuth_deg;
     s.earthEl[i] = r.earth_elevation_deg;
     s.earthClr[i] = r.earth_clearance_deg;
+    s.sunEcl[i] = r.sun_eclipse_clearance_deg ?? Infinity;
   });
   s.start = s.t[0];
   s.end = s.t[n - 1];
@@ -52,6 +68,10 @@ export interface BodyState {
   clearance: number; // el − terrain horizon at az
   horizon: number;
   visible: boolean;
+  /** Visibility rule: clearance must exceed this. */
+  threshold: number;
+  /** Sun only: clearance from Earth's disc; negative means eclipsed. */
+  eclipse: number;
 }
 export interface SkyState {
   t: number;
@@ -85,13 +105,14 @@ export function sampleAt(s: Series, t: number): SkyState {
     else hi = mid;
   }
   const f = s.t[hi] === s.t[lo] ? 0 : (tc - s.t[lo]) / (s.t[hi] - s.t[lo]);
-  const body = (az: Float64Array, el: Float64Array, clr: Float64Array): BodyState => {
+  const body = (az: Float64Array, el: Float64Array, clr: Float64Array, thr: number, ecl?: Float64Array): BodyState => {
     const e = lerp(el[lo], el[hi], f);
     const c = lerp(clr[lo], clr[hi], f);
-    return { az: lerpAz(az[lo], az[hi], f), el: e, clearance: c, horizon: e - c, visible: c > 0 };
+    const x = ecl ? (Number.isFinite(ecl[lo]) ? lerp(ecl[lo], ecl[hi], f) : Infinity) : Infinity;
+    return { az: lerpAz(az[lo], az[hi], f), el: e, clearance: c, horizon: e - c, visible: Math.min(c, x) > thr, threshold: thr, eclipse: x };
   };
-  const sun = body(s.sunAz, s.sunEl, s.sunClr);
-  const earth = body(s.earthAz, s.earthEl, s.earthClr);
+  const sun = body(s.sunAz, s.sunEl, s.sunClr, s.thr.sun, s.sunEcl);
+  const earth = body(s.earthAz, s.earthEl, s.earthClr, s.thr.earth);
   return { t, sun, earth, both: sun.visible && earth.visible, inRange };
 }
 

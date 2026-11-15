@@ -4,7 +4,7 @@
 
 **Try it:** https://lunar-mission-planner-alpha.vercel.app
 
-At the Moon's south pole the Sun never climbs more than a degree or two, so
+At the Moon's south pole the Sun never climbs more than a few degrees, so
 a ridge a few metres high decides whether a lander has solar power, and Earth
 drifts in and out of view as the Moon wobbles. This tool shows, for candidate
 landing sites and dates, when a lander would have sunlight and a direct radio
@@ -36,13 +36,17 @@ line to Earth, and how that changes when a launch slips.
 ## Science
 
 - **Ephemeris:** NAIF SPICE (DE440, MOON_ME), apparent directions with light-time and aberration. **Matches JPL Horizons to better than 0.00001°**, checked automatically in `tests/test_positions.py`.
-- **Terrain:** NASA LRO LOLA 5 m site maps plus the 80 m south-polar map (NASA Goddard PGDA). The 360° horizon is traced out to 160 km, accounting for lunar curvature, with 5 rays per degree. Horizons are computed for 2, 5 and 10 m observer heights.
-- **Visibility windows:** refined to about a second with root-finding. Windows that run past the analysed range are flagged.
+- **Terrain:** NASA LRO LOLA 5 m site maps plus the 80 m south-polar map (NASA Goddard PGDA). The 360° horizon is traced out to 160 km, accounting for lunar curvature, with 5 rays per degree at each landing point (3 per degree at the extra Street View viewpoints). Horizons are computed for 2, 5 and 10 m observer heights.
+- **Visibility windows:** found by root-finding (numerically to about a second; real accuracy is set by the terrain, see Limits). Windows that run past the analysed range are flagged.
+- **Eclipses:** Earth's disc is treated like terrain, so when Earth passes in front of the Sun (31 Dec 2028) the panels go dark.
 - **Limits:**
-  - Results are for a single point, not the whole ~100 m landing area.
+  - Results are for a single point. Within a few hundred metres sunlight can change by 30–50 points, often more than the difference between sites; Street View shows this.
+  - Near-field terrain (5 m cells within ~100 m) dominates the 2 m horizon, so sunrise/sunset times carry minutes-to-hours uncertainty.
+  - One 30-day window in late 2028; no full-year worst case for battery sizing.
   - Terrain is pending independent validation.
   - Irradiance is not electrical power.
-  - Earth visibility is line of sight, not a link budget.
+  - Earth visibility is line of sight, not a link budget or a Deep Space Network schedule; no relay satellites.
+  - Shackleton Rim's point was moved 54 m to the nearby crest (its published point is fully enclosed by terrain); the other sites use published points. See `config/sites.json`.
 
   The in-app **"How do we know?"** dialog explains all of this in plain language.
 

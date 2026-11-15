@@ -151,7 +151,10 @@ function DelayGrid({ base, constraints, priority }: { base: string; constraints:
                   {missing ? (
                     <span className="muted">calculating…</span>
                   ) : top?.passes ? (
-                    <span className="best-pill">{site ? shortName(site) : top.id}</span>
+                    <span className="best-pill" title={top.tiedWith.length ? "Tied on the main score; ordered by sunlight after touchdown" : undefined}>
+                      {site ? shortName(site) : top.id}
+                      {top.tiedWith.length > 0 && <span className="small"> (tie)</span>}
+                    </span>
                   ) : (
                     <span className="warn-pill" title={top?.failures.join(" · ")}>
                       none fully fits · closest: {site ? shortName(site) : "—"}

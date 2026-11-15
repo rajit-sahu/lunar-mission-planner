@@ -8,7 +8,7 @@
   "longitude_deg": 203.81414,
   "site_coordinate_source": "Kumari et al., Planetary Science Journal (2022); Site 004 89.78 S, 155.73 W",
   "site_note": "Representative published point, not an approved landing zone",
-  "representative_point_note": "Moved 54 m from the published point (89.78 S, 155.73 W) to the highest 5 m LOLA cell within 100 m (NASA's landing-site radius). The published point sits in a hollow 10.5 m below this crest, where nearby ground blocks the Sun and Earth in every direction.",
+  "representative_point_note": "Moved 54 m from the published point (89.78 S, 155.73 W) to the highest 5 m LOLA cell within 100 m. The published point sits in a hollow 10.5 m below this crest: nearby ground blocks the Sun and Earth in every direction, so it gets no sunlight and no Earth at all, which says more about one 5 m pixel than about the site. We applied this rule only to this site; the other two use their published points. Street View shows how much results change within a few hundred metres at every site.",
   "elevation_m": 1739.122,
   "elevation_source_path": "data/raw/Site04_final_adj_5mpp_surf.tif",
   "elevation_source_raster_pixel_size_m": [

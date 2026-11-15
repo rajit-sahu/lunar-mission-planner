@@ -14,7 +14,24 @@ export interface Site {
   source?: string | null;
   note?: string | null;
   terrain_source: TerrainSource;
+  /** Observer heights (m) with a precomputed horizon. */
+  observer_heights_m?: number[];
+  /** Set when the representative point was refined (e.g. moved onto a crest). */
+  point_note?: string | null;
+  /** NASA context, e.g. "Artemis III candidate region (2024)". */
+  context?: string | null;
 }
+
+export type SunCriterion = "limb" | "centre" | "full";
+
+/** Planner-adjustable visibility rules. Defaults match the backend's. */
+export interface VisSettings {
+  sunCriterion: SunCriterion;
+  earthMarginDeg: number;
+  observerHeightM: number;
+}
+
+export const DEFAULT_SETTINGS: VisSettings = { sunCriterion: "centre", earthMarginDeg: 0, observerHeightM: 2 };
 
 export interface Horizon {
   site_id: string;
@@ -33,6 +50,10 @@ export interface TimelineRow {
   earth_elevation_deg: number;
   earth_horizon_deg: number;
   earth_clearance_deg: number;
+  /** Visible fraction of the Sun's / Earth's disc (0–1). Absent in older snapshots. */
+  sun_disc_fraction?: number;
+  earth_disc_fraction?: number;
+  sun_distance_km?: number;
   sun_visible: boolean;
   earth_visible: boolean;
   both_visible: boolean;
@@ -42,6 +63,9 @@ export interface Window {
   start: string;
   end: string;
   duration_hours: number;
+  /** The window touches the start/end of the analysed range (may continue beyond it). */
+  clipped_start?: boolean;
+  clipped_end?: boolean;
 }
 
 export interface BodyStats {
@@ -49,6 +73,9 @@ export interface BodyStats {
   visible_percent?: number;
   longest_visible_hours?: number;
   longest_not_visible_hours?: number;
+  /** True duration is at least the value given (cut off by the range). */
+  longest_visible_clipped?: boolean;
+  longest_not_visible_clipped?: boolean;
 }
 
 export interface Analysis {
@@ -59,6 +86,7 @@ export interface Analysis {
   statistics: { sun: BodyStats; earth: BodyStats; both: BodyStats };
   ephemeris_source?: string;
   terrain_source?: TerrainSource;
+  settings?: { sun_criterion: SunCriterion; earth_margin_deg: number; observer_height_m: number };
 }
 
 export interface ComparisonRow {

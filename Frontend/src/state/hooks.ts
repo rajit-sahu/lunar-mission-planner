@@ -20,7 +20,7 @@ export function useSiteSky(siteId: string | null | undefined, opts?: { start?: s
   const globalTime = useStore((s) => s.time);
   const start = opts?.start ?? missionStart;
   const time = opts?.time ?? globalTime;
-  const entry = useStore((s) => (siteId ? s.analyses[analysisKey(siteId, start)] : undefined));
+  const entry = useStore((s) => (siteId ? s.analyses[analysisKey(siteId, start, s.settings)] : undefined));
 
   return useMemo(() => {
     if (!siteId || !entry) return { status: "idle" };

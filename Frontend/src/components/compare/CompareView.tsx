@@ -1,95 +1,84 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { analysisKey, DAY, DELAYS, isoAddDays, useStore, WINDOW_DAYS, type Scenario } from "../../state/store";
-import type { Analysis } from "../../api/types";
-import { formatHours, toSeries } from "../../lib/timeline";
+import type { Site } from "../../api/types";
+import {
+  DEFAULT_CONSTRAINTS,
+  fmtH,
+  missionMetrics,
+  rank,
+  type Candidate,
+  type Constraints,
+  type MissionMetrics,
+  type Priority,
+} from "../../lib/metrics";
 import { VisibilityLanes } from "../charts/VisibilityLanes";
 import { CloseIcon, PlusIcon } from "../icons";
 import { shortName } from "../globe/GlobeOverlay";
 
-type Priority = "both" | "sun" | "earth";
+type Row = {
+  key: keyof MissionMetrics;
+  label: string;
+  hint: string;
+  better: "high" | "low";
+  fmt: (m: MissionMetrics) => string;
+};
 
-interface Metrics {
-  sunPct: number;
-  earthPct: number;
-  bothPct: number;
-  longestSun: number;
-  longestDark: number;
-  longestEarthOut: number;
-  longestBoth: number;
-  firstSunsetH: number | null;
-  first72Sun: number;
-}
-
-function metrics(a: Analysis): Metrics {
-  const s = a.statistics;
-  const start = Date.parse(a.timeline[0].time);
-  const first = a.windows.sun[0];
-  const sunAtLanding = !!first && Date.parse(first.start) <= start + 1000;
-  const series = toSeries(a);
-  let on = 0, n = 0;
-  for (let i = 0; i < series.t.length && series.t[i] <= start + 3 * DAY; i++) {
-    n++;
-    if (series.sunClr[i] > 0) on++;
-  }
-  return {
-    sunPct: s.sun.visible_percent ?? 0,
-    earthPct: s.earth.visible_percent ?? 0,
-    bothPct: s.both.visible_percent ?? 0,
-    longestSun: s.sun.longest_visible_hours ?? 0,
-    longestDark: s.sun.longest_not_visible_hours ?? 0,
-    longestEarthOut: s.earth.longest_not_visible_hours ?? 0,
-    longestBoth: s.both.longest_visible_hours ?? 0,
-    firstSunsetH: sunAtLanding ? (Date.parse(first.end) - start) / 3.6e6 : null,
-    first72Sun: n ? (100 * on) / n : 0,
-  };
-}
-
-const ROWS: { key: keyof Metrics; label: string; fmt: (v: number | null) => string; better: "high" | "low"; hint: string }[] = [
-  { key: "bothPct", label: "Power + comms", fmt: (v) => `${v?.toFixed(1)}%`, better: "high", hint: "Share of time with both Sun and Earth above terrain" },
-  { key: "sunPct", label: "Sunlight", fmt: (v) => `${v?.toFixed(1)}%`, better: "high", hint: "Share of time the Sun is above terrain" },
-  { key: "earthPct", label: "Earth in view", fmt: (v) => `${v?.toFixed(1)}%`, better: "high", hint: "Direct-to-Earth line of sight" },
-  { key: "first72Sun", label: "Sunlit, first 72 h", fmt: (v) => `${v?.toFixed(0)}%`, better: "high", hint: "Landing and commissioning need power immediately" },
-  { key: "firstSunsetH", label: "First sunset after landing", fmt: (v) => (v === null ? "dark at landing" : formatHours(v)), better: "high", hint: "How long until the first loss of sunlight" },
-  { key: "longestSun", label: "Longest sunlit stretch", fmt: (v) => formatHours(v ?? 0), better: "high", hint: "Longest continuous sunlight" },
-  { key: "longestDark", label: "Longest darkness", fmt: (v) => formatHours(v ?? 0), better: "low", hint: "Sizes batteries and heaters" },
-  { key: "longestEarthOut", label: "Longest Earth outage", fmt: (v) => formatHours(v ?? 0), better: "low", hint: "Longest gap without direct-to-Earth comms" },
+const pct = (v: number) => `${v.toFixed(0)}%`;
+const ROWS: Row[] = [
+  { key: "sunAtLanding", label: "Sunlit at touchdown", hint: "Power from the first minute", better: "high", fmt: (m) => (m.sunAtLanding ? "yes" : `no · rises in ${fmtH(m.firstSunriseH)}`) },
+  { key: "firstSunsetH", label: "Sunlight from touchdown", hint: "Hours until the first sunset after landing", better: "high", fmt: (m) => (m.sunAtLanding ? `${m.firstSunsetAtLeast ? "≥ " : ""}${fmtH(m.firstSunsetH)}` : "—") },
+  { key: "earthAtLanding", label: "Earth in view at touchdown", hint: "Direct radio link during descent and landing", better: "high", fmt: (m) => (m.earthAtLanding ? "yes" : "no") },
+  { key: "first72Both", label: "Power + radio, first 72 h", hint: "Share of the first three days with both Sun and Earth above terrain", better: "high", fmt: (m) => pct(m.first72Both) },
+  { key: "earthGap7dH", label: "Longest radio gap, week 1", hint: "Longest time without Earth in the first 7 days", better: "low", fmt: (m) => fmtH(m.earthGap7dH) },
+  { key: "energy7dWhPerM2Day", label: "Solar energy, week 1", hint: "Average per day on 1 m² of vertical Sun-tracking panel, before losses", better: "high", fmt: (m) => `${(m.energy7dWhPerM2Day / 1000).toFixed(1)} kWh/m²/day` },
+  { key: "sunPct", label: "Sunlight, 30 days", hint: "Share of the 30 days after landing", better: "high", fmt: (m) => pct(m.sunPct) },
+  { key: "longestDarkH", label: "Longest darkness, 30 days", hint: "Sizes batteries and heaters", better: "low", fmt: (m) => `${m.longestDarkAtLeast ? "≥ " : ""}${fmtH(m.longestDarkH)}` },
 ];
 
-function useScenarioAnalysis(sc: Scenario) {
-  return useStore((s) => s.analyses[analysisKey(sc.siteId, sc.start)]);
-}
+const value = (m: MissionMetrics, k: keyof MissionMetrics) => Number(m[k]);
 
-function ScenarioCard({ sc, index }: { sc: Scenario; index: number }) {
+
+function ScenarioCard({ sc, index, verdict }: { sc: Scenario; index: number; verdict?: { passes: boolean; failures: string[] } }) {
   const sites = useStore((s) => s.sites);
   const missionStart = useStore((s) => s.missionStart);
   const time = useStore((s) => s.time);
   const { updateScenario, removeScenario, setTime } = useStore.getState();
-  const entry = useScenarioAnalysis(sc);
+  const entry = useStore((s) => s.analyses[analysisKey(sc.siteId, sc.start, s.settings)]);
   const offset = time - Date.parse(missionStart);
   const start = Date.parse(sc.start);
   return (
     <div className="sc" style={{ ["--sc" as string]: sc.color }}>
       <div className="sc__head">
         <span className="sc__tag">{String.fromCharCode(65 + index)}</span>
-        <select value={sc.siteId} onChange={(e) => updateScenario(sc.id, { siteId: e.target.value })} aria-label="Site">
+        <select value={sc.siteId} onChange={(e) => updateScenario(sc.id, { siteId: e.target.value })} aria-label={`Scenario ${index + 1} site`}>
           {sites.map((s) => (
             <option key={s.id} value={s.id}>
               {shortName(s)}
             </option>
           ))}
         </select>
-        <input type="date" value={sc.start.slice(0, 10)} onChange={(e) => e.target.value && updateScenario(sc.id, { start: `${e.target.value}T00:00:00Z` })} aria-label="Landing date" />
+        <input
+          type="date"
+          value={sc.start.slice(0, 10)}
+          onChange={(e) => e.target.value && updateScenario(sc.id, { start: `${e.target.value}T00:00:00Z` })}
+          aria-label={`Scenario ${index + 1} landing date`}
+        />
         <div className="sc__delays">
           {DELAYS.map((d) => (
-            <button key={d} className="chip chip--sm" onClick={() => updateScenario(sc.id, { start: isoAddDays(sc.start, d) })}>
+            <button key={d} className="chip chip--sm" onClick={() => updateScenario(sc.id, { start: isoAddDays(sc.start, d) })} title={`Push this landing back ${d} days`}>
               +{d}d
             </button>
           ))}
         </div>
-        <button className="btn btn--icon" onClick={() => removeScenario(sc.id)} aria-label="Remove scenario">
+        <button className="btn btn--icon" onClick={() => removeScenario(sc.id)} aria-label={`Remove scenario ${index + 1}`}>
           <CloseIcon size={14} />
         </button>
       </div>
+      {verdict && (
+        <div className={`sc__verdict ${verdict.passes ? "ok" : "fail"}`}>
+          {verdict.passes ? "✓ Meets every constraint" : `✗ ${verdict.failures.join(" · ")}`}
+        </div>
+      )}
       <VisibilityLanes
         analysis={entry?.data}
         start={start}
@@ -104,80 +93,87 @@ function ScenarioCard({ sc, index }: { sc: Scenario; index: number }) {
   );
 }
 
-function DelayGrid({ siteId, base }: { siteId: string; base: string }) {
-  const ensure = useStore((s) => s.ensureAnalysis);
+/** For each delay, which site would be the best choice? */
+function DelayGrid({ base, constraints, priority }: { base: string; constraints: Constraints; priority: Priority }) {
+  const sites = useStore((s) => s.sites);
+  const settings = useStore((s) => s.settings);
   const analyses = useStore((s) => s.analyses);
-  const site = useStore((s) => s.sites.find((x) => x.id === siteId));
+  const ensure = useStore((s) => s.ensureAnalysis);
   const delays = [0, ...DELAYS];
   useEffect(() => {
-    delays.forEach((d) => ensure(siteId, isoAddDays(base, d)));
+    for (const s of sites) for (const d of delays) ensure(s.id, isoAddDays(base, d));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [siteId, base]);
+  }, [sites, base, settings]);
+
   const rows = delays.map((d) => {
-    const e = analyses[analysisKey(siteId, isoAddDays(base, d))];
-    return { d, m: e?.data ? metrics(e.data) : null };
+    const start = isoAddDays(base, d);
+    const cands: Candidate[] = [];
+    let missing = false;
+    for (const s of sites) {
+      const e = analyses[analysisKey(s.id, start, settings)];
+      if (!e?.data) {
+        missing = true;
+        continue;
+      }
+      cands.push({ id: s.id, label: shortName(s), m: missionMetrics(e.data), slopeDeg: s.slope_deg });
+    }
+    return { d, start, cands, missing, verdicts: missing ? [] : rank(cands, constraints, priority) };
   });
-  const baseline = rows[0].m;
-  const delta = (v: number, b: number | undefined, better: "high" | "low", unit: string) => {
-    if (b === undefined) return null;
-    const diff = v - b;
-    if (Math.abs(diff) < 0.05) return <span className="muted">±0</span>;
-    const good = better === "high" ? diff > 0 : diff < 0;
-    return (
-      <span className={good ? "pos" : "neg"}>
-        {diff > 0 ? "+" : "−"}
-        {unit === "%" ? `${Math.abs(diff).toFixed(1)}%` : formatHours(Math.abs(diff))}
-      </span>
-    );
-  };
+
+  const name = (id: string) => sites.find((s) => s.id === id);
   return (
     <section className="card">
       <div className="card__head">
-        <span>Mission delay simulator · {site ? shortName(site) : ""}</span>
+        <span>Mission delay simulator: best site for each landing date</span>
         <span className="small muted">original landing {base.slice(0, 10)}</span>
       </div>
       <table className="kv kv--delay">
         <thead>
           <tr>
-            <th>Delay</th>
-            <th>Power + comms</th>
-            <th>Sunlight</th>
-            <th>Sunlit, first 72 h</th>
-            <th>Longest darkness</th>
-            <th>Longest Earth outage</th>
+            <th>Landing</th>
+            <th>Best choice</th>
+            {sites.map((s) => (
+              <th key={s.id}>{shortName(s)}: sunlight from touchdown</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ d, m }) => (
-            <tr key={d}>
-              <th>{d === 0 ? "On time" : `+${d} days`}</th>
-              {m ? (
-                <>
-                  <td className="mono">
-                    {m.bothPct.toFixed(1)}% {d > 0 && delta(m.bothPct, baseline?.bothPct, "high", "%")}
-                  </td>
-                  <td className="mono">
-                    {m.sunPct.toFixed(1)}% {d > 0 && delta(m.sunPct, baseline?.sunPct, "high", "%")}
-                  </td>
-                  <td className="mono">
-                    {m.first72Sun.toFixed(0)}% {d > 0 && delta(m.first72Sun, baseline?.first72Sun, "high", "%")}
-                  </td>
-                  <td className="mono">
-                    {formatHours(m.longestDark)} {d > 0 && delta(m.longestDark, baseline?.longestDark, "low", "h")}
-                  </td>
-                  <td className="mono">
-                    {formatHours(m.longestEarthOut)} {d > 0 && delta(m.longestEarthOut, baseline?.longestEarthOut, "low", "h")}
-                  </td>
-                </>
-              ) : (
-                <td colSpan={5} className="muted">
-                  calculating…
+          {rows.map(({ d, start, cands, missing, verdicts }) => {
+            const top = verdicts[0];
+            const site = top && name(top.id);
+            return (
+              <tr key={d}>
+                <th>
+                  {d === 0 ? "On time" : `+${d} days`}
+                  <div className="small muted mono">{start.slice(0, 10)}</div>
+                </th>
+                <td className="delay-best">
+                  {missing ? (
+                    <span className="muted">calculating…</span>
+                  ) : top?.passes ? (
+                    <span className="best-pill">{site ? shortName(site) : top.id}</span>
+                  ) : (
+                    <span className="warn-pill" title={top?.failures.join(" · ")}>
+                      none fully fits · closest: {site ? shortName(site) : "—"}
+                    </span>
+                  )}
                 </td>
-              )}
-            </tr>
-          ))}
+                {sites.map((s) => {
+                  const c = cands.find((x) => x.id === s.id);
+                  const v = verdicts.find((x) => x.id === s.id);
+                  return (
+                    <td key={s.id} className="mono" title={v?.failures.join(" · ") || "meets every constraint"}>
+                      {c ? (c.m.sunAtLanding ? `${c.m.firstSunsetAtLeast ? "≥" : ""}${fmtH(c.m.firstSunsetH)}` : "dark") : "…"}{" "}
+                      {v && <span className={v.passes ? "pos" : "neg"}>{v.passes ? "✓" : "✗"}</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
+      <p className="small muted">✓ meets every constraint, ✗ fails at least one (hover for why). "≥" means the sunlight lasts beyond the 30-day window.</p>
     </section>
   );
 }
@@ -185,39 +181,39 @@ function DelayGrid({ siteId, base }: { siteId: string; base: string }) {
 export function CompareView() {
   const scenarios = useStore((s) => s.scenarios);
   const sites = useStore((s) => s.sites);
+  const settings = useStore((s) => s.settings);
   const analyses = useStore((s) => s.analyses);
+  const baseStart = useStore((s) => s.baseStart);
   const { addScenario, setView } = useStore.getState();
   const [priority, setPriority] = useState<Priority>("both");
-  const [minSun, setMinSun] = useState(48);
-  // Libration hides Earth for 1–2 weeks a month at every south-pole site, so outages are long.
-  const [maxOutage, setMaxOutage] = useState(240);
+  const [k, setK] = useState<Constraints>(DEFAULT_CONSTRAINTS);
 
+  const site = (id: string): Site | undefined => sites.find((s) => s.id === id);
   const data = scenarios.map((sc) => {
-    const e = analyses[analysisKey(sc.siteId, sc.start)];
-    return { sc, m: e?.data ? metrics(e.data) : null };
+    const e = analyses[analysisKey(sc.siteId, sc.start, settings)];
+    return { sc, m: e?.data ? missionMetrics(e.data) : null };
   });
+  const cands: Candidate[] = data
+    .filter((d) => d.m)
+    .map((d) => ({ id: d.sc.id, label: d.sc.siteId, m: d.m!, slopeDeg: site(d.sc.siteId)?.slope_deg ?? null }));
+  const verdicts = rank(cands, k, priority);
+  const verdictOf = (id: string) => verdicts.find((v) => v.id === id);
+  const winner = verdicts[0];
+  const winnerSc = winner && scenarios.find((s) => s.id === winner.id);
+  const winnerIdx = winnerSc ? scenarios.indexOf(winnerSc) : -1;
 
-  /** Scenario ids holding the best value per metric (ties all highlighted). */
-  const best = useMemo(() => {
-    const out: Partial<Record<keyof Metrics, Set<string>>> = {};
-    const ready = data.filter((d) => d.m);
-    if (ready.length < 2) return out;
+  // Best value per row (ties all highlighted).
+  const best: Partial<Record<keyof MissionMetrics, Set<string>>> = {};
+  const ready = data.filter((d) => d.m);
+  if (ready.length > 1)
     for (const r of ROWS) {
-      const val = (m: Metrics) => (m[r.key] ?? (r.better === "high" ? -1 : Infinity)) as number;
-      const vals = ready.map((d) => val(d.m!));
+      const vals = ready.map((d) => value(d.m!, r.key));
       const target = r.better === "high" ? Math.max(...vals) : Math.min(...vals);
-      const winners = ready.filter((d) => Math.abs(val(d.m!) - target) < 0.05);
-      if (winners.length < ready.length) out[r.key] = new Set(winners.map((d) => d.sc.id));
+      const winners = ready.filter((d) => Math.abs(value(d.m!, r.key) - target) < 0.05);
+      if (winners.length < ready.length) best[r.key] = new Set(winners.map((d) => d.sc.id));
     }
-    return out;
-  }, [data]);
 
-  const passes = (m: Metrics) => m.longestSun >= minSun && m.longestEarthOut <= maxOutage;
-  const scoreKey: keyof Metrics = priority === "both" ? "bothPct" : priority === "sun" ? "sunPct" : "earthPct";
-  const ranked = data.filter((d) => d.m).sort((a, b) => (Number(passes(b.m!)) - Number(passes(a.m!))) || (b.m![scoreKey] as number) - (a.m![scoreKey] as number));
-  const winner = ranked[0];
-  const winnerSite = winner && sites.find((s) => s.id === winner.sc.siteId);
-  const winnerIdx = winner ? scenarios.indexOf(winner.sc) : -1;
+  const set = (patch: Partial<Constraints>) => setK((c) => ({ ...c, ...patch }));
 
   return (
     <div className="compare">
@@ -226,7 +222,9 @@ export function CompareView() {
           <div>
             <div className="eyebrow">Scenario comparison</div>
             <h2>Which landing site and date works best?</h2>
-            <p className="muted">Each scenario covers the {WINDOW_DAYS} days after its landing date. Timelines are aligned by days since landing.</p>
+            <p className="muted">
+              Every number is measured from touchdown. Each scenario covers the {WINDOW_DAYS} days after its landing date, and timelines are aligned by days since landing.
+            </p>
           </div>
           <button className="btn" onClick={() => setView("globe")}>
             <CloseIcon size={14} /> Back to map
@@ -244,7 +242,7 @@ export function CompareView() {
               )}
             </div>
             {scenarios.map((sc, i) => (
-              <ScenarioCard key={sc.id} sc={sc} index={i} />
+              <ScenarioCard key={sc.id} sc={sc} index={i} verdict={verdictOf(sc.id)} />
             ))}
             {scenarios.length === 0 && <div className="muted small">Add a scenario to start comparing.</div>}
           </section>
@@ -252,39 +250,52 @@ export function CompareView() {
           <section className="card compare__constraints">
             <div className="card__head">
               <span>Mission constraints</span>
+              <button className="btn btn--small" onClick={() => setK(DEFAULT_CONSTRAINTS)}>
+                Reset
+              </button>
             </div>
-            <label className="field-row">
-              <span>Optimise for</span>
-              <div className="seg">
+            <div className="field-row">
+              <span id="prio-label">When several fit, prefer</span>
+              <div className="seg" role="group" aria-labelledby="prio-label">
                 {(["both", "sun", "earth"] as Priority[]).map((p) => (
-                  <button key={p} className={priority === p ? "seg__btn active" : "seg__btn"} onClick={() => setPriority(p)}>
-                    {p === "both" ? "Power + comms" : p === "sun" ? "Power" : "Comms"}
+                  <button key={p} aria-pressed={priority === p} className={priority === p ? "seg__btn active" : "seg__btn"} onClick={() => setPriority(p)}>
+                    {p === "both" ? "Power + radio" : p === "sun" ? "Longest sunlight" : "Radio"}
                   </button>
                 ))}
               </div>
+            </div>
+            <label className="field-row">
+              <span>
+                Sunlight needed from touchdown: <b className="mono">{fmtH(k.minSunFromLandingH)}</b>
+              </span>
+              <input type="range" min={0} max={336} step={6} value={k.minSunFromLandingH} onChange={(e) => set({ minSunFromLandingH: +e.target.value })} />
             </label>
             <label className="field-row">
               <span>
-                Need at least <b className="mono">{formatHours(minSun)}</b> of continuous sunlight
+                Longest radio gap allowed in week 1: <b className="mono">{fmtH(k.maxEarthGap7dH)}</b>
               </span>
-              <input type="range" min={0} max={240} step={6} value={minSun} onChange={(e) => setMinSun(+e.target.value)} />
+              <input type="range" min={0} max={168} step={6} value={k.maxEarthGap7dH} onChange={(e) => set({ maxEarthGap7dH: +e.target.value })} />
             </label>
             <label className="field-row">
               <span>
-                Tolerate at most <b className="mono">{formatHours(maxOutage)}</b> without Earth contact
+                Steepest ground the lander tolerates: <b className="mono">{k.maxSlopeDeg}°</b>
               </span>
-              <input type="range" min={0} max={480} step={12} value={maxOutage} onChange={(e) => setMaxOutage(+e.target.value)} />
+              <input type="range" min={2} max={20} step={1} value={k.maxSlopeDeg} onChange={(e) => set({ maxSlopeDeg: +e.target.value })} />
             </label>
-            {winner && winnerSite && (
-              <div className={`verdict ${passes(winner.m!) ? "" : "verdict--warn"}`} style={{ ["--sc" as string]: winner.sc.color }}>
+            <label className="check-row">
+              <input type="checkbox" checked={k.earthAtLanding} onChange={(e) => set({ earthAtLanding: e.target.checked })} />
+              Earth must be in view at touchdown
+            </label>
+            {winner && winnerSc && (
+              <div className={`verdict ${winner.passes ? "" : "verdict--warn"}`} style={{ ["--sc" as string]: winnerSc.color }} aria-live="polite">
                 <div className="eyebrow">Recommendation</div>
                 <div className="verdict__main">
-                  <span className="sc__tag">{String.fromCharCode(65 + winnerIdx)}</span> {shortName(winnerSite)}, landing {winner.sc.start.slice(0, 10)}
+                  <span className="sc__tag">{String.fromCharCode(65 + winnerIdx)}</span> {site(winnerSc.siteId) ? shortName(site(winnerSc.siteId)!) : winnerSc.siteId}, landing {winnerSc.start.slice(0, 10)}
                 </div>
                 <div className="small">
-                  {passes(winner.m!)
-                    ? `Meets both constraints, with ${(winner.m![scoreKey] as number).toFixed(1)}% ${priority === "both" ? "power + comms" : priority === "sun" ? "sunlight" : "Earth visibility"}.`
-                    : "No scenario meets every constraint. This one comes closest. Try another date or site."}
+                  {winner.passes
+                    ? `Meets every constraint. ${verdicts.filter((v) => !v.passes).length ? `The others fail: ${verdicts.filter((v) => !v.passes).map((v) => `${String.fromCharCode(65 + scenarios.findIndex((s) => s.id === v.id))} (${v.failures[0]})`).join("; ")}.` : ""}`
+                    : `No scenario meets every constraint; this one comes closest (${winner.failures.join(", ")}). Try another date or site, or relax a constraint.`}
                 </div>
               </div>
             )}
@@ -296,43 +307,61 @@ export function CompareView() {
             <span>Side by side</span>
             <span className="small muted">best value highlighted</span>
           </div>
-          <table className="kv kv--compare">
-            <thead>
-              <tr>
-                <th />
-                {data.map(({ sc }, i) => {
-                  const site = sites.find((s) => s.id === sc.siteId);
-                  return (
-                    <th key={sc.id} style={{ ["--sc" as string]: sc.color }}>
-                      <span className="sc__tag">{String.fromCharCode(65 + i)}</span> {site ? shortName(site) : sc.siteId}
-                      <div className="small muted mono">{sc.start.slice(0, 10)}</div>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((r) => (
-                <tr key={r.key}>
-                  <th title={r.hint}>{r.label}</th>
-                  {data.map(({ sc, m }) => (
-                    <td key={sc.id} className={`mono ${best[r.key]?.has(sc.id) ? "best" : ""}`}>
-                      {m ? r.fmt(m[r.key] as number | null) : "…"}
-                    </td>
-                  ))}
+          <div className="table-scroll">
+            <table className="kv kv--compare">
+              <thead>
+                <tr>
+                  <th />
+                  {data.map(({ sc }, i) => {
+                    const s = site(sc.siteId);
+                    return (
+                      <th key={sc.id} style={{ ["--sc" as string]: sc.color }}>
+                        <span className="sc__tag">{String.fromCharCode(65 + i)}</span> {s ? shortName(s) : sc.siteId}
+                        <div className="small muted mono">{sc.start.slice(0, 10)}</div>
+                      </th>
+                    );
+                  })}
                 </tr>
-              ))}
-              <tr>
-                <th>Meets constraints</th>
-                {data.map(({ sc, m }) => (
-                  <td key={sc.id}>{m ? passes(m) ? <span className="badge badge--ok">yes</span> : <span className="badge badge--bad">no</span> : "…"}</td>
+              </thead>
+              <tbody>
+                {ROWS.map((r) => (
+                  <tr key={r.key}>
+                    <th title={r.hint}>{r.label}</th>
+                    {data.map(({ sc, m }) => (
+                      <td key={sc.id} className={`mono ${best[r.key]?.has(sc.id) ? "best" : ""}`}>
+                        {m ? r.fmt(m) : "…"}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            </tbody>
-          </table>
+                <tr>
+                  <th>Slope at the point</th>
+                  {data.map(({ sc }) => {
+                    const s = site(sc.siteId)?.slope_deg;
+                    return (
+                      <td key={sc.id} className={`mono ${s != null && s > k.maxSlopeDeg ? "neg" : ""}`}>
+                        {s != null ? `${s.toFixed(1)}°` : "—"}
+                      </td>
+                    );
+                  })}
+                </tr>
+                <tr>
+                  <th>Meets constraints</th>
+                  {data.map(({ sc, m }) => {
+                    const v = verdictOf(sc.id);
+                    return (
+                      <td key={sc.id}>
+                        {!m || !v ? "…" : v.passes ? <span className="badge badge--ok">yes</span> : <span className="badge badge--bad">no</span>}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
-        {scenarios[0] && <DelayGrid siteId={scenarios[0].siteId} base={scenarios[0].start} />}
+        <DelayGrid base={baseStart} constraints={k} priority={priority} />
       </div>
     </div>
   );

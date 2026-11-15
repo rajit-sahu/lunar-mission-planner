@@ -2,7 +2,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { analysisKey, useStore, type MapLayer } from "../../state/store";
+import { analysisKey, prefersReducedMotion, useStore, type MapLayer } from "../../state/store";
 import { CAP_HALF_M, DEG, latLonToVec3, MOON_RADIUS_M, subPoint } from "../../lib/geo";
 import { sampleAt, toSeries, type SkyState } from "../../lib/timeline";
 import { makeCapGeometry, makeMoonMaterial } from "./moonMaterial";
@@ -42,6 +42,26 @@ function loadTex(url: string, onLoad?: () => void) {
   return t;
 }
 
+/** Textures with a small placeholder version (public/textures/*_small.jpg). */
+const HAS_SMALL = new Set(["/textures/global_wac.jpg", "/textures/sp_outer_shade.jpg", "/textures/sp_outer_wac.jpg", "/textures/sp_outer_earthvis.jpg"]);
+
+/**
+ * Show a ~100 KB placeholder immediately, then swap in the full texture once
+ * it has downloaded, so the Moon never sits black while megabytes load.
+ */
+function setProgressive(mat: THREE.ShaderMaterial, url: string, stillWanted: () => boolean = () => true) {
+  const full = texCache.get(url);
+  if (full?.image) {
+    mat.uniforms.map.value = full;
+  } else {
+    if (HAS_SMALL.has(url)) mat.uniforms.map.value = loadTex(url.replace(".jpg", "_small.jpg"));
+    loadTex(url, () => {
+      if (stillWanted()) mat.uniforms.map.value = texCache.get(url)!;
+    });
+  }
+  mat.uniforms.hasMap.value = 1;
+}
+
 /** World-space unit vector for a lat/lon. */
 export function worldDir(lat: number, lon: number, out = new THREE.Vector3()) {
   return latLonToVec3(lat, lon, 1, out).applyQuaternion(MOON_QUAT);
@@ -51,7 +71,7 @@ function skyForReference(): { lat: number; lon: number; sky: SkyState } | null {
   const s = useStore.getState();
   const id = s.selectedSiteId ?? s.sites[0]?.id;
   const site = s.sites.find((x) => x.id === id);
-  const entry = id ? s.analyses[analysisKey(id, s.missionStart)] : undefined;
+  const entry = id ? s.analyses[analysisKey(id, s.missionStart, s.settings)] : undefined;
   if (!site || !entry?.data) return null;
   return { lat: site.latitude_deg, lon: site.longitude_deg, sky: sampleAt(toSeries(entry.data), s.time) };
 }
@@ -59,16 +79,18 @@ function skyForReference(): { lat: number; lon: number; sky: SkyState } | null {
 function Moon() {
   const layer = useStore((s) => s.layer);
   const { camera } = useThree();
-  const globalMat = useMemo(() => makeMoonMaterial(loadTex("/textures/global_wac.jpg")), []);
+  const globalMat = useMemo(() => {
+    const m = makeMoonMaterial(null);
+    setProgressive(m, "/textures/global_wac.jpg");
+    return m;
+  }, []);
   const outerGeo = useMemo(() => makeCapGeometry(CAP_HALF_M.outer, 1.00025, 180), []);
   const innerGeo = useMemo(() => makeCapGeometry(CAP_HALF_M.inner, 1.0004, 160), []);
   const outerMat = useMemo(() => makeMoonMaterial(null, { cap: true }), []);
   const innerMat = useMemo(() => makeMoonMaterial(loadTex("/textures/sp_inner_shade.jpg"), { cap: true }), []);
 
   useEffect(() => {
-    const tex = loadTex(LAYER_TEXTURE[layer]);
-    outerMat.uniforms.map.value = tex;
-    outerMat.uniforms.hasMap.value = 1;
+    setProgressive(outerMat, LAYER_TEXTURE[layer], () => useStore.getState().layer === layer);
     outerMat.uniforms.colormap.value = layer === "illum" || layer === "earthvis" ? 1 : 0;
   }, [layer, outerMat]);
 
@@ -209,13 +231,19 @@ function CameraRig() {
       d0: camera.position.length(),
       d1: dist,
       t0: performance.now(),
-      dur: dur * 1000,
+      // Respect the system "reduce motion" setting: jump instead of flying.
+      dur: prefersReducedMotion() ? 1 : dur * 1000,
     };
   };
 
   // Intro: start over the near side, swoop down to the south pole.
   useEffect(() => {
     if (import.meta.env.DEV) Object.assign(window, { __camera: camera, __anim: anim });
+    if (prefersReducedMotion()) {
+      camera.position.set(0, 0.0001, POLAR_VIEW_DIST);
+      camera.lookAt(0, 0, 0);
+      return;
+    }
     camera.position.set(0, 3.0, 0.9);
     camera.lookAt(0, 0, 0);
     // Skip the swoop if the user already picked a site (a fly-to is running).
@@ -348,7 +376,7 @@ function OverlayProjector() {
       };
       arrows.style.transform = `translate(${P.x}px, ${P.y}px)`;
       arrows.style.opacity = tmp.p.dot(camDir) > 0.05 ? "1" : "0";
-      const entry = s.analyses[analysisKey(site.id, s.missionStart)];
+      const entry = s.analyses[analysisKey(site.id, s.missionStart, s.settings)];
       if (entry?.data) {
         const sky = sampleAt(toSeries(entry.data), s.time);
         overlayRefs.setArrow?.("sun", angleFor(sky.sun.az), sky.sun.visible);

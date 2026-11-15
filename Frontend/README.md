@@ -5,6 +5,26 @@ the south pole, with a site dashboard, a global time slider, a surface view
 and scenario comparison. All numbers come from the FastAPI backend (SPICE
 ephemerides + LOLA terrain).
 
+## Two layers
+
+`mode` in the store is `"discover"` (default) or `"planner"`, remembered in
+localStorage and linkable with `?layer=planner`. Every panel reads it:
+
+| | Discover | Mission planner |
+|---|---|---|
+| Site list | traits ("Sunniest"), days of sunlight | coordinates, % bars, search |
+| Dashboard | plain sentences, sunlight gauge | angles, clearance, visibility rules, energy, battery check, charts, stats |
+| Timeline | play, day counter, one combined strip, "land a week late" toggle | UTC clock, speeds, landing date, delay chips, Sun/Earth/Both lanes |
+| Third view | "Launch late?" (`LateView`) | Compare (`CompareView`) with constraints + delay simulator |
+| Surface | sentences, true angles only | numeric readout, vertical exaggeration |
+
+Landing decisions use `src/lib/metrics.ts`. Its metrics are measured from
+touchdown: sunlit at touchdown, hours until the first sunset, Earth at
+touchdown, power and radio in the first 72 h, the longest radio gap in week 1,
+and energy. `rank()` applies constraints (including slope) and says why each
+option passes or fails. The guided tour (`StoryTour.tsx`) drives the real app;
+its delay sentence is computed from the data.
+
 ## Run it
 
 Start the backend first (from the repo root, see `Backend/README.md`):
@@ -87,13 +107,15 @@ Malapert massif.
 src/
   api/          types.ts (mirrors Backend/README.md), client.ts (live → snapshot → demo), demo.ts
   state/        store.ts (zustand: site, global time, mode, scenarios), hooks.ts
-  lib/          geo.ts (projections), timeline.ts (interpolation, countdowns), power.ts
+  lib/          geo.ts (projections), timeline.ts (interpolation, countdowns), power.ts, metrics.ts (touchdown metrics, ranking)
   components/
     globe/      MoonGlobe (three.js / react-three-fiber), GlobeOverlay (pins, bearing arrows, scale)
     panels/     TopBar, SitePanel, SiteDashboard, TimelineDock, LayerSwitcher
     charts/     VisibilityLanes, SkyChart, ClearanceChart (plain SVG)
     pov/        SurfacePOV (Felix: stylized horizon view)
-    compare/    CompareView (scenarios, constraints, delay simulator)
+    compare/    CompareView (planner), LateView (discover)
+    AboutDialog.tsx  "How do we know?" methods, validation, limits
+    StoryTour.tsx    1-minute guided story
 ```
 
 Every view reads the same `time` and `selectedSiteId` from the store, so the

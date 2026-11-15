@@ -72,6 +72,32 @@ export function VisibilityLanes({
           width={width}
           height={height}
           className={onScrub ? "lanes__svg scrub" : "lanes__svg"}
+          {...(onScrub
+            ? {
+                role: "slider",
+                tabIndex: 0,
+                "aria-label": "Time",
+                "aria-valuemin": 0,
+                "aria-valuemax": Math.round((end - start) / 3.6e6),
+                "aria-valuenow": Math.round((time - start) / 3.6e6),
+                "aria-valuetext": `${relative ? `Day ${((time - start) / DAY).toFixed(1)}` : fmtUTC(time)}${
+                  analysis
+                    ? `. ${(["sun", "earth"] as const)
+                        .map((k) => `${k === "sun" ? "Sun" : "Earth"} ${analysis.windows[k].some((w) => Date.parse(w.start) <= time && time < Date.parse(w.end)) ? "visible" : "hidden"}`)
+                        .join(", ")}`
+                    : ""
+                }`,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                  const step = (e.shiftKey ? 24 : 6) * 3.6e6;
+                  if (e.key === "ArrowRight" || e.key === "ArrowUp") onScrub(Math.min(end, time + step));
+                  else if (e.key === "ArrowLeft" || e.key === "ArrowDown") onScrub(Math.max(start, time - step));
+                  else if (e.key === "Home") onScrub(start);
+                  else if (e.key === "End") onScrub(end);
+                  else return;
+                  e.preventDefault();
+                },
+              }
+            : {})}
           onPointerDown={(e) => {
             if (!onScrub) return;
             dragging.current = true;

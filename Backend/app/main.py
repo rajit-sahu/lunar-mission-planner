@@ -135,6 +135,7 @@ def list_sites() -> list[dict]:
                 "terrain_source": science.terrain_source(site_id),
                 "observer_heights_m": science.available_heights(site_id),
                 "point_note": terrain.get("representative_point_note"),
+                "context": site.get("context"),
             }
         )
     return result

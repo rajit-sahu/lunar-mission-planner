@@ -98,7 +98,10 @@ export function StoryTour() {
   const delayLine = useMemo(() => {
     const a = analyses[analysisKey(STORY_SITE, baseStart, settings)]?.data;
     const b = analyses[analysisKey(STORY_SITE, isoAddDays(baseStart, 7), settings)]?.data;
-    return a && b ? delaySentence(missionMetrics(a), missionMetrics(b), 7) : null;
+    if (!a || !b) return null;
+    const onTime = missionMetrics(a);
+    const line = delaySentence(onTime, missionMetrics(b), 7);
+    return onTime.earthAtLanding ? line : `${line} Even on time, Earth is hidden at touchdown here, so the lander couldn't call home straight away.`;
   }, [analyses, baseStart, settings]);
 
   if (step === null) return null;

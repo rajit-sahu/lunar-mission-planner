@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lunar Mission Planner: data preview</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --text: #0b0b0b; --text-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --earth: #2a78d6; --sun: #eb6834; --both: #1baf7a;
+    --terrain: #c3c2b7; --terrain-line: #898781;
+    --critical: #d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --text: #f0efec; --text-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --earth: #3987e5; --sun: #d95926; --both: #199e70;
+      --terrain: #383835; --terrain-line: #898781;
+      --critical: #d03b3b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--text);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 0 0 2px; }
+  p.sub { margin: 0 0 12px; color: var(--text-2); }
+  .note { color: var(--text-2); font-size: 13px; margin: 0; }
+  .filters { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: end; margin: 20px 0 16px; }
+  .filters label { display: grid; gap: 4px; font-size: 12px; color: var(--text-2); }
+  select, input[type=date] {
+    font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--axis); border-radius: 6px; padding: 6px 8px;
+  }
+  .sources { margin-left: auto; font-size: 12px; color: var(--text-2); text-align: right; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 16px;
+  }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .tile .label { font-size: 12px; color: var(--text-2); }
+  .tile .value { font-size: 24px; font-weight: 600; }
+  .tile .unit { font-size: 13px; font-weight: 400; color: var(--text-2); margin-left: 2px; }
+  .chart { width: 100%; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--text-2); margin: 6px 0 0; }
+  .legend span::before {
+    content: ""; display: inline-block; width: 14px; height: 0;
+    border-top: 2px solid var(--c); vertical-align: middle; margin-right: 6px;
+  }
+  .legend span.fill::before { height: 8px; border: 0; background: var(--c); border-radius: 2px; }
+  .scrub { display: grid; gap: 6px; margin-top: 8px; }
+  .scrub input { width: 100%; accent-color: var(--text-2); }
+  .readout { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 13px; }
+  .readout b { font-weight: 600; }
+  .readout .state { color: var(--text-2); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  th { font-weight: 500; color: var(--text-2); font-size: 12px; vertical-align: bottom; }
+  th:first-child, td:first-child { text-align: left; }
+  tr.selected td { font-weight: 600; }
+  tr.selected td:first-child::after { content: "  (shown above)"; font-weight: 400; color: var(--muted); }
+  .scroll { overflow-x: auto; }
+  #error {
+    display: none; border-left: 3px solid var(--critical); background: var(--surface);
+    padding: 10px 14px; margin-bottom: 16px; border-radius: 4px;
+  }
+  .loading { opacity: 0.45; transition: opacity 0.15s; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lunar Mission Planner: data preview</h1>
+  <p class="sub">A plain view of what the backend serves. Angles are geometric, in degrees; times are UTC.</p>
+
+  <div class="filters">
+    <label>Site <select id="site"></select></label>
+    <label>Start date (UTC) <input type="date" id="start"></label>
+    <label>Length
+      <select id="days">
+        <option value="14">14 days</option>
+        <option value="30" selected>30 days (about one lunar day)</option>
+        <option value="60">60 days</option>
+      </select>
+    </label>
+    <div class="sources" id="sources"></div>
+  </div>
+
+  <div id="error" role="alert"></div>
+
+  <div id="content">
+    <div class="tiles" id="tiles"></div>
+
+    <section class="card">
+      <h2>Sky view from the surface</h2>
+      <p class="note">Where the Sun and Earth travel over the period, against the terrain horizon. Anything below the grey silhouette is blocked.</p>
+      <div id="sky" class="chart" style="height:380px"></div>
+      <div class="legend">
+        <span style="--c:var(--sun)">Sun path</span>
+        <span style="--c:var(--earth)">Earth path</span>
+        <span class="fill" style="--c:var(--terrain)">Terrain</span>
+        <span style="--c:transparent">Filled dot: visible now. Hollow dot: blocked now.</span>
+      </div>
+      <div class="scrub">
+        <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Time within the selected period">
+        <div class="readout" id="readout"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>When each is visible</h2>
+      <p class="note">Bars mark continuous visibility. Gaps are darkness (Sun) or loss of line of sight (Earth).</p>
+      <div id="windows" class="chart" style="height:190px"></div>
+    </section>
+
+    <section class="card">
+      <h2>Height above the terrain</h2>
+      <p class="note">Elevation minus the terrain horizon in that direction. Above zero means visible.</p>
+      <div id="clearance" class="chart" style="height:280px"></div>
+      <div class="legend">
+        <span style="--c:var(--sun)">Sun</span>
+        <span style="--c:var(--earth)">Earth</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Site comparison over this period</h2>
+      <div class="scroll"><table id="compare"></table></div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const fmt = (v, d = 1) => Number(v).toFixed(d);
+const PLOT_CONFIG = { displayModeBar: false, responsive: true };
+
+let sites = [];      // from /sites
+let data = null;     // latest /compare response
+let horizons = {};   // site_id -> /horizon response
+
+function el(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+async function getJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    let detail = response.statusText;
+    try { detail = (await response.json()).detail || detail; } catch (e) {}
+    throw new Error(`${response.status}: ${typeof detail === "string" ? detail : JSON.stringify(detail)}`);
+  }
+  return response.json();
+}
+
+function showError(message) {
+  $("error").textContent = message;
+  $("error").style.display = message ? "block" : "none";
+}
+
+function baseLayout(extra) {
+  const axis = {
+    gridcolor: css("--grid"), linecolor: css("--axis"), zerolinecolor: css("--axis"),
+    tickfont: { color: css("--muted"), size: 11 }, title: { font: { color: css("--text-2"), size: 12 } },
+  };
+  const layout = {
+    paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+    font: { family: 'system-ui, -apple-system, "Segoe UI", sans-serif', color: css("--text-2"), size: 12 },
+    margin: { l: 52, r: 12, t: 8, b: 40 }, showlegend: false,
+    hoverlabel: { bgcolor: css("--surface"), bordercolor: css("--axis"), font: { color: css("--text") } },
+    xaxis: { ...axis }, yaxis: { ...axis },
+  };
+  Object.assign(layout.xaxis, extra.xaxis || {});
+  Object.assign(layout.yaxis, extra.yaxis || {});
+  const { xaxis, yaxis, ...rest } = extra;
+  return Object.assign(layout, rest);
+}
+
+/* Break a path where it wraps past north, so no line is drawn across the chart. */
+function wrapSafe(azimuths, elevations, times) {
+  const x = [], y = [], t = [];
+  for (let i = 0; i < azimuths.length; i++) {
+    if (i > 0 && Math.abs(azimuths[i] - azimuths[i - 1]) > 180) { x.push(null); y.push(null); t.push(null); }
+    x.push(azimuths[i]); y.push(elevations[i]); t.push(times[i]);
+  }
+  return { x, y, t };
+}
+
+const shortTime = (iso) => iso.slice(0, 16).replace("T", " ");
+
+function currentSite() {
+  return data.sites.find((s) => s.site_id === $("site").value);
+}
+
+function renderTiles(analysis) {
+  const meta = sites.find((s) => s.id === analysis.site_id);
+  const stats = analysis.statistics;
+  const tiles = [
+    ["Sun visible", fmt(stats.sun.visible_percent), "%"],
+    ["Earth visible", fmt(stats.earth.visible_percent), "%"],
+    ["Both at once", fmt(stats.both.visible_percent), "%"],
+    ["Longest darkness", fmt(stats.sun.longest_not_visible_hours / 24), "days"],
+    ["Longest Earth outage", fmt(stats.earth.longest_not_visible_hours / 24), "days"],
+    ["Site elevation", meta.elevation_m === null ? "n/a" : Math.round(meta.elevation_m).toLocaleString(), meta.elevation_m === null ? "" : "m"],
+    ["Slope", meta.slope_deg === null ? "n/a" : fmt(meta.slope_deg), meta.slope_deg === null ? "" : "°"],
+  ];
+  $("tiles").replaceChildren(...tiles.map(([label, value, unit]) => {
+    const tile = el("div", undefined, "tile");
+    const valueNode = el("div", value, "value");
+    valueNode.append(el("span", unit, "unit"));
+    tile.append(el("div", label, "label"), valueNode);
+    return tile;
+  }));
+}
+
+function renderSky(analysis) {
+  const tl = analysis.timeline;
+  const times = tl.map((r) => r.time);
+  const horizon = horizons[analysis.site_id];
+  const hx = [...horizon.horizon_azimuths, 360];
+  const hy = [...horizon.horizon_elevations, horizon.horizon_elevations[0]];
+  const sun = wrapSafe(tl.map((r) => r.sun_azimuth_deg), tl.map((r) => r.sun_elevation_deg), times);
+  const earth = wrapSafe(tl.map((r) => r.earth_azimuth_deg), tl.map((r) => r.earth_elevation_deg), times);
+  const all = [...hy, ...sun.y, ...earth.y].filter((v) => v !== null);
+  const low = Math.floor(Math.min(...all) - 1), high = Math.ceil(Math.max(...all) + 1);
+  const pathHover = (name) => `<b>%{y:.2f}°</b> elevation<br>%{x:.1f}° azimuth<br>${name}, %{customdata}<extra></extra>`;
+
+  Plotly.react("sky", [
+    { x: [0, 360], y: [low, low], mode: "lines", line: { width: 0 }, hoverinfo: "skip" },
+    { x: hx, y: hy, mode: "lines", fill: "tonexty", fillcolor: css("--terrain"),
+      line: { color: css("--terrain-line"), width: 1.5 },
+      hovertemplate: "<b>%{y:.2f}°</b> terrain horizon<br>%{x}° azimuth<extra></extra>" },
+    { x: sun.x, y: sun.y, customdata: sun.t.map((t) => t && shortTime(t)), mode: "lines",
+      line: { color: css("--sun"), width: 2 }, hovertemplate: pathHover("Sun") },
+    { x: earth.x, y: earth.y, customdata: earth.t.map((t) => t && shortTime(t)), mode: "lines",
+      line: { color: css("--earth"), width: 2 }, hovertemplate: pathHover("Earth") },
+    { x: [null], y: [null], mode: "markers", hoverinfo: "skip", marker: { size: 13 } },
+    { x: [null], y: [null], mode: "markers", hoverinfo: "skip", marker: { size: 13 } },
+  ], baseLayout({
+    xaxis: { title: { text: "Azimuth (° clockwise from north)" }, range: [0, 360], dtick: 45,
+             ticktext: ["N", "45", "E", "135", "S", "225", "W", "315", "N"],
+             tickvals: [0, 45, 90, 135, 180, 225, 270, 315, 360] },
+    yaxis: { title: { text: "Elevation (°)" }, range: [low, high] },
+    hovermode: "closest",
+  }), PLOT_CONFIG);
+}
+
+function renderWindows(analysis) {
+  const rows = [["Both", "both", "--both"], ["Earth", "earth", "--earth"], ["Sun", "sun", "--sun"]];
+  const traces = rows.map(([label, key, color]) => {
+    const windows = analysis.windows[key];
+    return {
+      type: "bar", orientation: "h",
+      y: windows.map(() => label),
+      base: windows.map((w) => w.start),
+      x: windows.map((w) => new Date(w.end) - new Date(w.start)),
+      customdata: windows.map((w) => [shortTime(w.start), shortTime(w.end), fmt(w.duration_hours / 24)]),
+      marker: { color: css(color) }, width: 0.5,
+      hovertemplate: `<b>%{customdata[2]} days</b> ${label.toLowerCase()} visible<br>%{customdata[0]} to %{customdata[1]}<extra></extra>`,
+    };
+  });
+  const tl = analysis.timeline;
+  Plotly.react("windows", traces, baseLayout({
+    barmode: "overlay",
+    xaxis: { type: "date", range: [tl[0].time, tl[tl.length - 1].time] },
+    yaxis: { categoryorder: "array", categoryarray: ["Both", "Earth", "Sun"], showgrid: false,
+             tickfont: { color: css("--text-2"), size: 12 } },
+    margin: { l: 52, r: 12, t: 8, b: 32 },
+  }), PLOT_CONFIG);
+}
+
+function renderClearance(analysis) {
+  const tl = analysis.timeline;
+  const times = tl.map((r) => r.time);
+  const line = (name, key, color) => ({
+    x: times, y: tl.map((r) => r[key]), mode: "lines", name,
+    line: { color: css(color), width: 2 },
+    hovertemplate: `<b>%{y:.2f}°</b> ${name}<extra></extra>`,
+  });
+  Plotly.react("clearance", [
+    line("Sun", "sun_clearance_deg", "--sun"),
+    line("Earth", "earth_clearance_deg", "--earth"),
+  ], baseLayout({
+    xaxis: { type: "date" },
+    yaxis: { title: { text: "Above terrain (°)" }, zerolinewidth: 1.5, zerolinecolor: css("--muted") },
+    hovermode: "x unified",
+  }), PLOT_CONFIG);
+}
+
+function renderCompare() {
+  const columns = [
+    ["Sun visible", "sun_visible_percent", "%", 1],
+    ["Earth visible", "earth_visible_percent", "%", 1],
+    ["Both at once", "both_visible_percent", "%", 1],
+    ["Longest darkness", "longest_darkness_hours", " d", 24],
+    ["Longest Earth outage", "longest_earth_outage_hours", " d", 24],
+    ["Longest both visible", "longest_simultaneous_visibility_hours", " d", 24],
+  ];
+  const head = el("tr");
+  head.append(el("th", "Site"), ...columns.map(([label]) => el("th", label)), el("th", "Terrain data"));
+  const body = data.comparison.map((row) => {
+    const tr = el("tr");
+    if (row.site_id === $("site").value) tr.className = "selected";
+    const meta = sites.find((s) => s.id === row.site_id);
+    tr.append(el("td", meta ? meta.name : row.site_id));
+    for (const [, key, unit, divisor] of columns) tr.append(el("td", fmt(row[key] / divisor) + unit));
+    tr.append(el("td", data.terrain_sources[row.site_id] === "lola" ? "NASA LOLA" : "Placeholder"));
+    return tr;
+  });
+  $("compare").replaceChildren(head, ...body);
+}
+
+function renderScrub() {
+  const analysis = currentSite();
+  const tl = analysis.timeline;
+  const row = tl[Math.min(Number($("scrub").value), tl.length - 1)];
+  const marker = (body, color) => ({
+    x: [[row[`${body}_azimuth_deg`]]], y: [[row[`${body}_elevation_deg`]]],
+    "marker.color": row[`${body}_visible`] ? css(color) : css("--surface"),
+    "marker.line.color": css(color), "marker.line.width": 2.5,
+  });
+  Plotly.restyle("sky", marker("sun", "--sun"), [4]);
+  Plotly.restyle("sky", marker("earth", "--earth"), [5]);
+  const line = [{ type: "line", xref: "x", yref: "paper", x0: row.time, x1: row.time, y0: 0, y1: 1,
+                  line: { color: css("--muted"), width: 1 } }];
+  Plotly.relayout("windows", { shapes: line });
+  Plotly.relayout("clearance", { shapes: line });
+
+  const state = (body, label) => {
+    const span = el("span");
+    const clearance = row[`${body}_clearance_deg`];
+    span.append(el("b", `${label} ${row[`${body}_visible`] ? "visible" : "blocked"}`),
+      el("span", `  ${clearance >= 0 ? "+" : ""}${fmt(clearance, 2)}° vs terrain, elevation ${fmt(row[`${body}_elevation_deg`], 2)}°`, "state"));
+    return span;
+  };
+  $("readout").replaceChildren(el("b", shortTime(row.time) + " UTC"), state("sun", "Sun"), state("earth", "Earth"));
+}
+
+function renderAll() {
+  if (!data) return;
+  const analysis = currentSite();
+  renderTiles(analysis);
+  renderSky(analysis);
+  renderWindows(analysis);
+  renderClearance(analysis);
+  renderCompare();
+  $("scrub").max = analysis.timeline.length - 1;
+  renderScrub();
+}
+
+async function load() {
+  const days = Number($("days").value);
+  const step = { 14: 15, 30: 30, 60: 60 }[days];
+  const start = new Date($("start").value + "T00:00:00Z");
+  const end = new Date(start.getTime() + days * 86400000);
+  const params = new URLSearchParams({ start: start.toISOString(), end: end.toISOString(), step_minutes: step });
+  for (const site of sites) params.append("site_ids", site.id);
+  $("content").classList.add("loading");
+  try {
+    data = await getJSON("/compare?" + params);
+    showError("");
+    $("sources").textContent = `Sun/Earth positions: ${data.ephemeris_source === "spice" ? "NASA SPICE" : data.ephemeris_source}. ` +
+      `${data.step_minutes}-minute samples.`;
+    $("scrub").value = 0;
+    renderAll();
+  } catch (error) {
+    showError("Could not load this period. " + error.message);
+  } finally {
+    $("content").classList.remove("loading");
+  }
+}
+
+async function init() {
+  try {
+    sites = await getJSON("/sites");
+    for (const site of sites) {
+      horizons[site.id] = await getJSON(`/sites/${encodeURIComponent(site.id)}/horizon`);
+      const option = el("option", site.name);
+      option.value = site.id;
+      $("site").append(option);
+    }
+    $("start").value = new Date().toISOString().slice(0, 10);
+    await load();
+  } catch (error) {
+    showError("Could not reach the backend. " + error.message);
+  }
+}
+
+$("site").addEventListener("change", () => { $("scrub").value = 0; renderAll(); });
+$("start").addEventListener("change", () => { if ($("start").value) load(); });
+$("days").addEventListener("change", load);
+$("scrub").addEventListener("input", renderScrub);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
+init();
+</script>
+</body>
+</html>

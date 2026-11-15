@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useHorizon, useStore } from "../../state/store";
+import { placeName, useStreetView, type SvPoint } from "../../api/streetview";
+import { shiftAzEl } from "../../lib/sky";
+import { Minimap } from "./Minimap";
 import { useSiteSky } from "../../state/hooks";
 import { angDiff, cardinal, DEG, norm360 } from "../../lib/geo";
-import { horizonAt, type SkyState } from "../../lib/timeline";
+import { horizonAt, type BodyState, type SkyState } from "../../lib/timeline";
 import type { Horizon } from "../../api/types";
 import { EarthIcon, SunIcon } from "../icons";
 import { shortName } from "../globe/GlobeOverlay";
@@ -49,9 +52,11 @@ function draw(
   fov: number,
   exag: number,
   stars: ReturnType<typeof makeStars>,
+  pitch = 0,
 ) {
   const pxDeg = W / fov;
-  const y0 = H * 0.64; // 0° elevation
+  // 0° elevation; looking up (pitch > 0) moves the horizon down the screen.
+  const y0 = H * 0.64 + pitch * (W / fov) * exag;
   const X = (az: number) => W / 2 + angDiff(heading, az) * pxDeg;
   const Y = (el: number) => y0 - el * pxDeg * exag;
   const sunUp = !!sky?.sun.visible;
@@ -241,20 +246,74 @@ function draw(
   }
 }
 
+/** The sky seen from a nearby viewpoint: same Sun/Earth directions, that point's horizon. */
+function skyAt(sky: SkyState, from: { lat: number; lon: number }, to: SvPoint, horizon: Horizon): SkyState {
+  const body = (b: BodyState): BodyState => {
+    const { az, el } = shiftAzEl({ from, to: { lat: to.lat, lon: to.lon } }, b.az, b.el);
+    const h = horizonAt(horizon, az);
+    return { az, el, horizon: h, clearance: el - h, visible: el - h > 0 };
+  };
+  const sun = body(sky.sun);
+  const earth = body(sky.earth);
+  return { ...sky, sun, earth, both: sun.visible && earth.visible };
+}
+
+const asHorizon = (p: SvPoint, siteId: string): Horizon => ({
+  site_id: siteId,
+  terrain_source: "lola",
+  horizon_azimuths: p.horizon.map((_, i) => i),
+  horizon_elevations: p.horizon,
+});
+
+const fmtM = (m: number) => (m >= 1000 ? `${(m / 1000).toFixed(1)} km` : `${Math.round(m / 10) * 10} m`);
+
 export function SurfacePOV() {
   const siteId = useStore((s) => s.selectedSiteId);
   const site = useStore((s) => s.sites.find((x) => x.id === siteId));
-  const horizon = useHorizon(siteId);
-  const { sky, status } = useSiteSky(siteId);
+  const pointId = useStore((s) => s.svPointId);
+  const setSvPoint = useStore((s) => s.setSvPoint);
+  const settings = useStore((s) => s.settings);
+  const siteHorizon = useHorizon(siteId);
+  const sv = useStreetView(siteId);
+  const { sky: siteSky, status, analysis } = useSiteSky(siteId);
   const planner = useStore((s) => s.mode === "planner");
   const [heading, setHeading] = useState<number | null>(null);
   const [fov, setFov] = useState(70);
   const [exag, setExag] = useState(1);
+  const [pitch, setPitch] = useState(0);
   const canvas = useRef<HTMLCanvasElement>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const stars = useMemo(() => makeStars(), []);
-  const drag = useRef<{ x: number; h: number } | null>(null);
+  const drag = useRef<{ x: number; y: number; h: number; p: number; moved: boolean } | null>(null);
+
+  const point = sv?.points.find((p) => p.id === pointId) ?? sv?.points[0];
+  const atLanding = !point || point.id === "landing";
+  const from = site ? { lat: site.latitude_deg, lon: site.longitude_deg } : null;
+
+  // The landing point honours the planner's observer height; other viewpoints are 2 m.
+  const horizon = atLanding ? siteHorizon : point && siteId ? asHorizon(point, siteId) : undefined;
+  const sky = useMemo(
+    () => (siteSky && !atLanding && point && from && horizon ? skyAt(siteSky, from, point, horizon) : siteSky),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [siteSky, atLanding, point, horizon, from?.lat, from?.lon],
+  );
+
+  // Share of the month with Sun / Earth up, here vs at the landing point.
+  const month = useMemo(() => {
+    if (!analysis || !point || !from || !horizon || atLanding) return null;
+    let sun = 0, earth = 0;
+    const rows = analysis.timeline;
+    for (const r of rows) {
+      const s = shiftAzEl({ from, to: point }, r.sun_azimuth_deg, r.sun_elevation_deg);
+      const e = shiftAzEl({ from, to: point }, r.earth_azimuth_deg, r.earth_elevation_deg);
+      if (s.el > horizonAt(horizon, s.az)) sun++;
+      if (e.el > horizonAt(horizon, e.az)) earth++;
+    }
+    return { sun: (100 * sun) / rows.length, earth: (100 * earth) / rows.length };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [analysis, point, horizon, atLanding]);
+  const landingMonth = analysis?.statistics;
 
   // Face the Sun when first opened for a site.
   useEffect(() => setHeading(null), [siteId]);
@@ -276,19 +335,50 @@ export function SurfacePOV() {
     c.height = size.h * dpr;
     const ctx = c.getContext("2d")!;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw(ctx, size.w, size.h, horizon, sky, h, fov, planner ? exag : 1, stars);
-  }, [size, horizon, sky, h, fov, exag, stars, planner]);
+    draw(ctx, size.w, size.h, horizon, sky, h, fov, planner ? exag : 1, stars, pitch);
+  }, [size, horizon, sky, h, fov, exag, stars, planner, pitch]);
+
+  // Walking: move to the linked viewpoint closest to where you're looking.
+  const ahead = useMemo(() => {
+    if (!point) return null;
+    let best: SvPoint["links"][number] | null = null;
+    let bestD = 50;
+    for (const l of point.links) {
+      const d = Math.abs(angDiff(h, l.bearing_deg));
+      if (d < bestD) {
+        best = l;
+        bestD = d;
+      }
+    }
+    return best;
+  }, [point, h]);
+
+  const walk = (to: string) => {
+    if (!sv?.points.some((p) => p.id === to)) return;
+    setSvPoint(to);
+    setPitch(0);
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "SELECT" || (e.target as HTMLElement)?.getAttribute("role") === "slider") return;
+      const t = e.target as HTMLElement;
+      const tag = t?.tagName;
+      if (tag === "INPUT" || tag === "SELECT" || t?.getAttribute("role") === "slider") return;
       if (e.key === "ArrowLeft") setHeading(norm360(h - 5));
-      if (e.key === "ArrowRight") setHeading(norm360(h + 5));
+      else if (e.key === "ArrowRight") setHeading(norm360(h + 5));
+      else if ((e.key === "ArrowUp" || e.key === "w") && ahead) {
+        e.preventDefault();
+        walk(ahead.to);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [h]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [h, ahead]);
+
+  const label = (id: string) => placeName(sv?.points.find((p) => p.id === id)?.label ?? id);
+  const pxDeg = size.w / fov;
+  const groundY = size.h - 34 - 64;
 
   return (
     <div className="pov">
@@ -296,23 +386,79 @@ export function SurfacePOV() {
         ref={wrap}
         className="pov__stage"
         onPointerDown={(e) => {
-          drag.current = { x: e.clientX, h };
+          if ((e.target as HTMLElement).closest("button, .minimap")) return;
+          drag.current = { x: e.clientX, y: e.clientY, h, p: pitch, moved: false };
           (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
         }}
         onPointerMove={(e) => {
           if (!drag.current) return;
           const dx = e.clientX - drag.current.x;
+          const dy = e.clientY - drag.current.y;
+          if (Math.abs(dx) > 3 || Math.abs(dy) > 3) drag.current.moved = true;
           setHeading(norm360(drag.current.h - (dx / size.w) * fov));
+          // Drag down to look up, like Street View; true angles are kept.
+          setPitch(Math.max(-5, Math.min(60, drag.current.p + (dy / size.w) * fov)));
         }}
         onPointerUp={() => (drag.current = null)}
         onWheel={(e) => setFov((f) => Math.min(160, Math.max(12, f * Math.exp(e.deltaY * 0.001))))}
       >
-        <canvas ref={canvas} style={{ width: "100%", height: "100%" }} />
+        <canvas key={point?.id ?? "landing"} ref={canvas} className="pov__canvas" style={{ width: "100%", height: "100%" }} />
+
+        {/* Street-View-style arrows on the ground, at each neighbour's true bearing. */}
+        {point &&
+          size.w > 0 &&
+          point.links.map((l) => {
+            const d = angDiff(h, l.bearing_deg);
+            if (Math.abs(d) > fov / 2 - 4) return null;
+            const x = size.w / 2 + d * pxDeg;
+            const isAhead = ahead?.to === l.to;
+            return (
+              <button
+                key={l.to}
+                className={`sv-arrow ${isAhead ? "is-ahead" : ""}`}
+                style={{ left: x, top: groundY }}
+                onClick={() => walk(l.to)}
+                aria-label={`Walk ${fmtM(l.distance_m)} to ${label(l.to)}`}
+              >
+                <svg width="44" height="30" viewBox="0 0 44 30" aria-hidden>
+                  <path d="M4 26 L22 6 L40 26 L22 18 Z" />
+                </svg>
+                <span>
+                  {label(l.to)} · {fmtM(l.distance_m)}
+                </span>
+              </button>
+            );
+          })}
+
+        {point && size.w > 0 && point.links.every((l) => Math.abs(angDiff(h, l.bearing_deg)) > fov / 2 - 4) && point.links.length > 0 && (
+          <button
+            className="sv-turn"
+            onClick={() => {
+              const near = [...point.links].sort((a, b) => Math.abs(angDiff(h, a.bearing_deg)) - Math.abs(angDiff(h, b.bearing_deg)))[0];
+              setHeading(near.bearing_deg);
+            }}
+          >
+            {point.links.length} path{point.links.length > 1 ? "s" : ""} from here · turn to the nearest
+          </button>
+        )}
+
+        {sv && point && <Minimap sv={sv} point={point} heading={h} fov={fov} sky={sky} onPick={walk} />}
       </div>
 
       <div className="pov__hud glass">
-        <div className="eyebrow">Standing at</div>
+        <div className="eyebrow">{atLanding ? "Standing at" : "Walked to"}</div>
         <div className="pov__site">{site ? (planner ? site.name : shortName(site)) : "—"}</div>
+        {point && (
+          <div className="pov__place">
+            <b>{placeName(point.label)}</b>
+            {!atLanding && (
+              <span className="small muted">
+                {` · ${fmtM(point.distance_m)} from the landing point`},{" "}
+                {Math.abs(point.dz_m) < 1 ? "same height" : point.dz_m > 0 ? `${point.dz_m.toFixed(0)} m higher` : `${(-point.dz_m).toFixed(0)} m lower`}
+              </span>
+            )}
+          </div>
+        )}
         <div className="small muted">
           Looking {cardinal(h)}
           {planner ? ` (${h.toFixed(0)}°) · field of view ${fov.toFixed(0)}°` : ""}
@@ -344,12 +490,24 @@ export function SurfacePOV() {
               <EarthIcon size={16} />
               <span>{sky.earth.visible ? "Earth is in view" : "Earth is hidden"}</span>
             </div>
-            <p className="small muted">At the pole the Sun never climbs high: it circles the horizon once a month.</p>
+          </div>
+        )}
+        {month && landingMonth && (
+          <div className="sv-compare">
+            <div className="small muted">This month, from here vs the landing point</div>
+            <div className="sv-compare__row">
+              <SunIcon size={14} className="on-sun" /> Sunlight <b className="mono">{Math.round(month.sun)}%</b>
+              <span className="muted mono">vs {Math.round(landingMonth.sun.visible_percent ?? 0)}%</span>
+            </div>
+            <div className="sv-compare__row">
+              <EarthIcon size={14} className="on-earth" /> Earth <b className="mono">{Math.round(month.earth)}%</b>
+              <span className="muted mono">vs {Math.round(landingMonth.earth.visible_percent ?? 0)}%</span>
+            </div>
           </div>
         )}
         <p className="sr-only" aria-live="polite">
           {sky
-            ? `Facing ${cardinal(h)}. Sun ${sky.sun.visible ? `${sky.sun.clearance.toFixed(1)} degrees above the terrain` : "hidden behind terrain"}, Earth ${sky.earth.visible ? "in view" : "hidden"}.`
+            ? `${point && !atLanding ? `At ${point.label}. ` : ""}Facing ${cardinal(h)}. Sun ${sky.sun.visible ? `${sky.sun.clearance.toFixed(1)} degrees above the terrain` : "hidden behind terrain"}, Earth ${sky.earth.visible ? "in view" : "hidden"}.`
             : ""}
         </p>
         <div className="pov__btns">
@@ -359,6 +517,11 @@ export function SurfacePOV() {
           <button className="btn btn--small" onClick={() => sky && setHeading(sky.earth.az)}>
             <EarthIcon size={14} /> Face Earth
           </button>
+          {!atLanding && (
+            <button className="btn btn--small" onClick={() => walk("landing")}>
+              Back to landing point
+            </button>
+          )}
         </div>
         {planner && (
           <label className="pov__exag small">
@@ -370,7 +533,10 @@ export function SurfacePOV() {
             </select>
           </label>
         )}
-        <div className="small muted">Drag to look around · scroll to zoom · ← → keys</div>
+        {planner && !atLanding && settings.observerHeightM !== 2 && (
+          <div className="small muted">Viewpoints away from the landing point use a 2 m eye height.</div>
+        )}
+        <div className="small muted">Drag to look around (down to look up) · ↑ or click an arrow to walk · ← → turn · scroll to zoom</div>
       </div>
       {planner && exag !== 1 && <div className="pov__exag-badge">Vertical ×{exag}: angles above the horizon are stretched</div>}
     </div>

@@ -88,7 +88,7 @@ The science endpoints return the science pipeline's JSON unchanged, with
 [{"id": "site_001", "name": "Connecting Ridge / Site 001",
   "latitude_deg": -89.45, "longitude_deg": 222.69,
   "elevation_m": 1954.847, "slope_deg": 9.403,
-  "source": "Kumari et al., Planetary Science Journal (2022); ...",
+  "source": "Boazman et al., Planetary Science Journal (2022); ...",
   "note": "Representative published point, not an approved landing zone",
   "terrain_source": "lola"}]
 ```

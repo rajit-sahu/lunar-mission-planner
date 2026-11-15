@@ -75,3 +75,19 @@ Hosting: the frontend is on Vercel. The backend runs on Render from `render.yaml
 
 Sites are representative published points (Boazman et al. 2022; Wueller et al.
 2026), not approved landing zones.
+
+## Use of AI
+
+Following the Space Apps rules on AI tools, we note where they were used:
+
+- **Code and documentation:** parts of the code, tests and documentation in
+  this repository were written with AI coding assistants (Claude, through
+  Claude Code). Commits made that way carry a `Co-Authored-By: Claude …`
+  line in their git metadata.
+- **Data:** no data is AI-generated. Sun and Earth positions come from NASA
+  SPICE kernels and the terrain from NASA LOLA maps, processed by the
+  scripts in `Science/` and `Terrain/`, and checked against JPL Horizons
+  by the test suite.
+- **Images:** no images are AI-generated. The globe and Street View Earth
+  use NASA imagery (Moon Trek layers, Blue Marble); the Street View ground,
+  rocks and shadows are drawn by code.

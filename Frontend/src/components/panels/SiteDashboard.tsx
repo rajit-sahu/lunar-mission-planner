@@ -243,7 +243,7 @@ export function SiteDashboard() {
           <div className={`plain plain--earth ${sky.earth.visible ? "is-on" : ""}`}>
             <EarthIcon size={22} />
             <p>
-              <b>{sky.earth.visible ? "Earth is in view." : "Earth is hidden."}</b>{" "}
+              <b>{sky.earth.visible ? "Earth is in view (line of sight)." : "Earth is hidden."}</b>{" "}
               {earthCountdown?.kind === "set"
                 ? earthCountdown.beyondRange
                   ? "It stays in view for weeks."

@@ -281,7 +281,8 @@ export function CompareView() {
             </label>
             <label className="field-row">
               <span>
-                Steepest ground the lander tolerates: <b className="mono">{k.maxSlopeDeg}°</b>
+                Steepest ground the lander tolerates: <b className="mono">{k.maxSlopeDeg}°</b>{" "}
+                <span className="small muted">(NASA's Artemis III limit is under 10°)</span>
               </span>
               <input type="range" min={2} max={20} step={1} value={k.maxSlopeDeg} onChange={(e) => set({ maxSlopeDeg: +e.target.value })} />
             </label>

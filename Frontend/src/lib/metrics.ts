@@ -123,7 +123,7 @@ export const DEFAULT_CONSTRAINTS: Constraints = {
   minSunFromLandingH: 48,
   earthAtLanding: true,
   maxEarthGap7dH: 48,
-  maxSlopeDeg: 12,
+  maxSlopeDeg: 10, // NASA Artemis III landing requirement: < 10 deg over 100 m (Dwyer Cianciolo, NASA, 2024)
 };
 
 export interface Candidate {

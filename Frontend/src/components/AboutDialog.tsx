@@ -68,6 +68,20 @@ export function AboutDialog() {
         )}
 
         <section>
+          <h3>Why these measures</h3>
+          <p>
+            NASA's key landing requirements for the first crewed south-pole landing include: land within 6° of the pole, ground sloping less
+            than 10° over 100 m, a direct radio link with Earth (no relay satellite assumed), the surface lit for the whole stay, and touchdown
+            within 100 m of the target (Dwyer Cianciolo, NASA Artemis Human Landing System update, 2024). Those are exactly what this tool
+            checks.
+          </p>
+          <p>
+            Every result starts from an <b>example landing date of 20 Nov 2028</b>, close to when the first crewed landing could happen
+            (Artemis III became an Earth-orbit test; the landing moved to a later mission). In Mission planner you can pick any date.
+          </p>
+        </section>
+
+        <section>
           <h3>What this tool does not model</h3>
           <ul>
             <li>

@@ -46,7 +46,9 @@ export function AboutDialog() {
           <p>
             The horizon around each site comes from NASA's Lunar Orbiter Laser Altimeter (<b>LOLA</b>): 5 m-per-pixel maps near each site and an
             80 m map of the whole polar region (NASA Goddard PGDA). For every 1° of compass direction we trace 5 rays out to 160 km, accounting
-            for the Moon's curvature, and keep the highest terrain. The Moon has no air, so there is no atmospheric bending.
+            for the Moon's curvature, and keep the highest terrain. The Moon has no air, so there is no atmospheric bending. In Street View the
+            horizon line, Sun and Earth are drawn from this data at true angular size; Earth uses NASA's Blue Marble map at its real phase, and
+            the rocks and ground texture are illustrative.
           </p>
           <p>
             “Visible” means the centre of the Sun or Earth is above that terrain, seen from 2 m above the ground. In Mission planner you can
@@ -56,7 +58,7 @@ export function AboutDialog() {
 
         {moved.length > 0 && (
           <section>
-            <h3>One site point we moved</h3>
+            <h3>A comparison point we added</h3>
             {moved.map((s) => (
               <p key={s.id}>
                 <b>{s.name}:</b> {s.point_note}

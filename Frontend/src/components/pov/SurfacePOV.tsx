@@ -9,6 +9,7 @@ import { horizonAt, thresholdsOf, type BodyState, type SkyState } from "../../li
 import type { Horizon } from "../../api/types";
 import { EarthIcon, SunIcon } from "../icons";
 import { shortName } from "../globe/GlobeOverlay";
+import { drawEarth, drawGround, drawSun, makeRocks, onEarthReady, type Rock } from "./render";
 
 /**
  * "Stand on the Moon": stylized 2.5D horizon view.
@@ -53,6 +54,7 @@ function draw(
   exag: number,
   stars: ReturnType<typeof makeStars>,
   pitch = 0,
+  rocks: Rock[] = [],
 ) {
   const pxDeg = W / fov;
   // 0° elevation; looking up (pitch > 0) moves the horizon down the screen.
@@ -95,52 +97,17 @@ function draw(
   }
   ctx.setLineDash([]);
 
-  // Sun (drawn before terrain so ridges occlude it correctly)
+  // Sun and Earth (drawn before terrain so ridges occlude them correctly)
   if (sky) {
     const sx = X(sky.sun.az), sy = Y(sky.sun.el);
     const r = Math.max(2.5, SUN_RADIUS_DEG * pxDeg);
-    const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r * 14);
-    g.addColorStop(0, "rgba(255,244,214,0.55)");
-    g.addColorStop(0.2, "rgba(255,210,140,0.18)");
-    g.addColorStop(1, "rgba(255,180,90,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(sx, sy, r * 14, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#fffaf0";
-    ctx.beginPath();
-    ctx.ellipse(sx, sy, r, r * exag, 0, 0, Math.PI * 2);
-    ctx.fill();
+    drawSun(ctx, sx, sy, r, exag, sky.sun.visible);
 
-    // Earth with phase
     const ex = X(sky.earth.az), ey = Y(sky.earth.el);
     const er = Math.max(4, EARTH_RADIUS_DEG * pxDeg);
-    const k = earthPhase(sky);
     const toSun = Math.atan2(-(sky.sun.el - sky.earth.el) * exag, angDiff(sky.earth.az, sky.sun.az));
-    ctx.save();
-    ctx.translate(ex, ey);
-    ctx.scale(1, exag);
-    ctx.fillStyle = "#0d1a2e";
-    ctx.beginPath();
-    ctx.arc(0, 0, er, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.rotate(toSun);
-    // lit part: half disc towards the Sun + terminator ellipse
-    const grd = ctx.createLinearGradient(-er, 0, er, 0);
-    grd.addColorStop(0, "#2f6fb8");
-    grd.addColorStop(1, "#9cd3ff");
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.arc(0, 0, er, -Math.PI / 2, Math.PI / 2);
-    const tx = er * (1 - 2 * k);
-    ctx.ellipse(0, 0, Math.abs(tx), er, 0, Math.PI / 2, -Math.PI / 2, tx > 0);
-    ctx.fill();
-    ctx.restore();
-    ctx.strokeStyle = "rgba(160,205,255,0.35)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.ellipse(ex, ey, er + 2, (er + 2) * exag, 0, 0, Math.PI * 2);
-    ctx.stroke();
+    const phaseAngle = Math.acos(Math.max(-1, Math.min(1, 2 * earthPhase(sky) - 1)));
+    drawEarth(ctx, ex, ey, er, exag, toSun, phaseAngle, sky.t);
   }
 
   // Terrain silhouette
@@ -150,18 +117,20 @@ function draw(
       const az = norm360(heading + (x - W / 2) / pxDeg);
       pts.push([x, Y(horizonAt(horizon, az))]);
     }
-    const lit = sunUp ? Math.min(1, 0.35 + sunEl / 6) : 0.12;
-    const grad = ctx.createLinearGradient(0, Math.min(...pts.map((p) => p[1])), 0, H);
-    grad.addColorStop(0, `rgba(${110 + 70 * lit},${108 + 64 * lit},${104 + 56 * lit},1)`);
-    grad.addColorStop(0.25, `rgb(${40 + 40 * lit},${40 + 38 * lit},${42 + 34 * lit})`);
-    grad.addColorStop(1, "#07080b");
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.moveTo(-2, H);
-    for (const [x, y] of pts) ctx.lineTo(x, y);
-    ctx.lineTo(W + 2, H);
-    ctx.closePath();
-    ctx.fill();
+    drawGround(ctx, {
+      W,
+      H,
+      heading,
+      pxDeg,
+      X,
+      Y,
+      hAt: (az) => horizonAt(horizon, az),
+      pts,
+      sun: sky ? { az: sky.sun.az, el: sky.sun.el, up: sunUp } : undefined,
+      earth: sky ? { az: sky.earth.az, up: sky.earth.visible, lit: earthPhase(sky) } : undefined,
+      rocks,
+      observerM: 2,
+    });
 
     // Sunlit rim on ridges facing the Sun
     if (sky && sunUp) {
@@ -340,6 +309,16 @@ export function SurfacePOV() {
     return () => ro.disconnect();
   }, []);
 
+  const rocks = useMemo(() => makeRocks(`${siteId}:${point?.id ?? "landing"}`), [siteId, point?.id]);
+  // Redraw once NASA's Earth map has loaded.
+  const [earthTick, setEarthTick] = useState(0);
+  useEffect(() => {
+    const off = onEarthReady(() => setEarthTick((n) => n + 1));
+    return () => {
+      off();
+    };
+  }, []);
+
   useEffect(() => {
     const c = canvas.current;
     if (!c || !size.w) return;
@@ -348,8 +327,8 @@ export function SurfacePOV() {
     c.height = size.h * dpr;
     const ctx = c.getContext("2d")!;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw(ctx, size.w, size.h, horizon, sky, h, fov, planner ? exag : 1, stars, pitch);
-  }, [size, horizon, sky, h, fov, exag, stars, planner, pitch]);
+    draw(ctx, size.w, size.h, horizon, sky, h, fov, planner ? exag : 1, stars, pitch, rocks);
+  }, [size, horizon, sky, h, fov, exag, stars, planner, pitch, rocks, earthTick]);
 
   // Walking: move to the linked viewpoint closest to where you're looking.
   const ahead = useMemo(() => {
@@ -547,7 +526,7 @@ export function SurfacePOV() {
         {planner && !atLanding && settings.observerHeightM !== 2 && (
           <div className="small muted">Viewpoints away from the landing point use a 2 m eye height.</div>
         )}
-        <div className="small muted">Drag to look around (drag down to look up) · tap an arrow on the ground to walk · keys: ↑ walk, ← → turn</div>
+        <div className="small muted">Drag to look around (drag down to look up) · tap an arrow on the ground to walk · keys: ↑ walk, ← → turn<br />Horizon line, Sun and Earth: NASA data at true size. Rocks and ground texture: illustrative.</div>
       </div>
       {planner && exag !== 1 && <div className="pov__exag-badge">Vertical ×{exag}: angles above the horizon are stretched</div>}
     </div>

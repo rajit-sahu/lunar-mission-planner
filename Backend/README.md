@@ -16,11 +16,11 @@ says where its numbers came from (`ephemeris_source`, and `terrain_source`:
 (SPICE `LT+S`, observer fixed on the Moon) and match JPL Horizons to better
 than 0.00001 deg; `tests/test_positions.py` checks this on every run.
 
-**Shackleton Rim (site_004):** the published point sits in a hollow 10.5 m
-below the highest 5 m LOLA cell 54 m away, which blocked the Sun and Earth in
-every direction. The representative point is now that crest (within NASA's
-100 m landing-site radius); see `representative_point_note` in
-`config/sites.json`.
+**Shackleton Rim (site_004) and Shackleton crest (site_004_crest):** site_004
+uses its published point, which sits in a hollow 10.5 m below the highest 5 m
+LOLA cell 54 m away; nearby ground blocks the Sun and Earth there at 2 m.
+site_004_crest is that crest, added by the team as a comparison point (not a
+published site); see `representative_point_note` in `config/sites.json`.
 
 ## Run it
 

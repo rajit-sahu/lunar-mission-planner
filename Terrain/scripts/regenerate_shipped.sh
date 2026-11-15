@@ -8,9 +8,9 @@
 # RAW must hold Site01/04/23 *_final_adj_5mpp_surf.tif and *_slp.tif and
 # LDEM_80S_80MPP_ADJ.TIF (see "Data" above). Takes ~30-60 min.
 #
-# Site points come from ../config/sites.json. Shackleton Rim's point is the
-# crest found by `python scripts/find_crest.py $RAW 100` (highest 5 m cell
-# within 100 m of the published point); the other sites use published points.
+# Site points come from ../config/sites.json: published points, plus
+# site_004_crest, the crest found by `python scripts/find_crest.py $RAW 100`
+# (highest 5 m cell within 100 m of Shackleton Rim's published point).
 set -e
 RAW=${RAW:-data/raw}
 OUT=${OUT:-out}
@@ -20,13 +20,14 @@ for H in 2 5 10; do
   $PY -m science.terrain.cli --sites-json ../config/sites.json \
     --observer-height-m $H --max-distance-km 160 --subrays-per-bin 5 \
     --output-dir "$OUT/h$H" --plots-dir "$OUT/h$H" \
-    --site site_001 --site site_004 --site site_malapert \
+    --site site_001 --site site_004 --site site_004_crest --site site_malapert \
     --dem "$RAW/Site01_final_adj_5mpp_surf.tif" --dem "$RAW/Site04_final_adj_5mpp_surf.tif" \
     --dem "$RAW/Site23_final_adj_5mpp_surf.tif" --dem "$RAW/LDEM_80S_80MPP_ADJ.TIF" \
     --slope-map "site_001=$RAW/Site01_final_adj_5mpp_slp.tif" \
     --slope-map "site_004=$RAW/Site04_final_adj_5mpp_slp.tif" \
+    --slope-map "site_004_crest=$RAW/Site04_final_adj_5mpp_slp.tif" \
     --slope-map "site_malapert=$RAW/Site23_final_adj_5mpp_slp.tif"
-  for S in site_001 site_004 site_malapert; do
+  for S in site_001 site_004 site_004_crest site_malapert; do
     if [ "$H" = 2 ]; then DST=../data/processed/${S}_terrain.json; else DST=../data/processed/${S}_terrain_h$H.json; fi
     cp "$OUT/h$H/${S}_terrain.json" "$DST"
   done

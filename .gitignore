@@ -11,3 +11,11 @@ venv/
 
 # Environment variables
 .env
+
+terrain_inspection/
+**/__pycache__/
+**/.DS_Store
+**/.venv/
+Terrain/data/raw/
+Terrain/data/convergence/
+Terrain/data/convergence_fine/

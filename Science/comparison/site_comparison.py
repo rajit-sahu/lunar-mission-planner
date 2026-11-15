@@ -9,7 +9,8 @@ def analyse_site(
     site,
     start_time,
     end_time,
-    step_minutes=15
+    step_minutes=15,
+    thresholds=None
 ):
     """
     Run the complete visibility analysis for one lunar site.
@@ -44,7 +45,8 @@ def analyse_site(
         horizon_azimuths=horizon_azimuths,
         horizon_elevations=horizon_elevations,
         site_id=site_id,
-        site_elevation_km=elevation
+        site_elevation_km=elevation,
+        thresholds=thresholds
     )
 
     windows_result = find_visibility_windows(
@@ -54,7 +56,8 @@ def analyse_site(
         horizon_azimuths=horizon_azimuths,
         horizon_elevations=horizon_elevations,
         site_id=site_id,
-        site_elevation_km=elevation
+        site_elevation_km=elevation,
+        thresholds=thresholds
     )
 
     statistics = calculate_window_statistics(windows_result)
@@ -68,7 +71,8 @@ def analyse_site(
         },
         "timeline": timeline_result["timeline"],
         "windows": windows_result["windows"],
-        "statistics": statistics
+        "statistics": statistics,
+        "thresholds_deg": thresholds or {"sun": 0.0, "earth": 0.0}
     }
 
 
@@ -76,7 +80,8 @@ def compare_sites(
     sites,
     start_time,
     end_time,
-    step_minutes=15
+    step_minutes=15,
+    thresholds=None
 ):
     """
     Analyse multiple lunar sites over the same time interval.
@@ -96,7 +101,8 @@ def compare_sites(
             site=site,
             start_time=start_time,
             end_time=end_time,
-            step_minutes=step_minutes
+            step_minutes=step_minutes,
+            thresholds=thresholds
         )
 
         analyses.append(result)

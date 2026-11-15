@@ -8,7 +8,8 @@ def run_site_analysis(
     site,
     start_time,
     end_time,
-    step_minutes=15
+    step_minutes=15,
+    thresholds=None
 ):
     """
     Main entry point for analysing one lunar site.
@@ -20,7 +21,8 @@ def run_site_analysis(
         site=site,
         start_time=start_time,
         end_time=end_time,
-        step_minutes=step_minutes
+        step_minutes=step_minutes,
+        thresholds=thresholds
     )
 
 
@@ -28,7 +30,8 @@ def run_site_comparison(
     sites,
     start_time,
     end_time,
-    step_minutes=15
+    step_minutes=15,
+    thresholds=None
 ):
     """
     Main entry point for comparing multiple lunar sites.

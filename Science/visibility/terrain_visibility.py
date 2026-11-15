@@ -50,10 +50,61 @@ def interpolate_horizon(azimuth_deg, horizon_azimuths, horizon_elevations):
     )
 
 
-def check_visibility(body_azimuth, body_elevation,
-                     horizon_azimuths, horizon_elevations):
+SUN_RADIUS_KM = 695_700.0
+EARTH_RADIUS_KM = 6_371.0
+BODY_RADIUS_KM = {"sun": SUN_RADIUS_KM, "earth": EARTH_RADIUS_KM}
+
+# Mean angular radii seen from the Moon, for building thresholds.
+SUN_ANGULAR_RADIUS_DEG = 0.2666
+EARTH_ANGULAR_RADIUS_DEG = 0.95
+
+# What counts as "the Sun is visible": its top edge, its centre, or its whole disc.
+SUN_CRITERIA = {"limb": -SUN_ANGULAR_RADIUS_DEG, "centre": 0.0, "full": SUN_ANGULAR_RADIUS_DEG}
+
+
+def visibility_thresholds(sun_criterion="centre", earth_margin_deg=0.0):
+    """Clearance (deg) each body must exceed to count as visible.
+
+    sun_criterion: "limb" (any part of the disc above terrain), "centre", or
+    "full" (whole disc above terrain).
+    earth_margin_deg: how far Earth's centre must clear the terrain, e.g. a
+    link margin for direct-to-Earth radio.
     """
-    Compare a celestial body's centre against the terrain horizon.
+    if sun_criterion not in SUN_CRITERIA:
+        raise ValueError(f"sun_criterion must be one of {sorted(SUN_CRITERIA)}.")
+    if not 0.0 <= earth_margin_deg <= 20.0:
+        raise ValueError("earth_margin_deg must be between 0 and 20.")
+    return {"sun": SUN_CRITERIA[sun_criterion], "earth": float(earth_margin_deg)}
+
+
+def angular_radius_deg(body, distance_km):
+    """Apparent angular radius of the Sun or Earth at a given distance."""
+    return float(np.degrees(np.arcsin(BODY_RADIUS_KM[body] / distance_km)))
+
+
+def disc_fraction(clearance_deg, radius_deg):
+    """Fraction of a disc above a straight horizon, given its centre's clearance.
+
+    Exact circle-segment area; the horizon is treated as locally straight
+    across the disc (fine for discs well under 2 degrees).
+    """
+    d, r = float(clearance_deg), float(radius_deg)
+    if d >= r:
+        return 1.0
+    if d <= -r:
+        return 0.0
+    area = r * r * np.arccos(-d / r) + d * np.sqrt(r * r - d * d)
+    return float(area / (np.pi * r * r))
+
+
+def check_visibility(body_azimuth, body_elevation,
+                     horizon_azimuths, horizon_elevations,
+                     threshold_deg=0.0):
+    """
+    Compare a celestial body against the terrain horizon.
+
+    Visible means clearance (body elevation minus terrain elevation at the
+    body's azimuth) is greater than threshold_deg; 0 tests the body's centre.
     """
 
     terrain_elevation = interpolate_horizon(
@@ -65,18 +116,22 @@ def check_visibility(body_azimuth, body_elevation,
     clearance = body_elevation - terrain_elevation
 
     return {
-        "visible": bool(clearance > 0),
+        "visible": bool(clearance > threshold_deg),
         "terrain_horizon_deg": terrain_elevation,
         "clearance_deg": float(clearance)
     }
 
 
-def compare_sun_earth(positions, horizon_azimuths, horizon_elevations):
+def compare_sun_earth(positions, horizon_azimuths, horizon_elevations,
+                      thresholds=None):
     """
     Compare Sun and Earth positions against a shared terrain horizon.
 
     positions: output dictionary from sun_earth_positions()
+    thresholds: optional {"sun": deg, "earth": deg} from visibility_thresholds()
     """
+
+    thresholds = thresholds or {"sun": 0.0, "earth": 0.0}
 
     result = {
         "site_id": positions["site_id"],
@@ -91,12 +146,17 @@ def compare_sun_earth(positions, horizon_azimuths, horizon_elevations):
             body_data["azimuth_deg"],
             body_data["elevation_deg"],
             horizon_azimuths,
-            horizon_elevations
+            horizon_elevations,
+            threshold_deg=thresholds[body]
         )
+
+        radius = angular_radius_deg(body, body_data["distance_km"])
 
         result[body] = {
             **body_data,
-            **visibility
+            **visibility,
+            "angular_radius_deg": radius,
+            "disc_fraction": disc_fraction(visibility["clearance_deg"], radius),
         }
 
     return result

@@ -28,10 +28,13 @@ def generate_visibility_timeline(
     horizon_azimuths,
     horizon_elevations,
     site_id="test_site",
-    site_elevation_km=0.0
+    site_elevation_km=0.0,
+    thresholds=None
 ):
     """
     Generate Sun/Earth visibility data over a specified time interval.
+
+    thresholds: optional {"sun": deg, "earth": deg}; see visibility_thresholds().
 
     SPICE kernels must already be loaded.
     """
@@ -67,7 +70,8 @@ def generate_visibility_timeline(
         visibility = compare_sun_earth(
             positions,
             horizon_azimuths,
-            horizon_elevations
+            horizon_elevations,
+            thresholds
         )
 
         sun_visible = visibility["sun"]["visible"]
@@ -80,11 +84,14 @@ def generate_visibility_timeline(
             "sun_elevation_deg": visibility["sun"]["elevation_deg"],
             "sun_horizon_deg": visibility["sun"]["terrain_horizon_deg"],
             "sun_clearance_deg": visibility["sun"]["clearance_deg"],
+            "sun_disc_fraction": visibility["sun"]["disc_fraction"],
+            "sun_distance_km": visibility["sun"]["distance_km"],
 
             "earth_azimuth_deg": visibility["earth"]["azimuth_deg"],
             "earth_elevation_deg": visibility["earth"]["elevation_deg"],
             "earth_horizon_deg": visibility["earth"]["terrain_horizon_deg"],
             "earth_clearance_deg": visibility["earth"]["clearance_deg"],
+            "earth_disc_fraction": visibility["earth"]["disc_fraction"],
 
             "sun_visible": sun_visible,
             "earth_visible": earth_visible,

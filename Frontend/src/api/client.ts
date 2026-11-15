@@ -4,16 +4,22 @@ import { demoAnalysis, demoHorizon, DEMO_SITES } from "./demo";
 /**
  * API client.
  *
- * Order of preference for every request:
- *   1. live   – the FastAPI backend (proxied at /api by Vite in dev,
- *               or VITE_API_URL in a deployed build)
+ * Sources, best first:
+ *   1. live     – the FastAPI backend (proxied at /api by Vite in dev,
+ *                 or VITE_API_URL in a deployed build)
  *   2. snapshot – JSON saved from the real backend into public/fixtures/
- *               (run `npm run snapshot` while the backend is up)
- *   3. demo   – a clearly labelled synthetic model so the UI never blanks
- *               during a demo. Never presented as science.
+ *                 (`npm run snapshot` while the backend is up)
+ *   3. demo     – a clearly labelled synthetic model so the UI never blanks
+ *                 during a demo. Never presented as science.
+ *
+ * Hosted backends on free plans sleep and take ~30–60 s to wake. So on load
+ * we ping /health with a short timeout (which also wakes the server). While
+ * it is asleep, requests that have a snapshot use it instantly; requests
+ * with no snapshot wait for the live backend. We keep pinging until it is up,
+ * after which every new request is live.
  */
 
-const API = (import.meta.env.VITE_API_URL as string | undefined) ?? "/api";
+const API = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "/api";
 
 export interface Result<T> {
   data: T;
@@ -40,21 +46,64 @@ async function getJSON<T>(url: string, timeoutMs = 20000): Promise<T> {
   }
 }
 
+// ---- backend availability -------------------------------------------------
+
+let backendUp = false;
+let firstCheck: Promise<boolean> | null = null;
+
+async function ping(timeoutMs: number) {
+  try {
+    const h = await getJSON<{ status?: string }>(`${API}/health`, timeoutMs);
+    backendUp = h.status === "ok";
+  } catch {
+    backendUp = false;
+  }
+  return backendUp;
+}
+
+/** Resolves quickly with whether the backend is awake; keeps waking it in the background. */
+function backendReady(): Promise<boolean> {
+  if (!firstCheck) {
+    firstCheck = ping(4000).then((up) => {
+      if (!up) {
+        const retry = setInterval(async () => {
+          if (await ping(15000)) clearInterval(retry);
+        }, 10000);
+        // Give up after ~3 minutes: a backend that is not deployed never wakes.
+        setTimeout(() => clearInterval(retry), 180_000);
+      }
+      return up;
+    });
+  }
+  return firstCheck.then(() => backendUp);
+}
+
 async function withFallback<T>(
-  live: () => Promise<T>,
+  live: (timeoutMs: number) => Promise<T>,
   snapshotPath: string | null,
   demo: () => T,
 ): Promise<Result<T>> {
-  try {
-    return { data: await live(), origin: "live" };
-  } catch (err) {
-    console.warn("[api] live request failed, falling back:", err);
+  const up = await backendReady();
+  if (up) {
+    try {
+      return { data: await live(60000), origin: "live" };
+    } catch (err) {
+      console.warn("[api] live request failed, falling back:", err);
+    }
   }
   if (snapshotPath) {
     try {
-      return { data: await getJSON<T>(snapshotPath, 5000), origin: "snapshot" };
+      return { data: await getJSON<T>(snapshotPath, 8000), origin: "snapshot" };
     } catch {
       /* no snapshot for this request */
+    }
+  }
+  if (!up) {
+    // No snapshot: worth waiting for a sleeping backend to wake rather than showing demo data.
+    try {
+      return { data: await live(75000), origin: "live" };
+    } catch (err) {
+      console.warn("[api] backend unavailable:", err);
     }
   }
   return { data: demo(), origin: "demo" };
@@ -62,7 +111,7 @@ async function withFallback<T>(
 
 export function fetchSites(): Promise<Result<Site[]>> {
   return withFallback(
-    () => getJSON<Site[]>(`${API}/sites`),
+    (t) => getJSON<Site[]>(`${API}/sites`, t),
     "/fixtures/sites.json",
     () => DEMO_SITES,
   );
@@ -70,7 +119,7 @@ export function fetchSites(): Promise<Result<Site[]>> {
 
 export function fetchHorizon(siteId: string): Promise<Result<Horizon>> {
   return withFallback(
-    () => getJSON<Horizon>(`${API}/sites/${siteId}/horizon`),
+    (t) => getJSON<Horizon>(`${API}/sites/${siteId}/horizon`, t),
     `/fixtures/${siteId}_horizon.json`,
     () => demoHorizon(siteId),
   );
@@ -87,7 +136,7 @@ export function fetchAnalysis(
   const days = Math.round((Date.parse(end) - Date.parse(start)) / 86_400_000);
   const snap = `/fixtures/${siteId}_${start.slice(0, 10)}_${days}d.json`;
   return withFallback(
-    () => getJSON<Analysis>(`${API}/sites/${siteId}/analysis?${q}`, 60000),
+    (t) => getJSON<Analysis>(`${API}/sites/${siteId}/analysis?${q}`, t),
     snap,
     () => demoAnalysis(siteId, start, end, stepMinutes),
   );

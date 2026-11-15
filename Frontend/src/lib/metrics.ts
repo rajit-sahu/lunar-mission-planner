@@ -138,6 +138,10 @@ export interface Verdict {
   passes: boolean;
   failures: string[];
   score: number;
+  /** Tie-break: hours of sunlight from touchdown (longer first). */
+  tiebreak: number;
+  /** Other candidates equal on pass/fail and the main score (shown as a tie). */
+  tiedWith: string[];
 }
 
 export const scoreFor = (m: MissionMetrics, p: Priority) =>
@@ -151,14 +155,24 @@ export function judge(c: Candidate, k: Constraints, p: Priority): Verdict {
   if (k.earthAtLanding && !m.earthAtLanding) failures.push("Earth hidden at touchdown");
   if (m.earthGap7dH > k.maxEarthGap7dH) failures.push(`${fmtH(m.earthGap7dH)} without Earth in week 1`);
   if (c.slopeDeg != null && c.slopeDeg > k.maxSlopeDeg) failures.push(`slope ${c.slopeDeg.toFixed(1)}° > ${k.maxSlopeDeg}°`);
-  return { id: c.id, passes: failures.length === 0, failures, score: scoreFor(m, p) };
+  return { id: c.id, passes: failures.length === 0, failures, score: scoreFor(m, p), tiebreak: m.sunAtLanding ? m.firstSunsetH : -m.firstSunriseH, tiedWith: [] };
 }
 
 /** Best first: candidates meeting every constraint, then by the chosen priority, then by fewest failures. */
 export function rank(cs: Candidate[], k: Constraints, p: Priority): Verdict[] {
-  return cs
+  const vs = cs
     .map((c) => judge(c, k, p))
-    .sort((a, b) => Number(b.passes) - Number(a.passes) || a.failures.length - b.failures.length || b.score - a.score);
+    .sort(
+      (a, b) =>
+        Number(b.passes) - Number(a.passes) ||
+        a.failures.length - b.failures.length ||
+        b.score - a.score ||
+        b.tiebreak - a.tiebreak,
+    );
+  const same = (a: Verdict, b: Verdict) =>
+    a.passes === b.passes && a.failures.length === b.failures.length && Math.abs(a.score - b.score) < 1e-9;
+  for (const v of vs) v.tiedWith = vs.filter((o) => o !== v && same(o, v)).map((o) => o.id);
+  return vs;
 }
 
 export function fmtH(h: number) {
@@ -178,7 +192,7 @@ export function delaySentence(onTime: MissionMetrics, late: MissionMetrics, days
     if (Math.abs(a - b) < 6) return `${when} barely changes things: about ${fmtH(b)} of sunlight after touchdown either way.`;
     return b < a
       ? `${when} cuts the first stretch of sunlight from ${fmtH(a)} to ${fmtH(b)}.`
-      : `${when} stretches the first stretch of sunlight from ${fmtH(a)} to ${fmtH(b)}.`;
+      : `${when} lengthens the first stretch of sunlight from ${fmtH(a)} to ${fmtH(b)}.`;
   }
-  return `${when} still lands in darkness.`;
+  return `${when} still lands in darkness${late.earthAtLanding ? ", though with Earth in view" : ""}.`;
 }

@@ -49,7 +49,7 @@ function LoadingVeil() {
   return (
     <div className="veil" role="status" aria-live="polite">
       <div className="veil__spinner" aria-hidden />
-      Loading NASA LOLA terrain and SPICE results…
+      Loading real NASA terrain and Sun/Earth positions…
     </div>
   );
 }

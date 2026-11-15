@@ -54,6 +54,9 @@ export interface TimelineRow {
   sun_disc_fraction?: number;
   earth_disc_fraction?: number;
   sun_distance_km?: number;
+  /** Sun centre's angular distance outside Earth's disc (negative = behind Earth: eclipse). */
+  sun_eclipse_clearance_deg?: number;
+  sun_eclipsed_fraction?: number;
   sun_visible: boolean;
   earth_visible: boolean;
   both_visible: boolean;
@@ -86,7 +89,12 @@ export interface Analysis {
   statistics: { sun: BodyStats; earth: BodyStats; both: BodyStats };
   ephemeris_source?: string;
   terrain_source?: TerrainSource;
-  settings?: { sun_criterion: SunCriterion; earth_margin_deg: number; observer_height_m: number };
+  settings?: {
+    sun_criterion: SunCriterion;
+    earth_margin_deg: number;
+    observer_height_m: number;
+    thresholds_deg?: { sun: number; earth: number };
+  };
 }
 
 export interface ComparisonRow {

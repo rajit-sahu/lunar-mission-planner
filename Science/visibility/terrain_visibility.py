@@ -159,4 +159,40 @@ def compare_sun_earth(positions, horizon_azimuths, horizon_elevations,
             "disc_fraction": disc_fraction(visibility["clearance_deg"], radius),
         }
 
+    # Eclipses: seen from the Moon, Earth's disc (~0.95 deg) can pass in
+    # front of the Sun's (~0.27 deg). Treat Earth's disc like terrain: the
+    # Sun counts as visible only if it clears both, using the same threshold.
+    sun, earth = result["sun"], result["earth"]
+    sep = angular_separation_deg(sun["azimuth_deg"], sun["elevation_deg"],
+                                 earth["azimuth_deg"], earth["elevation_deg"])
+    eclipse_clearance = sep - earth["angular_radius_deg"]
+    covered = disc_overlap_fraction(sep, sun["angular_radius_deg"], earth["angular_radius_deg"])
+    sun["eclipse_clearance_deg"] = float(eclipse_clearance)
+    sun["eclipsed_fraction"] = covered
+    sun["visible"] = bool(min(sun["clearance_deg"], eclipse_clearance) > thresholds["sun"])
+    sun["disc_fraction"] = float(sun["disc_fraction"] * (1.0 - covered))
+
     return result
+
+
+def angular_separation_deg(az1, el1, az2, el2):
+    """Angle between two directions given as azimuth/elevation (deg)."""
+    a1, e1, a2, e2 = np.radians([az1, el1, az2, el2])
+    c = np.sin(e1) * np.sin(e2) + np.cos(e1) * np.cos(e2) * np.cos(a1 - a2)
+    return float(np.degrees(np.arccos(np.clip(c, -1.0, 1.0))))
+
+
+def disc_overlap_fraction(sep_deg, r_deg, R_deg):
+    """Fraction of a disc of radius r covered by a disc of radius R whose
+    centre is sep_deg away (exact circle-circle intersection, flat sky)."""
+    d, r, R = float(sep_deg), float(r_deg), float(R_deg)
+    if d >= r + R:
+        return 0.0
+    if d <= R - r:
+        return 1.0
+    if d <= r - R:
+        return (R * R) / (r * r)
+    a = r * r * np.arccos((d * d + r * r - R * R) / (2 * d * r))
+    b = R * R * np.arccos((d * d + R * R - r * r) / (2 * d * R))
+    c = 0.5 * np.sqrt((-d + r + R) * (d + r - R) * (d - r + R) * (d + r + R))
+    return float(min(1.0, (a + b - c) / (np.pi * r * r)))

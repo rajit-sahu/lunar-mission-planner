@@ -6,6 +6,7 @@ import { CloseIcon } from "./icons";
 export function AboutDialog() {
   const open = useStore((s) => s.aboutOpen);
   const setOpen = useStore((s) => s.setAboutOpen);
+  const setStory = useStore((s) => s.setStoryStep);
   const sites = useStore((s) => s.sites);
   const close = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -20,7 +21,12 @@ export function AboutDialog() {
           <CloseIcon />
         </button>
         <div className="eyebrow">How do we know?</div>
-        <h2 id="about-title">Real NASA data, checked against NASA's own tools</h2>
+        <h2 id="about-title">Real NASA data, and how far to trust it</h2>
+        <p>
+          <button className="btn" onClick={() => { setOpen(false); setStory(0); }}>
+            Take the 1-minute tour
+          </button>
+        </p>
 
         <section>
           <h3>Where the Sun and Earth are</h3>
@@ -30,7 +36,8 @@ export function AboutDialog() {
           </p>
           <p className="validation">
             ✓ <b>Validated against JPL Horizons</b>: for two sites and two dates, our Sun and Earth azimuth and elevation match NASA's Horizons
-            system to better than <b>0.00001°</b>. These checks run automatically in our test suite.
+            system to better than <b>0.00001°</b>. These checks run automatically in our test suite. That checks the sky; the terrain (below) is
+            the bigger source of uncertainty.
           </p>
         </section>
 
@@ -61,10 +68,22 @@ export function AboutDialog() {
         <section>
           <h3>What this tool does not model</h3>
           <ul>
-            <li>Results are for a single point, not the whole ~100 m landing area. Moving even tens of metres can change them.</li>
+            <li>
+              Results are for a single point, not a whole landing area. Moving a few hundred metres can change sunlight by 30–50 points (walk
+              around in Street View to see it), which is often more than the difference between sites.
+            </li>
+            <li>
+              The horizon close to the lander comes from 5 m map cells, so a small error in nearby ground can shift sunrise and sunset by minutes
+              to hours. Times are computed to the second, but they are not that accurate.
+            </li>
+            <li>Every analysis covers 30 days in late 2028. Battery checks use the longest night in that window, not over a whole year.</li>
             <li>Terrain is computed from NASA maps but not yet independently validated; peaks farther than 160 km are ignored.</li>
             <li>“Sunlight” is light reaching a panel, not guaranteed electrical power. “Earth in view” is line of sight, not a full radio link budget.</li>
-            <li>No relay satellites, dust, or lander shadows.</li>
+            <li>
+              No relay satellites (such as Gateway or NASA's planned lunar relays), no Deep Space Network scheduling, and no thermal model.
+              Slope comes from one 5 m map cell; rocks are not mapped.
+            </li>
+            <li>Eclipses are included: when Earth passes in front of the Sun (as on 31 Dec 2028), the panels go dark.</li>
           </ul>
         </section>
 

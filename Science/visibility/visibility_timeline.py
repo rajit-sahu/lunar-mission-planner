@@ -86,6 +86,8 @@ def generate_visibility_timeline(
             "sun_clearance_deg": visibility["sun"]["clearance_deg"],
             "sun_disc_fraction": visibility["sun"]["disc_fraction"],
             "sun_distance_km": visibility["sun"]["distance_km"],
+            "sun_eclipse_clearance_deg": visibility["sun"]["eclipse_clearance_deg"],
+            "sun_eclipsed_fraction": visibility["sun"]["eclipsed_fraction"],
 
             "earth_azimuth_deg": visibility["earth"]["azimuth_deg"],
             "earth_elevation_deg": visibility["earth"]["elevation_deg"],

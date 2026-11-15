@@ -43,7 +43,15 @@ def clearance_at_time(
         horizon_elevations
     )
 
-    return visibility[body]["clearance_deg"] - threshold_deg
+    return effective_clearance(visibility[body]) - threshold_deg
+
+
+def effective_clearance(body_vis):
+    """Terrain clearance, or for the Sun the smaller of terrain clearance and
+    clearance from Earth's disc (eclipses)."""
+    c = body_vis["clearance_deg"]
+    e = body_vis.get("eclipse_clearance_deg")
+    return c if e is None else min(c, e)
 
 
 def refine_transition(
@@ -134,14 +142,15 @@ def find_visibility_windows(
     for body in ("sun", "earth"):
 
         clearance_key = f"{body}_clearance_deg"
+        eclipse_key = f"{body}_eclipse_clearance_deg"
 
         for i in range(len(timeline) - 1):
 
             row0 = timeline[i]
             row1 = timeline[i + 1]
 
-            c0 = row0[clearance_key] - thresholds[body]
-            c1 = row1[clearance_key] - thresholds[body]
+            c0 = min(row0[clearance_key], row0.get(eclipse_key, float("inf"))) - thresholds[body]
+            c1 = min(row1[clearance_key], row1.get(eclipse_key, float("inf"))) - thresholds[body]
 
             # Check whether clearance crosses the threshold.
             if c0 * c1 < 0:

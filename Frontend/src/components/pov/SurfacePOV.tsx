@@ -5,7 +5,7 @@ import { shiftAzEl } from "../../lib/sky";
 import { Minimap } from "./Minimap";
 import { useSiteSky } from "../../state/hooks";
 import { angDiff, cardinal, DEG, norm360 } from "../../lib/geo";
-import { horizonAt, type BodyState, type SkyState } from "../../lib/timeline";
+import { horizonAt, thresholdsOf, type BodyState, type SkyState } from "../../lib/timeline";
 import type { Horizon } from "../../api/types";
 import { EarthIcon, SunIcon } from "../icons";
 import { shortName } from "../globe/GlobeOverlay";
@@ -77,9 +77,11 @@ function draw(
   ctx.globalAlpha = 1;
 
   // Elevation grid
-  const step = fov > 90 ? 5 : fov > 40 ? 2 : 1;
+  // Label spacing at least ~24 px, so tall phone screens don't stack labels.
+  const rowPx = Math.abs(Y(1) - Y(0));
+  const step = [1, 2, 5, 10, 20].find((s) => s * rowPx >= 24) ?? 30;
   ctx.font = "11px 'JetBrains Mono', monospace";
-  for (let e = -10; e <= 60; e += step) {
+  for (let e = Math.ceil(-10 / step) * step; e <= 60; e += step) {
     const y = Y(e);
     if (y < 0 || y > H) continue;
     ctx.strokeStyle = e === 0 ? "rgba(140,170,220,0.35)" : "rgba(140,170,220,0.10)";
@@ -251,7 +253,7 @@ function skyAt(sky: SkyState, from: { lat: number; lon: number }, to: SvPoint, h
   const body = (b: BodyState): BodyState => {
     const { az, el } = shiftAzEl({ from, to: { lat: to.lat, lon: to.lon } }, b.az, b.el);
     const h = horizonAt(horizon, az);
-    return { az, el, horizon: h, clearance: el - h, visible: el - h > 0 };
+    return { ...b, az, el, horizon: h, clearance: el - h, visible: Math.min(el - h, b.eclipse) > b.threshold };
   };
   const sun = body(sky.sun);
   const earth = body(sky.earth);
@@ -304,11 +306,13 @@ export function SurfacePOV() {
     if (!analysis || !point || !from || !horizon || atLanding) return null;
     let sun = 0, earth = 0;
     const rows = analysis.timeline;
+    const thr = thresholdsOf(analysis);
     for (const r of rows) {
       const s = shiftAzEl({ from, to: point }, r.sun_azimuth_deg, r.sun_elevation_deg);
       const e = shiftAzEl({ from, to: point }, r.earth_azimuth_deg, r.earth_elevation_deg);
-      if (s.el > horizonAt(horizon, s.az)) sun++;
-      if (e.el > horizonAt(horizon, e.az)) earth++;
+      const ecl = r.sun_eclipse_clearance_deg ?? Infinity;
+      if (Math.min(s.el - horizonAt(horizon, s.az), ecl) > thr.sun) sun++;
+      if (e.el - horizonAt(horizon, e.az) > thr.earth) earth++;
     }
     return { sun: (100 * sun) / rows.length, earth: (100 * earth) / rows.length };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -318,6 +322,15 @@ export function SurfacePOV() {
   // Face the Sun when first opened for a site.
   useEffect(() => setHeading(null), [siteId]);
   const h = heading ?? sky?.sun.az ?? 0;
+  // Screen-reader summary, spoken once the view settles (not on every drag frame).
+  const liveText = sky
+    ? `${point && !atLanding ? `At ${placeName(point.label)}. ` : ""}Facing ${cardinal(h)}. Sun ${sky.sun.visible ? `${sky.sun.clearance.toFixed(1)} degrees above the terrain` : "hidden"}, Earth ${sky.earth.visible ? "in view" : "hidden"}.`
+    : "";
+  const [spoken, setSpoken] = useState("");
+  useEffect(() => {
+    const id = setTimeout(() => setSpoken(liveText), 700);
+    return () => clearTimeout(id);
+  }, [liveText]);
 
   useEffect(() => {
     const el = wrap.current;
@@ -484,7 +497,7 @@ export function SurfacePOV() {
           <div className="pov__read">
             <div className={`pov__body pov__body--plain ${sky.sun.visible ? "on-sun" : "off"}`}>
               <SunIcon size={16} />
-              <span>{sky.sun.visible ? "The Sun is just above the hills" : "The Sun is behind the hills"}</span>
+              <span>{sky.sun.visible ? "The Sun is just above the hills" : sky.sun.eclipse <= sky.sun.threshold ? "Earth is blocking the Sun (eclipse)" : "The Sun is behind the hills"}</span>
             </div>
             <div className={`pov__body pov__body--plain ${sky.earth.visible ? "on-earth" : "off"}`}>
               <EarthIcon size={16} />
@@ -506,9 +519,7 @@ export function SurfacePOV() {
           </div>
         )}
         <p className="sr-only" aria-live="polite">
-          {sky
-            ? `${point && !atLanding ? `At ${point.label}. ` : ""}Facing ${cardinal(h)}. Sun ${sky.sun.visible ? `${sky.sun.clearance.toFixed(1)} degrees above the terrain` : "hidden behind terrain"}, Earth ${sky.earth.visible ? "in view" : "hidden"}.`
-            : ""}
+          {spoken}
         </p>
         <div className="pov__btns">
           <button className="btn btn--small" onClick={() => sky && setHeading(sky.sun.az)}>
@@ -536,7 +547,7 @@ export function SurfacePOV() {
         {planner && !atLanding && settings.observerHeightM !== 2 && (
           <div className="small muted">Viewpoints away from the landing point use a 2 m eye height.</div>
         )}
-        <div className="small muted">Drag to look around (down to look up) · ↑ or click an arrow to walk · ← → turn · scroll to zoom</div>
+        <div className="small muted">Drag to look around (drag down to look up) · tap an arrow on the ground to walk · keys: ↑ walk, ← → turn</div>
       </div>
       {planner && exag !== 1 && <div className="pov__exag-badge">Vertical ×{exag}: angles above the horizon are stretched</div>}
     </div>

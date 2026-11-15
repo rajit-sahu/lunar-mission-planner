@@ -54,3 +54,23 @@ def test_thresholds():
         visibility_thresholds("edge")
     with pytest.raises(ValueError):
         visibility_thresholds("centre", -1)
+
+
+def test_disc_overlap_fraction():
+    from Science.visibility.terrain_visibility import disc_overlap_fraction
+    assert disc_overlap_fraction(2.0, 0.27, 0.95) == 0.0
+    assert disc_overlap_fraction(0.1, 0.27, 0.95) == 1.0
+    half = disc_overlap_fraction(0.95, 0.27, 0.95)
+    assert 0.3 < half < 0.6
+
+
+def test_earth_eclipsing_sun_hides_it():
+    from Science.visibility.terrain_visibility import compare_sun_earth
+    pos = {"site_id": "x", "time": "t",
+           "sun": {"azimuth_deg": 10.0, "elevation_deg": 5.0, "distance_km": 1.496e8},
+           "earth": {"azimuth_deg": 10.0, "elevation_deg": 5.2, "distance_km": 384400.0}}
+    v = compare_sun_earth(pos, list(range(360)), [0.0] * 360)
+    assert v["sun"]["clearance_deg"] > 0          # above the terrain...
+    assert v["sun"]["visible"] is False            # ...but behind Earth
+    assert v["sun"]["disc_fraction"] == 0.0
+    assert v["earth"]["visible"] is True

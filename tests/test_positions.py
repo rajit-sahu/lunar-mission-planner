@@ -7,7 +7,7 @@ from Science.ephemeris.sun_earth_positions import local_enu_basis, sun_earth_pos
 
 # Reference values from the JPL Horizons API (2026-11-15): observer CENTER='coord@301',
 # COORD_TYPE='GEODETIC', QUANTITIES='4' (apparent azimuth/elevation), APPARENT='AIRLESS'.
-# Sites: Mons Malapert (5.171 km + 2 m) and Site 001 (1.955 km + 2 m) above the 1737.4 km sphere.
+# Sites: Malapert Massif (5.171 km + 2 m) and Site 001 (1.955 km + 2 m) above the 1737.4 km sphere.
 MALAPERT = (-85.992, 2.056, 5.173403)
 SITE_001 = (-89.45, 222.69, 1.956847)
 HORIZONS = [
@@ -16,7 +16,7 @@ HORIZONS = [
     (SITE_001, "2028-11-20T12:00:00Z", (273.427057537, 1.155029644), (143.709052292, -0.239741931)),
     (SITE_001, "2028-11-25T00:00:00Z", (218.645607818, 0.646126028), (139.535969262, 5.114416685)),
 ]
-TOLERANCE_DEG = 0.001  # measured agreement is better than 0.00001 deg
+TOLERANCE_DEG = 0.00001  # measured agreement is about 5e-7 deg
 
 
 @pytest.mark.parametrize("site,time,sun,earth", HORIZONS)

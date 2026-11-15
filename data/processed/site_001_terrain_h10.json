@@ -1,0 +1,2580 @@
+{
+  "schema_version": "1.0",
+  "status": "geotiff_calculated_pending_validation",
+  "science_ready": null,
+  "site_id": "site_001",
+  "name": "Connecting Ridge / Site 001",
+  "latitude_deg": -89.45,
+  "longitude_deg": 222.69,
+  "site_coordinate_source": "Kumari et al., Planetary Science Journal (2022); Site 001 89.45 S, 137.31 W",
+  "site_note": "Representative published point, not an approved landing zone",
+  "representative_point_note": null,
+  "elevation_m": 1954.847,
+  "elevation_source_path": "data/raw/Site01_final_adj_5mpp_surf.tif",
+  "elevation_source_raster_pixel_size_m": [
+    5.0,
+    5.0
+  ],
+  "slope_deg": 9.403,
+  "slope_method": "NASA_LOLA_precomputed_slope_map",
+  "computed_slope_deg": 6.402,
+  "observer_height_m": 10.0,
+  "terrain_horizon": [
+    {
+      "azimuth_deg": 0,
+      "elevation_deg": -1.22594,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 1,
+      "elevation_deg": -1.18598,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 2,
+      "elevation_deg": -1.16858,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 3,
+      "elevation_deg": -1.10425,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 4,
+      "elevation_deg": -1.07534,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 5,
+      "elevation_deg": -1.05466,
+      "obstruction_distance_km": 0.4,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 6,
+      "elevation_deg": -1.02996,
+      "obstruction_distance_km": 0.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 7,
+      "elevation_deg": -0.99632,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 8,
+      "elevation_deg": -0.9062,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 9,
+      "elevation_deg": -0.9062,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 10,
+      "elevation_deg": -1.02335,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 11,
+      "elevation_deg": -1.06566,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 12,
+      "elevation_deg": -1.00537,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 13,
+      "elevation_deg": -1.04837,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 14,
+      "elevation_deg": -1.08911,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 15,
+      "elevation_deg": -1.13232,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 16,
+      "elevation_deg": -1.17313,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 17,
+      "elevation_deg": -1.23743,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 18,
+      "elevation_deg": -1.2711,
+      "obstruction_distance_km": 0.41,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 19,
+      "elevation_deg": -1.35815,
+      "obstruction_distance_km": 0.4,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 20,
+      "elevation_deg": -1.39471,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 21,
+      "elevation_deg": -1.45264,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 22,
+      "elevation_deg": -1.42437,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 23,
+      "elevation_deg": -1.44032,
+      "obstruction_distance_km": 114.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 24,
+      "elevation_deg": -1.4165,
+      "obstruction_distance_km": 115.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 25,
+      "elevation_deg": -1.44929,
+      "obstruction_distance_km": 124.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 26,
+      "elevation_deg": -1.49251,
+      "obstruction_distance_km": 124.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 27,
+      "elevation_deg": -1.65608,
+      "obstruction_distance_km": 111.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 28,
+      "elevation_deg": -1.61168,
+      "obstruction_distance_km": 110.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 29,
+      "elevation_deg": -1.65351,
+      "obstruction_distance_km": 110.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 30,
+      "elevation_deg": -1.81461,
+      "obstruction_distance_km": 110.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 31,
+      "elevation_deg": -2.08547,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 32,
+      "elevation_deg": -2.121,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 33,
+      "elevation_deg": -2.19767,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 34,
+      "elevation_deg": -2.21631,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 35,
+      "elevation_deg": -2.21642,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 36,
+      "elevation_deg": -2.31761,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 37,
+      "elevation_deg": -2.33145,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 38,
+      "elevation_deg": -2.48341,
+      "obstruction_distance_km": 0.46,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 39,
+      "elevation_deg": -2.53867,
+      "obstruction_distance_km": 0.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 40,
+      "elevation_deg": -2.5877,
+      "obstruction_distance_km": 0.46,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 41,
+      "elevation_deg": -2.58044,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 42,
+      "elevation_deg": -2.58044,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 43,
+      "elevation_deg": -2.68013,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 44,
+      "elevation_deg": -2.76589,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 45,
+      "elevation_deg": -2.95446,
+      "obstruction_distance_km": 0.43,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 46,
+      "elevation_deg": -3.01622,
+      "obstruction_distance_km": 0.32,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 47,
+      "elevation_deg": -2.82172,
+      "obstruction_distance_km": 70.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 48,
+      "elevation_deg": -2.70994,
+      "obstruction_distance_km": 69.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 49,
+      "elevation_deg": -2.57608,
+      "obstruction_distance_km": 69.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 50,
+      "elevation_deg": -2.43621,
+      "obstruction_distance_km": 69.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 51,
+      "elevation_deg": -2.37955,
+      "obstruction_distance_km": 68.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 52,
+      "elevation_deg": -2.44434,
+      "obstruction_distance_km": 68.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 53,
+      "elevation_deg": -2.53074,
+      "obstruction_distance_km": 69.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 54,
+      "elevation_deg": -2.53626,
+      "obstruction_distance_km": 50.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 55,
+      "elevation_deg": -2.519,
+      "obstruction_distance_km": 50.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 56,
+      "elevation_deg": -2.53321,
+      "obstruction_distance_km": 50.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 57,
+      "elevation_deg": -2.53839,
+      "obstruction_distance_km": 50.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 58,
+      "elevation_deg": -2.54995,
+      "obstruction_distance_km": 50.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 59,
+      "elevation_deg": -2.58986,
+      "obstruction_distance_km": 50.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 60,
+      "elevation_deg": -2.60606,
+      "obstruction_distance_km": 51.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 61,
+      "elevation_deg": -2.63468,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 62,
+      "elevation_deg": -2.4872,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 63,
+      "elevation_deg": -2.36611,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 64,
+      "elevation_deg": -2.30403,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 65,
+      "elevation_deg": -2.15581,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 66,
+      "elevation_deg": -2.02869,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 67,
+      "elevation_deg": -1.93168,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 68,
+      "elevation_deg": -1.82902,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 69,
+      "elevation_deg": -1.74247,
+      "obstruction_distance_km": 20.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 70,
+      "elevation_deg": -1.66249,
+      "obstruction_distance_km": 20.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 71,
+      "elevation_deg": -1.59917,
+      "obstruction_distance_km": 20.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 72,
+      "elevation_deg": -1.50291,
+      "obstruction_distance_km": 20.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 73,
+      "elevation_deg": -1.47359,
+      "obstruction_distance_km": 20.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 74,
+      "elevation_deg": -1.49701,
+      "obstruction_distance_km": 21.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 75,
+      "elevation_deg": -1.4692,
+      "obstruction_distance_km": 21.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 76,
+      "elevation_deg": -1.49944,
+      "obstruction_distance_km": 21.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 77,
+      "elevation_deg": -1.52882,
+      "obstruction_distance_km": 21.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 78,
+      "elevation_deg": -1.5222,
+      "obstruction_distance_km": 21.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 79,
+      "elevation_deg": -1.57874,
+      "obstruction_distance_km": 21.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 80,
+      "elevation_deg": -1.68372,
+      "obstruction_distance_km": 21.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 81,
+      "elevation_deg": -1.82749,
+      "obstruction_distance_km": 22.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 82,
+      "elevation_deg": -1.96187,
+      "obstruction_distance_km": 22.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 83,
+      "elevation_deg": -2.13161,
+      "obstruction_distance_km": 22.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 84,
+      "elevation_deg": -2.13774,
+      "obstruction_distance_km": 48.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 85,
+      "elevation_deg": -1.99175,
+      "obstruction_distance_km": 47.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 86,
+      "elevation_deg": -1.67234,
+      "obstruction_distance_km": 46.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 87,
+      "elevation_deg": -1.42053,
+      "obstruction_distance_km": 46.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 88,
+      "elevation_deg": -1.318,
+      "obstruction_distance_km": 45.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 89,
+      "elevation_deg": -1.3189,
+      "obstruction_distance_km": 45.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 90,
+      "elevation_deg": -1.23101,
+      "obstruction_distance_km": 44.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 91,
+      "elevation_deg": -1.12114,
+      "obstruction_distance_km": 41.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 92,
+      "elevation_deg": -0.95174,
+      "obstruction_distance_km": 40.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 93,
+      "elevation_deg": -0.85207,
+      "obstruction_distance_km": 37.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 94,
+      "elevation_deg": -0.86449,
+      "obstruction_distance_km": 37.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 95,
+      "elevation_deg": -0.97068,
+      "obstruction_distance_km": 37.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 96,
+      "elevation_deg": -1.179,
+      "obstruction_distance_km": 37.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 97,
+      "elevation_deg": -1.41916,
+      "obstruction_distance_km": 37.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 98,
+      "elevation_deg": -1.6276,
+      "obstruction_distance_km": 37.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 99,
+      "elevation_deg": -1.82282,
+      "obstruction_distance_km": 36.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 100,
+      "elevation_deg": -1.95532,
+      "obstruction_distance_km": 38.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 101,
+      "elevation_deg": -2.05544,
+      "obstruction_distance_km": 37.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 102,
+      "elevation_deg": -2.15105,
+      "obstruction_distance_km": 38.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 103,
+      "elevation_deg": -2.32114,
+      "obstruction_distance_km": 38.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 104,
+      "elevation_deg": -2.5487,
+      "obstruction_distance_km": 38.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 105,
+      "elevation_deg": -2.60618,
+      "obstruction_distance_km": 45.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 106,
+      "elevation_deg": -2.62679,
+      "obstruction_distance_km": 45.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 107,
+      "elevation_deg": -2.49497,
+      "obstruction_distance_km": 91.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 108,
+      "elevation_deg": -2.38415,
+      "obstruction_distance_km": 90.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 109,
+      "elevation_deg": -2.27356,
+      "obstruction_distance_km": 91.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 110,
+      "elevation_deg": -2.22796,
+      "obstruction_distance_km": 90.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 111,
+      "elevation_deg": -2.22873,
+      "obstruction_distance_km": 90.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 112,
+      "elevation_deg": -2.31582,
+      "obstruction_distance_km": 90.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 113,
+      "elevation_deg": -2.41316,
+      "obstruction_distance_km": 89.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 114,
+      "elevation_deg": -2.5367,
+      "obstruction_distance_km": 106.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 115,
+      "elevation_deg": -2.41742,
+      "obstruction_distance_km": 107.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 116,
+      "elevation_deg": -2.40796,
+      "obstruction_distance_km": 107.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 117,
+      "elevation_deg": -2.30094,
+      "obstruction_distance_km": 102.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 118,
+      "elevation_deg": -2.12482,
+      "obstruction_distance_km": 100.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 119,
+      "elevation_deg": -2.01699,
+      "obstruction_distance_km": 99.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 120,
+      "elevation_deg": -1.74889,
+      "obstruction_distance_km": 117.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 121,
+      "elevation_deg": -1.53178,
+      "obstruction_distance_km": 118.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 122,
+      "elevation_deg": -1.52742,
+      "obstruction_distance_km": 118.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 123,
+      "elevation_deg": -1.6074,
+      "obstruction_distance_km": 115.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 124,
+      "elevation_deg": -1.74944,
+      "obstruction_distance_km": 112.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 125,
+      "elevation_deg": -1.79204,
+      "obstruction_distance_km": 106.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 126,
+      "elevation_deg": -1.82521,
+      "obstruction_distance_km": 104.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 127,
+      "elevation_deg": -1.8617,
+      "obstruction_distance_km": 103.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 128,
+      "elevation_deg": -1.96964,
+      "obstruction_distance_km": 104.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 129,
+      "elevation_deg": -2.07587,
+      "obstruction_distance_km": 106.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 130,
+      "elevation_deg": -2.18597,
+      "obstruction_distance_km": 110.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 131,
+      "elevation_deg": -2.08741,
+      "obstruction_distance_km": 142.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 132,
+      "elevation_deg": -2.007,
+      "obstruction_distance_km": 140.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 133,
+      "elevation_deg": -1.90463,
+      "obstruction_distance_km": 140.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 134,
+      "elevation_deg": -1.81962,
+      "obstruction_distance_km": 139.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 135,
+      "elevation_deg": -1.6191,
+      "obstruction_distance_km": 137.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 136,
+      "elevation_deg": -1.35628,
+      "obstruction_distance_km": 137.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 137,
+      "elevation_deg": -1.23095,
+      "obstruction_distance_km": 135.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 138,
+      "elevation_deg": -1.02815,
+      "obstruction_distance_km": 135.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 139,
+      "elevation_deg": -0.95588,
+      "obstruction_distance_km": 134.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 140,
+      "elevation_deg": -0.93604,
+      "obstruction_distance_km": 134.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 141,
+      "elevation_deg": -0.95637,
+      "obstruction_distance_km": 134.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 142,
+      "elevation_deg": -0.99317,
+      "obstruction_distance_km": 134.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 143,
+      "elevation_deg": -0.92913,
+      "obstruction_distance_km": 135.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 144,
+      "elevation_deg": -0.85916,
+      "obstruction_distance_km": 134.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 145,
+      "elevation_deg": -0.86155,
+      "obstruction_distance_km": 134.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 146,
+      "elevation_deg": -0.90299,
+      "obstruction_distance_km": 134.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 147,
+      "elevation_deg": -1.10499,
+      "obstruction_distance_km": 133.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 148,
+      "elevation_deg": -1.39664,
+      "obstruction_distance_km": 133.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 149,
+      "elevation_deg": -1.68049,
+      "obstruction_distance_km": 134.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 150,
+      "elevation_deg": -1.99483,
+      "obstruction_distance_km": 133.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 151,
+      "elevation_deg": -2.26355,
+      "obstruction_distance_km": 122.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 152,
+      "elevation_deg": -2.30372,
+      "obstruction_distance_km": 122.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 153,
+      "elevation_deg": -2.32369,
+      "obstruction_distance_km": 125.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 154,
+      "elevation_deg": -2.37867,
+      "obstruction_distance_km": 0.49,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 155,
+      "elevation_deg": -2.33459,
+      "obstruction_distance_km": 0.47,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 156,
+      "elevation_deg": -2.28928,
+      "obstruction_distance_km": 0.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 157,
+      "elevation_deg": -2.23603,
+      "obstruction_distance_km": 0.6,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 158,
+      "elevation_deg": -2.18492,
+      "obstruction_distance_km": 0.6,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 159,
+      "elevation_deg": -2.13344,
+      "obstruction_distance_km": 0.6,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 160,
+      "elevation_deg": -2.07132,
+      "obstruction_distance_km": 0.65,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 161,
+      "elevation_deg": -2.04668,
+      "obstruction_distance_km": 0.65,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 162,
+      "elevation_deg": -2.01597,
+      "obstruction_distance_km": 0.65,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 163,
+      "elevation_deg": -1.78846,
+      "obstruction_distance_km": 148.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 164,
+      "elevation_deg": -1.48007,
+      "obstruction_distance_km": 154.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 165,
+      "elevation_deg": -1.26942,
+      "obstruction_distance_km": 155.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 166,
+      "elevation_deg": -1.18442,
+      "obstruction_distance_km": 153.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 167,
+      "elevation_deg": -1.07104,
+      "obstruction_distance_km": 153.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 168,
+      "elevation_deg": -0.95943,
+      "obstruction_distance_km": 153.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 169,
+      "elevation_deg": -0.9411,
+      "obstruction_distance_km": 153.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 170,
+      "elevation_deg": -0.91615,
+      "obstruction_distance_km": 153.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 171,
+      "elevation_deg": -0.91904,
+      "obstruction_distance_km": 154.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 172,
+      "elevation_deg": -1.00643,
+      "obstruction_distance_km": 154.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 173,
+      "elevation_deg": -1.11875,
+      "obstruction_distance_km": 160.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 174,
+      "elevation_deg": -0.97491,
+      "obstruction_distance_km": 159.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 175,
+      "elevation_deg": -0.90368,
+      "obstruction_distance_km": 159.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 176,
+      "elevation_deg": -0.96068,
+      "obstruction_distance_km": 150.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 177,
+      "elevation_deg": -1.21309,
+      "obstruction_distance_km": 145.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 178,
+      "elevation_deg": -1.24864,
+      "obstruction_distance_km": 139.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 179,
+      "elevation_deg": -1.24141,
+      "obstruction_distance_km": 137.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 180,
+      "elevation_deg": -1.26994,
+      "obstruction_distance_km": 136.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 181,
+      "elevation_deg": -1.32307,
+      "obstruction_distance_km": 0.7,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 182,
+      "elevation_deg": -1.31416,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 183,
+      "elevation_deg": -1.33444,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 184,
+      "elevation_deg": -1.34263,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 185,
+      "elevation_deg": -1.37227,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 186,
+      "elevation_deg": -1.42591,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 187,
+      "elevation_deg": -1.49511,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 188,
+      "elevation_deg": -1.53273,
+      "obstruction_distance_km": 0.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 189,
+      "elevation_deg": -1.5351,
+      "obstruction_distance_km": 11.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 190,
+      "elevation_deg": -1.46177,
+      "obstruction_distance_km": 10.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 191,
+      "elevation_deg": -1.40623,
+      "obstruction_distance_km": 10.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 192,
+      "elevation_deg": -1.42726,
+      "obstruction_distance_km": 10.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 193,
+      "elevation_deg": -1.45149,
+      "obstruction_distance_km": 10.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 194,
+      "elevation_deg": -1.48178,
+      "obstruction_distance_km": 10.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 195,
+      "elevation_deg": -1.60324,
+      "obstruction_distance_km": 10.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 196,
+      "elevation_deg": -1.61502,
+      "obstruction_distance_km": 1.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 197,
+      "elevation_deg": -1.64349,
+      "obstruction_distance_km": 1.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 198,
+      "elevation_deg": -1.68171,
+      "obstruction_distance_km": 1.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 199,
+      "elevation_deg": -1.69357,
+      "obstruction_distance_km": 1.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 200,
+      "elevation_deg": -1.71971,
+      "obstruction_distance_km": 1.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 201,
+      "elevation_deg": -1.7785,
+      "obstruction_distance_km": 1.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 202,
+      "elevation_deg": -1.81706,
+      "obstruction_distance_km": 1.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 203,
+      "elevation_deg": -1.8312,
+      "obstruction_distance_km": 9.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 204,
+      "elevation_deg": -1.81572,
+      "obstruction_distance_km": 9.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 205,
+      "elevation_deg": -1.75334,
+      "obstruction_distance_km": 9.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 206,
+      "elevation_deg": -1.67707,
+      "obstruction_distance_km": 9.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 207,
+      "elevation_deg": -1.67726,
+      "obstruction_distance_km": 9.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 208,
+      "elevation_deg": -1.71837,
+      "obstruction_distance_km": 9.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 209,
+      "elevation_deg": -1.93965,
+      "obstruction_distance_km": 9.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 210,
+      "elevation_deg": -2.05538,
+      "obstruction_distance_km": 8.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 211,
+      "elevation_deg": -2.05219,
+      "obstruction_distance_km": 30.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 212,
+      "elevation_deg": -1.99476,
+      "obstruction_distance_km": 30.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 213,
+      "elevation_deg": -1.95506,
+      "obstruction_distance_km": 30.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 214,
+      "elevation_deg": -1.9707,
+      "obstruction_distance_km": 30.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 215,
+      "elevation_deg": -1.97367,
+      "obstruction_distance_km": 30.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 216,
+      "elevation_deg": -1.9944,
+      "obstruction_distance_km": 30.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 217,
+      "elevation_deg": -2.01646,
+      "obstruction_distance_km": 30.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 218,
+      "elevation_deg": -2.02362,
+      "obstruction_distance_km": 30.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 219,
+      "elevation_deg": -1.98401,
+      "obstruction_distance_km": 29.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 220,
+      "elevation_deg": -2.00697,
+      "obstruction_distance_km": 29.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 221,
+      "elevation_deg": -1.96821,
+      "obstruction_distance_km": 29.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 222,
+      "elevation_deg": -1.9722,
+      "obstruction_distance_km": 29.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 223,
+      "elevation_deg": -1.93479,
+      "obstruction_distance_km": 29.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 224,
+      "elevation_deg": -1.90291,
+      "obstruction_distance_km": 29.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 225,
+      "elevation_deg": -1.84423,
+      "obstruction_distance_km": 29.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 226,
+      "elevation_deg": -1.82252,
+      "obstruction_distance_km": 28.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 227,
+      "elevation_deg": -1.8621,
+      "obstruction_distance_km": 28.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 228,
+      "elevation_deg": -1.8568,
+      "obstruction_distance_km": 28.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 229,
+      "elevation_deg": -1.85503,
+      "obstruction_distance_km": 28.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 230,
+      "elevation_deg": -1.86381,
+      "obstruction_distance_km": 27.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 231,
+      "elevation_deg": -1.87444,
+      "obstruction_distance_km": 27.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 232,
+      "elevation_deg": -1.75108,
+      "obstruction_distance_km": 39.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 233,
+      "elevation_deg": -1.6212,
+      "obstruction_distance_km": 39.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 234,
+      "elevation_deg": -1.55767,
+      "obstruction_distance_km": 41.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 235,
+      "elevation_deg": -1.37275,
+      "obstruction_distance_km": 41.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 236,
+      "elevation_deg": -1.25245,
+      "obstruction_distance_km": 41.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 237,
+      "elevation_deg": -1.1742,
+      "obstruction_distance_km": 42.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 238,
+      "elevation_deg": -1.12972,
+      "obstruction_distance_km": 42.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 239,
+      "elevation_deg": -1.1605,
+      "obstruction_distance_km": 42.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 240,
+      "elevation_deg": -1.23285,
+      "obstruction_distance_km": 42.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 241,
+      "elevation_deg": -1.35683,
+      "obstruction_distance_km": 40.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 242,
+      "elevation_deg": -1.38771,
+      "obstruction_distance_km": 39.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 243,
+      "elevation_deg": -1.44583,
+      "obstruction_distance_km": 38.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 244,
+      "elevation_deg": -1.42842,
+      "obstruction_distance_km": 38.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 245,
+      "elevation_deg": -1.48279,
+      "obstruction_distance_km": 38.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 246,
+      "elevation_deg": -1.64653,
+      "obstruction_distance_km": 38.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 247,
+      "elevation_deg": -1.87163,
+      "obstruction_distance_km": 39.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 248,
+      "elevation_deg": -1.97518,
+      "obstruction_distance_km": 37.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 249,
+      "elevation_deg": -2.12865,
+      "obstruction_distance_km": 37.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 250,
+      "elevation_deg": -2.27977,
+      "obstruction_distance_km": 38.75,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 251,
+      "elevation_deg": -2.3962,
+      "obstruction_distance_km": 38.25,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 252,
+      "elevation_deg": -2.49265,
+      "obstruction_distance_km": 37.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 253,
+      "elevation_deg": -2.40579,
+      "obstruction_distance_km": 87.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 254,
+      "elevation_deg": -2.37182,
+      "obstruction_distance_km": 85.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 255,
+      "elevation_deg": -2.41302,
+      "obstruction_distance_km": 84.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 256,
+      "elevation_deg": -2.53536,
+      "obstruction_distance_km": 85.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 257,
+      "elevation_deg": -2.48903,
+      "obstruction_distance_km": 61.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 258,
+      "elevation_deg": -2.48197,
+      "obstruction_distance_km": 59.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 259,
+      "elevation_deg": -2.48775,
+      "obstruction_distance_km": 86.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 260,
+      "elevation_deg": -2.43026,
+      "obstruction_distance_km": 72.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 261,
+      "elevation_deg": -2.43458,
+      "obstruction_distance_km": 66.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 262,
+      "elevation_deg": -2.32601,
+      "obstruction_distance_km": 66.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 263,
+      "elevation_deg": -2.20015,
+      "obstruction_distance_km": 66.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 264,
+      "elevation_deg": -2.18212,
+      "obstruction_distance_km": 66.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 265,
+      "elevation_deg": -2.18386,
+      "obstruction_distance_km": 66.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 266,
+      "elevation_deg": -2.17517,
+      "obstruction_distance_km": 66.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 267,
+      "elevation_deg": -2.16383,
+      "obstruction_distance_km": 59.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 268,
+      "elevation_deg": -2.07732,
+      "obstruction_distance_km": 60.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 269,
+      "elevation_deg": -1.98344,
+      "obstruction_distance_km": 59.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 270,
+      "elevation_deg": -1.98465,
+      "obstruction_distance_km": 59.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 271,
+      "elevation_deg": -2.01809,
+      "obstruction_distance_km": 59.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 272,
+      "elevation_deg": -2.03163,
+      "obstruction_distance_km": 57.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 273,
+      "elevation_deg": -2.08553,
+      "obstruction_distance_km": 57.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 274,
+      "elevation_deg": -2.15191,
+      "obstruction_distance_km": 56.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 275,
+      "elevation_deg": -2.23479,
+      "obstruction_distance_km": 56.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 276,
+      "elevation_deg": -2.28057,
+      "obstruction_distance_km": 58.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 277,
+      "elevation_deg": -2.41257,
+      "obstruction_distance_km": 56.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 278,
+      "elevation_deg": -2.47248,
+      "obstruction_distance_km": 59.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 279,
+      "elevation_deg": -2.54529,
+      "obstruction_distance_km": 59.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 280,
+      "elevation_deg": -2.62169,
+      "obstruction_distance_km": 58.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 281,
+      "elevation_deg": -2.68268,
+      "obstruction_distance_km": 58.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 282,
+      "elevation_deg": -2.75626,
+      "obstruction_distance_km": 99.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 283,
+      "elevation_deg": -2.80383,
+      "obstruction_distance_km": 98.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 284,
+      "elevation_deg": -2.82878,
+      "obstruction_distance_km": 48.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 285,
+      "elevation_deg": -2.76498,
+      "obstruction_distance_km": 51.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 286,
+      "elevation_deg": -2.69118,
+      "obstruction_distance_km": 51.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 287,
+      "elevation_deg": -2.69911,
+      "obstruction_distance_km": 51.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 288,
+      "elevation_deg": -2.71929,
+      "obstruction_distance_km": 51.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 289,
+      "elevation_deg": -2.82475,
+      "obstruction_distance_km": 55.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 290,
+      "elevation_deg": -2.75004,
+      "obstruction_distance_km": 55.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 291,
+      "elevation_deg": -2.78412,
+      "obstruction_distance_km": 55.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 292,
+      "elevation_deg": -2.78459,
+      "obstruction_distance_km": 61.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 293,
+      "elevation_deg": -2.71998,
+      "obstruction_distance_km": 61.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 294,
+      "elevation_deg": -2.73997,
+      "obstruction_distance_km": 61.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 295,
+      "elevation_deg": -2.74165,
+      "obstruction_distance_km": 62.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 296,
+      "elevation_deg": -2.81818,
+      "obstruction_distance_km": 62.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 297,
+      "elevation_deg": -2.92796,
+      "obstruction_distance_km": 54.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 298,
+      "elevation_deg": -2.90158,
+      "obstruction_distance_km": 54.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 299,
+      "elevation_deg": -2.89186,
+      "obstruction_distance_km": 48.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 300,
+      "elevation_deg": -2.90595,
+      "obstruction_distance_km": 48.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 301,
+      "elevation_deg": -2.92225,
+      "obstruction_distance_km": 48.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 302,
+      "elevation_deg": -2.96658,
+      "obstruction_distance_km": 50.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 303,
+      "elevation_deg": -3.10086,
+      "obstruction_distance_km": 49.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 304,
+      "elevation_deg": -3.09863,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 305,
+      "elevation_deg": -3.08426,
+      "obstruction_distance_km": 0.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 306,
+      "elevation_deg": -3.02121,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 307,
+      "elevation_deg": -2.98596,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 308,
+      "elevation_deg": -2.92164,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 309,
+      "elevation_deg": -2.90156,
+      "obstruction_distance_km": 0.39,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 310,
+      "elevation_deg": -2.8479,
+      "obstruction_distance_km": 0.39,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 311,
+      "elevation_deg": -2.75921,
+      "obstruction_distance_km": 0.4,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 312,
+      "elevation_deg": -2.69507,
+      "obstruction_distance_km": 0.23,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 313,
+      "elevation_deg": -2.57337,
+      "obstruction_distance_km": 0.23,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 314,
+      "elevation_deg": -2.5054,
+      "obstruction_distance_km": 0.23,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 315,
+      "elevation_deg": -2.28473,
+      "obstruction_distance_km": 44.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 316,
+      "elevation_deg": -2.11037,
+      "obstruction_distance_km": 45.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 317,
+      "elevation_deg": -2.07588,
+      "obstruction_distance_km": 46.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 318,
+      "elevation_deg": -1.9883,
+      "obstruction_distance_km": 46.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 319,
+      "elevation_deg": -1.8941,
+      "obstruction_distance_km": 47.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 320,
+      "elevation_deg": -1.67195,
+      "obstruction_distance_km": 47.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 321,
+      "elevation_deg": -1.62704,
+      "obstruction_distance_km": 47.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 322,
+      "elevation_deg": -1.63662,
+      "obstruction_distance_km": 47.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 323,
+      "elevation_deg": -1.70115,
+      "obstruction_distance_km": 48.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 324,
+      "elevation_deg": -1.84659,
+      "obstruction_distance_km": 48.5,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 325,
+      "elevation_deg": -1.92354,
+      "obstruction_distance_km": 49.0,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 326,
+      "elevation_deg": -1.93154,
+      "obstruction_distance_km": 0.27,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 327,
+      "elevation_deg": -1.87628,
+      "obstruction_distance_km": 0.27,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 328,
+      "elevation_deg": -1.85465,
+      "obstruction_distance_km": 0.28,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 329,
+      "elevation_deg": -1.83003,
+      "obstruction_distance_km": 0.28,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 330,
+      "elevation_deg": -1.80173,
+      "obstruction_distance_km": 0.28,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 331,
+      "elevation_deg": -1.77382,
+      "obstruction_distance_km": 0.28,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 332,
+      "elevation_deg": -1.71765,
+      "obstruction_distance_km": 0.28,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 333,
+      "elevation_deg": -1.65965,
+      "obstruction_distance_km": 0.29,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 334,
+      "elevation_deg": -1.65965,
+      "obstruction_distance_km": 0.29,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 335,
+      "elevation_deg": -1.68517,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 336,
+      "elevation_deg": -1.65911,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 337,
+      "elevation_deg": -1.61393,
+      "obstruction_distance_km": 0.33,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 338,
+      "elevation_deg": -1.54748,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 339,
+      "elevation_deg": -1.44642,
+      "obstruction_distance_km": 0.34,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 340,
+      "elevation_deg": -1.37956,
+      "obstruction_distance_km": 0.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 341,
+      "elevation_deg": -1.2321,
+      "obstruction_distance_km": 0.36,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 342,
+      "elevation_deg": -1.31064,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 343,
+      "elevation_deg": -1.25457,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 344,
+      "elevation_deg": -1.18838,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 345,
+      "elevation_deg": -1.17979,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 346,
+      "elevation_deg": -1.11151,
+      "obstruction_distance_km": 0.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 347,
+      "elevation_deg": -1.06734,
+      "obstruction_distance_km": 0.35,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 348,
+      "elevation_deg": -1.1049,
+      "obstruction_distance_km": 0.38,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 349,
+      "elevation_deg": -1.0975,
+      "obstruction_distance_km": 0.41,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 350,
+      "elevation_deg": -1.0975,
+      "obstruction_distance_km": 0.41,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 351,
+      "elevation_deg": -1.15925,
+      "obstruction_distance_km": 0.41,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 352,
+      "elevation_deg": -1.22035,
+      "obstruction_distance_km": 0.33,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 353,
+      "elevation_deg": -1.22285,
+      "obstruction_distance_km": 0.31,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 354,
+      "elevation_deg": -1.22069,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 355,
+      "elevation_deg": -1.25005,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 356,
+      "elevation_deg": -1.22505,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 357,
+      "elevation_deg": -1.29778,
+      "obstruction_distance_km": 0.3,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 358,
+      "elevation_deg": -1.33634,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    },
+    {
+      "azimuth_deg": 359,
+      "elevation_deg": -1.2811,
+      "obstruction_distance_km": 0.37,
+      "dem_sample_coverage_fraction": 1.0,
+      "nearest_valid_dem_sample_m": 10.0
+    }
+  ],
+  "terrain_horizon_semantics": "Maximum line-of-sight elevation along a ray; lower bound with finite DEM coverage and sampling",
+  "quality": {
+    "azimuth_bins_without_elevation": 0,
+    "mean_dem_sample_coverage_fraction": 1.0,
+    "min_dem_sample_coverage_fraction": 1.0,
+    "azimuth_bins_with_near_gap_gt_100m": 0,
+    "max_range_limit_km": 160.0,
+    "complete_near_range_coverage": true,
+    "horizon_samples_are_complete": true,
+    "caution": "Incomplete coverage or limited range can hide higher obstacles; never interpret gaps as clear line of sight"
+  },
+  "model": {
+    "horizontal_reference": "spherical Moon local tangent plane (ENU)",
+    "moon_fixed_frame": "MOON_ME / DE421 (user must verify input DEMs; code cannot verify frame epoch)",
+    "planetocentric_latitude_positive_north": true,
+    "longitude_positive_east_0_to_360": true,
+    "azimuth_clockwise_from_north_deg": true,
+    "lunar_reference_radius_m": 1737400.0,
+    "observer_elevation_reference": "height above 1737400 m lunar reference sphere",
+    "max_horizon_distance_m": 160000.0,
+    "subrays_per_azimuth_bin": 5,
+    "sampling_spacing_m": {
+      "near_0_500m": 10,
+      "mid_500_5000m": 50,
+      "far_5_40km": 250,
+      "outer_40km_plus": 500
+    },
+    "dems_in_priority_order": [
+      "data/raw/Site01_final_adj_5mpp_surf.tif",
+      "data/raw/Site04_final_adj_5mpp_surf.tif",
+      "data/raw/Site23_final_adj_5mpp_surf.tif",
+      "data/raw/LDEM_80S_80MPP_ADJ.TIF"
+    ],
+    "slope_map": "data/raw/Site01_final_adj_5mpp_slp.tif",
+    "generated_utc": "2026-11-15T03:12:24.670106+00:00"
+  }
+}

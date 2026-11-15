@@ -24,6 +24,8 @@ def main(argv=None):
     ap.add_argument('--mid-step-m', type=float, default=50)
     ap.add_argument('--far-step-m', type=float, default=250)
     ap.add_argument('--outer-step-m', type=float, default=500)
+    ap.add_argument('--subrays-per-bin', type=int, default=1,
+                    help='Rays per 1-degree bin; the highest is kept (catches narrow peaks)')
     ap.add_argument('--crs-override', help='Use ONLY if metadata is absent AND manually verified')
     args = ap.parse_args(argv)
     if args.observer_height_m < 0 or args.max_distance_km <= 0:
@@ -48,14 +50,16 @@ def main(argv=None):
                         slope_baseline_m=args.slope_baseline_m,
                         max_distance_m=args.max_distance_km*1000,
                         near_step_m=args.near_step_m, mid_step_m=args.mid_step_m,
-                        far_step_m=args.far_step_m, outer_step_m=args.outer_step_m)
+                        far_step_m=args.far_step_m, outer_step_m=args.outer_step_m,
+                        subrays_per_bin=args.subrays_per_bin)
             else:
                 result = process_site(site, elev,
                     observer_height_m=args.observer_height_m,
                     slope_baseline_m=args.slope_baseline_m,
                     max_distance_m=args.max_distance_km*1000,
                     near_step_m=args.near_step_m, mid_step_m=args.mid_step_m,
-                    far_step_m=args.far_step_m, outer_step_m=args.outer_step_m)
+                    far_step_m=args.far_step_m, outer_step_m=args.outer_step_m,
+                        subrays_per_bin=args.subrays_per_bin)
             out = export_site(args.output_dir, result)
             figure = plot_horizon(result, Path(args.plots_dir)/f"{site['id']}_horizon.png")
             print(f"  elevation={result['elevation_m']} m; slope={result['slope_deg']}°")
